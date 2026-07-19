@@ -287,6 +287,7 @@
     </style>
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="toast-container" id="toast-container"></div>
@@ -398,6 +399,8 @@
                 </div>
                 <div>
                     <div class="dash-section-header" id="hist-header-title" style="margin-top:25px;">Recent Sessions & Lectures Log</div>
+                    <button class="add-item-pill-btn" onclick="openManualSessionModal()" id="add-manual-session-btn" style="margin-bottom: 15px;">+ <span id="add-manual-btn-txt">Add Past Session</span></button>
+
                     <div class="search-filter-bar">
                         <input type="text" class="search-input" id="session-search" placeholder="Search sessions..." oninput="filterSessions()">
                         <select class="filter-select" id="tag-filter" onchange="filterSessions()">
@@ -504,7 +507,47 @@
             </div>
         </div>
     </div>
-    <div class="fullscreen-overlay-container" id="focus-overlay">
+        <!-- EDIT SESSION MODAL -->
+    <div class="modal-overlay" id="edit-session-modal">
+        <div class="modal-box">
+            <h3 id="edit-session-heading">Edit Session</h3>
+            <label class="field-label" id="edit-date-lbl">Date</label>
+            <input type="date" id="edit-session-date">
+            <label class="field-label" id="edit-title-lbl">Session Title</label>
+            <input type="text" id="edit-session-title" placeholder="Session title...">
+            <label class="field-label" id="edit-tag-lbl">Subject Tag</label>
+            <select id="edit-session-tag" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-soft); color: #fff; padding: 12px; width: 100%; border-radius: 12px; font-size: 16px; text-align: center; margin-bottom: 16px; outline: none;"></select>
+            <label class="field-label" id="edit-duration-lbl">Duration (minutes)</label>
+            <input type="number" id="edit-session-duration" min="1" max="999" value="25">
+            <label class="field-label" id="edit-range-lbl">Time Range (optional)</label>
+            <input type="text" id="edit-session-range" placeholder="e.g. 14:00 - 15:30">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeEditSessionModal()" id="edit-cancel-btn">Cancel</button>
+                <button class="modal-btn confirm" onclick="saveEditSession()" id="edit-save-btn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+    <!-- ADD MANUAL SESSION MODAL -->
+    <div class="modal-overlay" id="manual-session-modal">
+        <div class="modal-box">
+            <h3 id="manual-session-heading">Add Study Session</h3>
+            <label class="field-label" id="manual-date-lbl">Date</label>
+            <input type="date" id="manual-session-date">
+            <label class="field-label" id="manual-title-lbl">Session Title</label>
+            <input type="text" id="manual-session-title" placeholder="Session title...">
+            <label class="field-label" id="manual-tag-lbl">Subject Tag</label>
+            <select id="manual-session-tag" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-soft); color: #fff; padding: 12px; width: 100%; border-radius: 12px; font-size: 16px; text-align: center; margin-bottom: 16px; outline: none;"></select>
+            <label class="field-label" id="manual-duration-lbl">Duration (minutes)</label>
+            <input type="number" id="manual-session-duration" min="1" max="999" value="25">
+            <label class="field-label" id="manual-range-lbl">Time Range (optional)</label>
+            <input type="text" id="manual-session-range" placeholder="e.g. 14:00 - 15:30">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeManualSessionModal()" id="manual-cancel-btn">Cancel</button>
+                <button class="modal-btn confirm" onclick="saveManualSession()" id="manual-save-btn">Add Session</button>
+            </div>
+        </div>
+    </div>
+<div class="fullscreen-overlay-container" id="focus-overlay">
         <div class="timer-circle-widget" onclick="openTimeEditModal()">
             <svg class="timer-svg" viewBox="0 0 360 360"><circle class="rail" cx="180" cy="180" r="174"></circle><circle class="fill-progress" id="fs-ring-filler" cx="180" cy="180" r="174"></circle></svg>
             <div class="timer-digits" id="fs-timer-numbers">25:00</div>
@@ -549,7 +592,20 @@
                 goalsSettingsTitle: "Study Goals Settings", goalsDailyLbl: "Daily Goal (hours)",
                 goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
                 goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
-                exportBtn: "Export", clearBtn: "Clear All Data"
+                exportBtn: "Export", clearBtn: "Clear All Data",
+                editSessionTitle: "Edit Session",
+                addManualSessionTitle: "Add Study Session",
+                manualDateLbl: "Date",
+                manualTitleLbl: "Session Title",
+                manualTagLbl: "Subject Tag",
+                manualDurationLbl: "Duration (minutes)",
+                manualTimeRangeLbl: "Time Range (optional)",
+                manualTimeRangePlace: "e.g. 14:00 - 15:30",
+                saveChangesBtn: "Save Changes",
+                addSessionBtn: "Add Session",
+                sessionUpdated: "Session updated!",
+                sessionAdded: "Session added successfully!",
+                addManualBtn: "+ Add Past Session"
             },
             ar: {
                 logo: "إندكس", navTimer: "المؤقت", navAnalysis: "التحليلات والإحصائيات", navGoals: "الأهداف", navHabits: "العادات",
@@ -579,7 +635,20 @@
                 goalsSettingsTitle: "Study Goals Settings", goalsDailyLbl: "Daily Goal (hours)",
                 goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
                 goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
-                exportBtn: "تصدير", clearBtn: "حذف البيانات"
+                exportBtn: "تصدير", clearBtn: "حذف البيانات",
+                editSessionTitle: "تعديل الجلسة",
+                addManualSessionTitle: "إضافة جلسة دراسية",
+                manualDateLbl: "التاريخ",
+                manualTitleLbl: "عنوان الجلسة",
+                manualTagLbl: "التاج المخصص",
+                manualDurationLbl: "المدة (بالدقائق)",
+                manualTimeRangeLbl: "النطاق الزمني (اختياري)",
+                manualTimeRangePlace: "مثال: 14:00 - 15:30",
+                saveChangesBtn: "حفظ التعديلات",
+                addSessionBtn: "إضافة الجلسة",
+                sessionUpdated: "تم تحديث الجلسة!",
+                sessionAdded: "تم إضافة الجلسة بنجاح!",
+                addManualBtn: "+ إضافة جلسة سابقة"
             }
         };
 
@@ -813,6 +882,7 @@
             document.getElementById('goals-settings-save').innerText = d.goalsSettingsSave;
             renderGoalsScreen();
             renderHabitsScreen();
+            updateEditAddModalLabels();
         }
 
         function switchMode(mode) {
@@ -1246,7 +1316,7 @@
             currentItemsPage.forEach((rowItem, pageLocalIndex) => {
                 let absoluteArrayIndex = archivedSessionsArray.indexOf(rowItem);
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${rowItem.date}</td><td><strong>${rowItem.title}</strong></td><td><span class="session-tag-indicator" style="color: ${getTagColor(rowItem.tag)};">#${rowItem.tag}</span></td><td>${rowItem.duration}</td><td style="color: var(--text-gray); font-size:13px;">${rowItem.range}</td><td><button class="delete-row-btn" onclick="deleteIndividualSession(${absoluteArrayIndex})">✕</button></td>`;
+                tr.innerHTML = `<td>${rowItem.date}</td><td><strong>${rowItem.title}</strong></td><td><span class="session-tag-indicator" style="color: ${getTagColor(rowItem.tag)};">#${rowItem.tag}</span></td><td>${rowItem.duration}</td><td style="color: var(--text-gray); font-size:13px;">${rowItem.range}</td><td><button class="delete-row-btn" onclick="openEditSessionModal(${absoluteArrayIndex})" title="Edit" style="margin-right: 6px; color: var(--accent-orange);">✎</button><button class="delete-row-btn" onclick="deleteIndividualSession(${absoluteArrayIndex})">✕</button></td>`;
                 tableBody.appendChild(tr);
             });
             renderPaginationNodes(sessionsToShow.length);
@@ -1500,6 +1570,156 @@
                     </div>`;
                 grid.appendChild(card);
             });
+        }
+
+        // Edit Session functionality
+        let currentlyEditingIndex = -1;
+
+        function openEditSessionModal(index) {
+            currentlyEditingIndex = index;
+            const session = archivedSessionsArray[index];
+            if (!session) return;
+
+            document.getElementById('edit-session-date').value = session.date;
+            document.getElementById('edit-session-title').value = session.title;
+            document.getElementById('edit-session-duration').value = parseInt(session.duration) || 25;
+            document.getElementById('edit-session-range').value = session.range || '';
+
+            // Populate tag dropdown
+            const tagSelect = document.getElementById('edit-session-tag');
+            tagSelect.innerHTML = '';
+            currentTagsList.forEach(tag => {
+                const opt = document.createElement('option');
+                opt.value = tag;
+                opt.innerText = tag;
+                if (tag === session.tag) opt.selected = true;
+                tagSelect.appendChild(opt);
+            });
+
+            document.getElementById('edit-session-modal').classList.add('modal-open');
+        }
+
+        function closeEditSessionModal() {
+            document.getElementById('edit-session-modal').classList.remove('modal-open');
+            currentlyEditingIndex = -1;
+        }
+
+        function saveEditSession() {
+            if (currentlyEditingIndex < 0 || currentlyEditingIndex >= archivedSessionsArray.length) return;
+
+            const date = document.getElementById('edit-session-date').value;
+            const title = document.getElementById('edit-session-title').value.trim();
+            const tag = document.getElementById('edit-session-tag').value;
+            const duration = parseInt(document.getElementById('edit-session-duration').value);
+            const range = document.getElementById('edit-session-range').value.trim();
+
+            if (!date || !title || !duration || duration < 1) {
+                showToast('Error', 'Please fill in all required fields', 'error');
+                return;
+            }
+
+            archivedSessionsArray[currentlyEditingIndex] = {
+                date: date,
+                title: title,
+                tag: tag,
+                duration: duration + ' Min',
+                range: range || '--:--'
+            };
+
+            dbSet('sessions', archivedSessionsArray);
+            recalculateAndRenderDashboard();
+            renderHistoryGridWithPagination();
+            renderHeatmap();
+            updateQuickStats();
+            closeEditSessionModal();
+
+            const d = languageDictionary[currentSystemLanguage];
+            showToast(d.sessionUpdated, title, 'success');
+        }
+
+        // Add Manual Session functionality
+        function openManualSessionModal() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('manual-session-date').value = today;
+            document.getElementById('manual-session-title').value = '';
+            document.getElementById('manual-session-duration').value = 25;
+            document.getElementById('manual-session-range').value = '';
+
+            // Populate tag dropdown
+            const tagSelect = document.getElementById('manual-session-tag');
+            tagSelect.innerHTML = '';
+            currentTagsList.forEach(tag => {
+                const opt = document.createElement('option');
+                opt.value = tag;
+                opt.innerText = tag;
+                if (tag === currentlySelectedTag) opt.selected = true;
+                tagSelect.appendChild(opt);
+            });
+
+            document.getElementById('manual-session-modal').classList.add('modal-open');
+            setTimeout(() => document.getElementById('manual-session-title').focus(), 100);
+        }
+
+        function closeManualSessionModal() {
+            document.getElementById('manual-session-modal').classList.remove('modal-open');
+        }
+
+        function saveManualSession() {
+            const date = document.getElementById('manual-session-date').value;
+            const title = document.getElementById('manual-session-title').value.trim();
+            const tag = document.getElementById('manual-session-tag').value;
+            const duration = parseInt(document.getElementById('manual-session-duration').value);
+            const range = document.getElementById('manual-session-range').value.trim();
+
+            if (!date || !title || !duration || duration < 1) {
+                showToast('Error', 'Please fill in all required fields', 'error');
+                return;
+            }
+
+            const newSession = {
+                date: date,
+                title: title,
+                tag: tag,
+                duration: duration + ' Min',
+                range: range || '--:--'
+            };
+
+            archivedSessionsArray.unshift(newSession);
+            dbSet('sessions', archivedSessionsArray);
+
+            recalculateAndRenderDashboard();
+            renderHistoryGridWithPagination();
+            renderHeatmap();
+            updateQuickStats();
+            closeManualSessionModal();
+
+            const d = languageDictionary[currentSystemLanguage];
+            showToast(d.sessionAdded, title, 'success');
+        }
+
+        // Update language strings for edit/add modals
+        function updateEditAddModalLabels() {
+            const d = languageDictionary[currentSystemLanguage];
+            document.getElementById('edit-session-heading').innerText = d.editSessionTitle;
+            document.getElementById('edit-date-lbl').innerText = d.manualDateLbl;
+            document.getElementById('edit-title-lbl').innerText = d.manualTitleLbl;
+            document.getElementById('edit-tag-lbl').innerText = d.manualTagLbl;
+            document.getElementById('edit-duration-lbl').innerText = d.manualDurationLbl;
+            document.getElementById('edit-range-lbl').innerText = d.manualTimeRangeLbl;
+            document.getElementById('edit-session-range').placeholder = d.manualTimeRangePlace;
+            document.getElementById('edit-cancel-btn').innerText = d.modalCancel;
+            document.getElementById('edit-save-btn').innerText = d.saveChangesBtn;
+
+            document.getElementById('manual-session-heading').innerText = d.addManualSessionTitle;
+            document.getElementById('manual-date-lbl').innerText = d.manualDateLbl;
+            document.getElementById('manual-title-lbl').innerText = d.manualTitleLbl;
+            document.getElementById('manual-tag-lbl').innerText = d.manualTagLbl;
+            document.getElementById('manual-duration-lbl').innerText = d.manualDurationLbl;
+            document.getElementById('manual-range-lbl').innerText = d.manualTimeRangeLbl;
+            document.getElementById('manual-session-range').placeholder = d.manualTimeRangePlace;
+            document.getElementById('manual-cancel-btn').innerText = d.modalCancel;
+            document.getElementById('manual-save-btn').innerText = d.addSessionBtn;
+            document.getElementById('add-manual-btn-txt').innerText = d.addManualBtn;
         }
 
         // Keyboard shortcuts
