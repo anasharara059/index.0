@@ -277,6 +277,7 @@
         @media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
     </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
     <div class="toast-container" id="toast-container"></div>
@@ -289,6 +290,7 @@
             <button class="tab-trigger" onclick="activateScreen('habits-tab', 'screen-habits')" id="nav-btn-habits">Habits</button>
         </div>
         <div class="header-actions">
+            <button class="export-btn" onclick="openGoalsSettingsModal()" id="btn-goals-settings" title="Study Goals">🎯 Goals</button>
             <button class="export-btn" onclick="exportData()" id="btn-export" title="Export Data">📥 Export</button>
             <button class="clear-btn" onclick="clearAllData()" id="btn-clear-all">Clear All Data</button>
             <button class="lang-button" onclick="toggleLanguageSystem()" id="lang-toggle">العربية</button>
@@ -478,6 +480,21 @@
             </div>
         </div>
     </div>
+    <div class="modal-overlay" id="goals-settings-modal">
+        <div class="modal-box">
+            <h3 id="goals-settings-heading">Study Goals Settings</h3>
+            <label class="field-label" id="goals-daily-lbl">Daily Goal (hours)</label>
+            <input type="number" id="goals-daily-input" min="0.5" max="24" step="0.5" value="4">
+            <label class="field-label" id="goals-weekly-lbl">Weekly Goal (hours)</label>
+            <input type="number" id="goals-weekly-input" min="1" max="168" step="1" value="28">
+            <label class="field-label" id="goals-monthly-lbl">Monthly Goal (hours)</label>
+            <input type="number" id="goals-monthly-input" min="1" max="744" step="1" value="120">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeGoalsSettingsModal()" id="goals-settings-cancel">Cancel</button>
+                <button class="modal-btn confirm" onclick="saveGoalsSettings()" id="goals-settings-save">Save</button>
+            </div>
+        </div>
+    </div>
     <div class="fullscreen-overlay-container" id="focus-overlay">
         <div class="timer-circle-widget" onclick="openTimeEditModal()">
             <svg class="timer-svg" viewBox="0 0 360 360"><circle class="rail" cx="180" cy="180" r="174"></circle><circle class="fill-progress" id="fs-ring-filler" cx="180" cy="180" r="174"></circle></svg>
@@ -520,6 +537,9 @@
                 habitModalCancel: "Cancel", habitModalSave: "Add",
                 toastSessionSaved: "Session saved successfully!", toastDataCleared: "All data cleared!",
                 toastGoalAdded: "Goal added!", toastHabitAdded: "Habit added!", toastTagAdded: "Subject added!",
+                goalsSettingsTitle: "Study Goals Settings", goalsDailyLbl: "Daily Goal (hours)",
+                goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
+                goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
                 exportBtn: "Export", clearBtn: "Clear All Data"
             },
             ar: {
@@ -547,6 +567,9 @@
                 habitModalCancel: "إلغاء", habitModalSave: "إضافة",
                 toastSessionSaved: "تم حفظ الجلسة بنجاح!", toastDataCleared: "تم مسح كل البيانات!",
                 toastGoalAdded: "تم إضافة الهدف!", toastHabitAdded: "تم إضافة العادة!", toastTagAdded: "تم إضافة المادة!",
+                goalsSettingsTitle: "Study Goals Settings", goalsDailyLbl: "Daily Goal (hours)",
+                goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
+                goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
                 exportBtn: "تصدير", clearBtn: "حذف البيانات"
             }
         };
@@ -568,6 +591,8 @@
         let goalsArray = [];
         let habitsArray = [];
         let filteredSessions = [];
+        // User-defined study goals (hours) - editable
+        let studyGoals = { daily: 4, weekly: 28, monthly: 120 };
 
         const firebaseConfig = {
             apiKey: "AIzaSyBk6TreuE-mwRllaxXV1vJo6cbZ9iPC3zg",
@@ -641,6 +666,9 @@
                 const savedHabits = await dbGet('habits');
                 if (savedHabits !== undefined) habitsArray = savedHabits;
                 else await dbSet('habits', habitsArray);
+                const savedStudyGoals = await dbGet('studyGoals');
+                if (savedStudyGoals !== undefined) studyGoals = { ...studyGoals, ...savedStudyGoals };
+                else await dbSet('studyGoals', studyGoals);
                 const savedSelectedTag = await dbGet('selectedTag');
                 if (savedSelectedTag !== undefined && currentTagsList.includes(savedSelectedTag)) currentlySelectedTag = savedSelectedTag;
                 else { currentlySelectedTag = currentTagsList[0] || currentlySelectedTag; await dbSet('selectedTag', currentlySelectedTag); }
@@ -730,8 +758,9 @@
             document.getElementById('m-day-unit').innerText = d.unitHrs;
             document.getElementById('m-week-unit').innerText = d.unitHrs;
             document.getElementById('m-month-unit').innerText = d.unitHrs;
-            document.getElementById('m-day-sub-txt').innerText = d.daySubTxt;
-            document.getElementById('m-month-sub-txt').innerText = d.monthSubTxt;
+            // Subtexts are dynamically calculated in recalculateAndRenderDashboard
+            // document.getElementById('m-day-sub-txt').innerText = d.daySubTxt;
+            // document.getElementById('m-month-sub-txt').innerText = d.monthSubTxt;
             document.getElementById('hist-header-title').innerText = d.histTitle;
             document.getElementById('th-date').innerText = d.thDate;
             document.getElementById('th-title').innerText = d.thTitle;
@@ -768,6 +797,12 @@
             document.getElementById('modal-habit-name').placeholder = d.habitModalNamePlace;
             document.getElementById('habit-modal-cancel').innerText = d.habitModalCancel;
             document.getElementById('habit-modal-save').innerText = d.habitModalSave;
+            document.getElementById('goals-settings-heading').innerText = d.goalsSettingsTitle;
+            document.getElementById('goals-daily-lbl').innerText = d.goalsDailyLbl;
+            document.getElementById('goals-weekly-lbl').innerText = d.goalsWeeklyLbl;
+            document.getElementById('goals-monthly-lbl').innerText = d.goalsMonthlyLbl;
+            document.getElementById('goals-settings-cancel').innerText = d.goalsSettingsCancel;
+            document.getElementById('goals-settings-save').innerText = d.goalsSettingsSave;
             renderGoalsScreen();
             renderHabitsScreen();
         }
@@ -975,28 +1010,121 @@
         }
 
         function recalculateAndRenderDashboard() {
+            const todayISO = new Date().toISOString().split('T')[0];
+            const yesterdayDate = new Date(); yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+            const yesterdayISO = yesterdayDate.toISOString().split('T')[0];
+            const weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+            weekStart.setHours(0, 0, 0, 0);
+            const monthPrefix = new Date().toISOString().slice(0, 7);
+
+            let todayMinutes = 0, yesterdayMinutes = 0, weekMinutes = 0, monthMinutes = 0;
             let totalAccumulatedStudyMinutes = 0;
             let tagMinutesSumMap = {};
             currentTagsList.forEach(t => tagMinutesSumMap[t] = 0);
+
             archivedSessionsArray.forEach(session => {
                 let minutesVal = parseInt(session.duration) || 0;
                 if (tagMinutesSumMap[session.tag] !== undefined) tagMinutesSumMap[session.tag] += minutesVal;
                 else tagMinutesSumMap[session.tag] = minutesVal;
                 totalAccumulatedStudyMinutes += minutesVal;
+                if (session.date === todayISO) todayMinutes += minutesVal;
+                if (session.date === yesterdayISO) yesterdayMinutes += minutesVal;
+                if (new Date(session.date) >= weekStart) weekMinutes += minutesVal;
+                if (session.date.startsWith(monthPrefix)) monthMinutes += minutesVal;
             });
-            let calculatedHours = (totalAccumulatedStudyMinutes / 60).toFixed(1);
+
+            let dailyHours = (todayMinutes / 60).toFixed(1);
+            let yesterdayHours = (yesterdayMinutes / 60).toFixed(1);
+            let weeklyHours = (weekMinutes / 60).toFixed(1);
+            let monthlyHours = (monthMinutes / 60).toFixed(1);
+
             let dayValEl = document.getElementById('m-day-val');
-            if (dayValEl) dayValEl.innerText = (calculatedHours * 0.15).toFixed(1);
+            if (dayValEl) dayValEl.innerText = dailyHours;
             let weekValEl = document.getElementById('m-week-val');
-            if (weekValEl) weekValEl.innerText = calculatedHours;
+            if (weekValEl) weekValEl.innerText = weeklyHours;
             let monthValEl = document.getElementById('m-month-val');
-            if (monthValEl) monthValEl.innerText = (calculatedHours * 4).toFixed(1);
+            if (monthValEl) monthValEl.innerText = monthlyHours;
+
+            const DAILY_GOAL = studyGoals.daily || 4;
+            const WEEKLY_GOAL = studyGoals.weekly || 28;
+            const MONTHLY_GOAL = studyGoals.monthly || 120;
+
+            let dayPct = Math.min(100, Math.round((dailyHours / DAILY_GOAL) * 100));
+            let weekPct = Math.min(100, Math.round((weeklyHours / WEEKLY_GOAL) * 100));
+            let monthPct = Math.min(100, Math.round((monthlyHours / MONTHLY_GOAL) * 100));
+
             let ringDay = document.getElementById('ring-day');
-            if (ringDay) { let pct = Math.min(100, Math.round(((calculatedHours * 0.15) / 6) * 100)); ringDay.style.strokeDashoffset = 176 - (pct / 100) * 176; document.getElementById('ring-day-txt').innerText = pct + '%'; }
+            if (ringDay) { ringDay.style.strokeDashoffset = 176 - (dayPct / 100) * 176; document.getElementById('ring-day-txt').innerText = dayPct + '%'; }
             let ringWeek = document.getElementById('ring-week');
-            if (ringWeek) { let pct = Math.min(100, Math.round((calculatedHours / 40) * 100)); ringWeek.style.strokeDashoffset = 176 - (pct / 100) * 176; document.getElementById('ring-week-txt').innerText = pct + '%'; }
+            if (ringWeek) { ringWeek.style.strokeDashoffset = 176 - (weekPct / 100) * 176; document.getElementById('ring-week-txt').innerText = weekPct + '%'; }
             let ringMonth = document.getElementById('ring-month');
-            if (ringMonth) { let pct = Math.min(100, Math.round(((calculatedHours * 4) / 160) * 100)); ringMonth.style.strokeDashoffset = 176 - (pct / 100) * 176; document.getElementById('ring-month-txt').innerText = pct + '%'; }
+            if (ringMonth) { ringMonth.style.strokeDashoffset = 176 - (monthPct / 100) * 176; document.getElementById('ring-month-txt').innerText = monthPct + '%'; }
+
+            let daySubEl = document.getElementById('m-day-sub-txt');
+            if (daySubEl) {
+                let dayParent = daySubEl.parentElement;
+                let dh = parseFloat(dailyHours), yh = parseFloat(yesterdayHours);
+                if (yh > 0 && dh > yh) {
+                    let pctUp = Math.round(((dh - yh) / yh) * 100);
+                    let diff = (dh - yh).toFixed(1);
+                    daySubEl.innerText = (currentSystemLanguage === 'ar'
+                        ? 'uparrow ' + pctUp + '% better than yesterday (+' + diff + 'h)'
+                        : 'uparrow ' + pctUp + '% better than yesterday (+' + diff + 'h)');
+                    dayParent.className = 'subtext green';
+                } else if (dh >= DAILY_GOAL) {
+                    let over = (dh - DAILY_GOAL).toFixed(1);
+                    daySubEl.innerText = (currentSystemLanguage === 'ar'
+                        ? 'Goal exceeded by ' + over + ' hrs!'
+                        : 'Goal exceeded by ' + over + ' hrs!');
+                    dayParent.className = 'subtext green';
+                } else {
+                    let rem = Math.max(0, (DAILY_GOAL - dh).toFixed(1));
+                    daySubEl.innerText = (currentSystemLanguage === 'ar'
+                        ? rem + ' hrs left to daily goal'
+                        : rem + ' hrs left to daily goal');
+                    dayParent.className = 'subtext orange';
+                }
+            }
+
+            let weekSubEl = document.getElementById('m-week-sub-txt');
+            if (weekSubEl) {
+                let weekParent = weekSubEl.parentElement;
+                let wh = parseFloat(weeklyHours);
+                if (wh >= WEEKLY_GOAL) {
+                    let over = (wh - WEEKLY_GOAL).toFixed(1);
+                    weekSubEl.innerText = (currentSystemLanguage === 'ar'
+                        ? 'Weekly goal exceeded by ' + over + ' hrs!'
+                        : 'Weekly goal exceeded by ' + over + ' hrs!');
+                    weekParent.className = 'subtext green';
+                } else {
+                    let rem = Math.max(0, (WEEKLY_GOAL - wh).toFixed(1));
+                    weekSubEl.innerText = (currentSystemLanguage === 'ar'
+                        ? rem + ' hrs left to weekly goal'
+                        : rem + ' hrs left to weekly goal');
+                    weekParent.className = 'subtext orange';
+                }
+            }
+
+            let monthSubEl = document.getElementById('m-month-sub-txt');
+            if (monthSubEl) {
+                let monthParent = monthSubEl.parentElement;
+                let mh = parseFloat(monthlyHours);
+                if (mh >= MONTHLY_GOAL) {
+                    let over = (mh - MONTHLY_GOAL).toFixed(1);
+                    monthSubEl.innerText = (currentSystemLanguage === 'ar'
+                        ? 'Monthly goal exceeded by ' + over + ' hrs!'
+                        : 'Monthly goal exceeded by ' + over + ' hrs!');
+                    monthParent.className = 'subtext green';
+                } else {
+                    let rem = Math.max(0, (MONTHLY_GOAL - mh).toFixed(1));
+                    monthSubEl.innerText = (currentSystemLanguage === 'ar'
+                        ? rem + ' hrs left to monthly goal'
+                        : rem + ' hrs left to monthly goal');
+                    monthParent.className = 'subtext gray';
+                }
+            }
+
             const barsContainer = document.getElementById('bars-dynamic-wrapper');
             if (barsContainer) {
                 barsContainer.innerHTML = '';
@@ -1005,7 +1133,7 @@
                     let tagPercentage = totalAccumulatedStudyMinutes > 0 ? Math.round((tagMinutes / totalAccumulatedStudyMinutes) * 100) : 0;
                     const item = document.createElement('div');
                     item.className = 'chart-progress-item';
-                    item.innerHTML = `<div class="chart-progress-labels"><span>${tag}</span><span style="color: var(--accent-orange); font-weight:700;">${tagPercentage}% (${tagMinutes} Min)</span></div><div class="chart-progress-rail"><div class="chart-progress-fill" style="width: ${tagPercentage}%"></div></div>`;
+                    item.innerHTML = '<div class="chart-progress-labels"><span>' + tag + '</span><span style="color: var(--accent-orange); font-weight:700;">' + tagPercentage + '% (' + tagMinutes + ' Min)</span></div><div class="chart-progress-rail"><div class="chart-progress-fill" style="width: ' + tagPercentage + '%"></div></div>';
                     barsContainer.appendChild(item);
                 });
             }
@@ -1290,6 +1418,26 @@
             setTimeout(() => document.getElementById('modal-habit-name').focus(), 100);
         }
         function closeHabitModal() { document.getElementById('habit-modal').classList.remove('modal-open'); }
+
+        function openGoalsSettingsModal() {
+            document.getElementById('goals-daily-input').value = studyGoals.daily || 4;
+            document.getElementById('goals-weekly-input').value = studyGoals.weekly || 28;
+            document.getElementById('goals-monthly-input').value = studyGoals.monthly || 120;
+            document.getElementById('goals-settings-modal').classList.add('modal-open');
+        }
+        function closeGoalsSettingsModal() { document.getElementById('goals-settings-modal').classList.remove('modal-open'); }
+        function saveGoalsSettings() {
+            let daily = parseFloat(document.getElementById('goals-daily-input').value);
+            let weekly = parseFloat(document.getElementById('goals-weekly-input').value);
+            let monthly = parseFloat(document.getElementById('goals-monthly-input').value);
+            if (daily > 0) studyGoals.daily = daily;
+            if (weekly > 0) studyGoals.weekly = weekly;
+            if (monthly > 0) studyGoals.monthly = monthly;
+            dbSet('studyGoals', studyGoals);
+            recalculateAndRenderDashboard();
+            closeGoalsSettingsModal();
+            showToast('Goals Saved!', '', 'success');
+        }
         function saveHabitFromModal() {
             const name = document.getElementById('modal-habit-name').value.trim();
             if (!name) return;
