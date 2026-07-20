@@ -457,21 +457,21 @@
             <button class="tab-trigger" onclick="activateScreen('admin-tab', 'screen-admin')" id="nav-btn-admin" style="display:none;">Admin ⚙️</button>
         </div>
         <div class="header-actions">
-            <button class="lang-button" onclick="toggleLanguageSystem()" id="lang-toggle">العربية</button>
-            <div class="user-badge" id="user-badge" style="display:none;" onclick="confirmSignOut()" title="Sign out" oncontextmenu="showAccountMenu(event)">
+            <button class="export-btn" onclick="openGoalsSettingsModal()" id="btn-goals-settings" title="Study Goals">🎯 Goals</button>
+            <div class="user-badge" id="user-badge" style="display:none;" onclick="toggleAccountMenu(event)" title="Account Options">
                 <img id="user-badge-photo" src="" alt="">
                 <span id="user-badge-name"></span>
-                <div class="account-dropdown-hint" id="account-dropdown-hint">Right-click for options</div>
+                <div class="account-dropdown-hint" id="account-dropdown-hint">Click for options</div>
                 <div class="account-dropdown-menu" id="account-dropdown-menu">
-                    <div class="account-menu-item" onclick="event.stopPropagation(); openGoalsSettingsModal(); hideAccountMenu();">
-                        <span class="account-menu-icon">🎯</span>
-                        <span class="account-menu-label" id="menu-goals-label">Goals</span>
+                    <div class="account-menu-item" onclick="event.stopPropagation(); toggleLanguageSystem(); hideAccountMenu();">
+                        <span class="account-menu-icon">🌐</span>
+                        <span class="account-menu-label" id="menu-lang-label">Language</span>
                     </div>
+                    <div class="account-menu-divider"></div>
                     <div class="account-menu-item" onclick="event.stopPropagation(); exportData(); hideAccountMenu();">
                         <span class="account-menu-icon">📥</span>
                         <span class="account-menu-label" id="menu-export-label">Export</span>
                     </div>
-                    <div class="account-menu-divider"></div>
                     <div class="account-menu-item danger" onclick="event.stopPropagation(); clearAllData(); hideAccountMenu();">
                         <span class="account-menu-icon">🗑</span>
                         <span class="account-menu-label" id="menu-clear-label">Clear All Data</span>
@@ -783,8 +783,8 @@
                 goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
                 goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
                 exportBtn: "Export", clearBtn: "Clear All Data",
-                menuGoalsLabel: "Goals", menuExportLabel: "Export", menuClearLabel: "Clear All Data", menuSignOutLabel: "Sign Out",
-                menuHint: "Right-click for options",
+                menuGoalsLabel: "Goals", menuLangLabel: "Language", menuExportLabel: "Export", menuClearLabel: "Clear All Data", menuSignOutLabel: "Sign Out",
+                menuHint: "Click for options",
                 editSessionTitle: "Edit Session",
                 addManualSessionTitle: "Add Study Session",
                 manualDateLbl: "Date",
@@ -828,8 +828,8 @@
                 goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
                 goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
                 exportBtn: "تصدير", clearBtn: "حذف البيانات",
-                menuGoalsLabel: "الأهداف", menuExportLabel: "تصدير", menuClearLabel: "حذف البيانات", menuSignOutLabel: "تسجيل الخروج",
-                menuHint: "كليك يمين للخيارات",
+                menuGoalsLabel: "الأهداف", menuLangLabel: "اللغة", menuExportLabel: "تصدير", menuClearLabel: "حذف البيانات", menuSignOutLabel: "تسجيل الخروج",
+                menuHint: "اضغط للخيارات",
                 editSessionTitle: "تعديل الجلسة",
                 addManualSessionTitle: "إضافة جلسة دراسية",
                 manualDateLbl: "التاريخ",
@@ -1313,8 +1313,10 @@
             document.getElementById('tag-modal-save').innerText = d.tagModalSave;
             document.getElementById('btn-clear-all').innerText = d.clearBtn;
             document.getElementById('btn-export').innerText = '📥 ' + d.exportBtn;
-            const menuGoals = document.getElementById('menu-goals-label');
-            if (menuGoals) menuGoals.innerText = d.menuGoalsLabel;
+            const goalsSettingsBtn = document.getElementById('btn-goals-settings');
+            if (goalsSettingsBtn) goalsSettingsBtn.innerText = '🎯 ' + (d.menuGoalsLabel || 'Goals');
+            const menuLang = document.getElementById('menu-lang-label');
+            if (menuLang) menuLang.innerText = d.menuLangLabel;
             const menuExport = document.getElementById('menu-export-label');
             if (menuExport) menuExport.innerText = d.menuExportLabel;
             const menuClear = document.getElementById('menu-clear-label');
