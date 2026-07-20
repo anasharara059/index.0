@@ -299,7 +299,112 @@
         .user-badge img { width: 26px; height: 26px; border-radius: 50%; }
         .user-badge span { font-size: 12px; color: var(--text-light); max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        @media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
+
+        .account-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: linear-gradient(160deg, #141622, #1a1c2e);
+            border: 1px solid var(--border-soft);
+            border-radius: 16px;
+            padding: 8px 0;
+            min-width: 200px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            z-index: 10000;
+            display: none;
+            opacity: 0;
+            transform: translateY(-8px) scale(0.95);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+        }
+        html[dir="rtl"] .account-dropdown-menu { right: auto; left: 0; }
+        .account-dropdown-menu.is-visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .account-dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-purple));
+            opacity: 0.6;
+        }
+        .account-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+        .account-menu-item:hover {
+            background: rgba(255, 115, 0, 0.08);
+            color: var(--accent-orange);
+        }
+        .account-menu-item.danger:hover {
+            background: rgba(231, 76, 60, 0.08);
+            color: var(--danger);
+        }
+        .account-menu-icon {
+            font-size: 16px;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .account-menu-label {
+            flex: 1;
+        }
+        .account-menu-divider {
+            height: 1px;
+            background: var(--border-soft);
+            margin: 6px 12px;
+        }
+        .user-badge {
+            position: relative;
+            cursor: pointer;
+        }
+        .user-badge::after {
+            content: '▾';
+            font-size: 10px;
+            color: var(--text-gray);
+            margin-left: 4px;
+            transition: transform 0.2s;
+        }
+        html[dir="rtl"] .user-badge::after {
+            margin-left: 0;
+            margin-right: 4px;
+        }
+        .user-badge:hover::after {
+            color: var(--accent-orange);
+        }
+        .account-dropdown-hint {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            right: 0;
+            font-size: 10px;
+            color: var(--text-gray);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-soft);
+        }
+        .user-badge:hover .account-dropdown-hint {
+            opacity: 1;
+        }
+                @media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
     </style>
 <base target="_blank">
 <base target="_blank">
@@ -352,13 +457,31 @@
             <button class="tab-trigger" onclick="activateScreen('admin-tab', 'screen-admin')" id="nav-btn-admin" style="display:none;">Admin ⚙️</button>
         </div>
         <div class="header-actions">
-            <button class="export-btn" onclick="openGoalsSettingsModal()" id="btn-goals-settings" title="Study Goals">🎯 Goals</button>
-            <button class="export-btn" onclick="exportData()" id="btn-export" title="Export Data">📥 Export</button>
-            <button class="clear-btn" onclick="clearAllData()" id="btn-clear-all">Clear All Data</button>
             <button class="lang-button" onclick="toggleLanguageSystem()" id="lang-toggle">العربية</button>
-            <div class="user-badge" id="user-badge" style="display:none;" onclick="confirmSignOut()" title="Sign out">
+            <div class="user-badge" id="user-badge" style="display:none;" onclick="confirmSignOut()" title="Sign out" oncontextmenu="showAccountMenu(event)">
                 <img id="user-badge-photo" src="" alt="">
                 <span id="user-badge-name"></span>
+                <div class="account-dropdown-hint" id="account-dropdown-hint">Right-click for options</div>
+                <div class="account-dropdown-menu" id="account-dropdown-menu">
+                    <div class="account-menu-item" onclick="event.stopPropagation(); openGoalsSettingsModal(); hideAccountMenu();">
+                        <span class="account-menu-icon">🎯</span>
+                        <span class="account-menu-label" id="menu-goals-label">Goals</span>
+                    </div>
+                    <div class="account-menu-item" onclick="event.stopPropagation(); exportData(); hideAccountMenu();">
+                        <span class="account-menu-icon">📥</span>
+                        <span class="account-menu-label" id="menu-export-label">Export</span>
+                    </div>
+                    <div class="account-menu-divider"></div>
+                    <div class="account-menu-item danger" onclick="event.stopPropagation(); clearAllData(); hideAccountMenu();">
+                        <span class="account-menu-icon">🗑</span>
+                        <span class="account-menu-label" id="menu-clear-label">Clear All Data</span>
+                    </div>
+                    <div class="account-menu-divider"></div>
+                    <div class="account-menu-item" onclick="event.stopPropagation(); confirmSignOut(); hideAccountMenu();">
+                        <span class="account-menu-icon">🚪</span>
+                        <span class="account-menu-label" id="menu-signout-label">Sign Out</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -660,6 +783,8 @@
                 goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
                 goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
                 exportBtn: "Export", clearBtn: "Clear All Data",
+                menuGoalsLabel: "Goals", menuExportLabel: "Export", menuClearLabel: "Clear All Data", menuSignOutLabel: "Sign Out",
+                menuHint: "Right-click for options",
                 editSessionTitle: "Edit Session",
                 addManualSessionTitle: "Add Study Session",
                 manualDateLbl: "Date",
@@ -703,6 +828,8 @@
                 goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
                 goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
                 exportBtn: "تصدير", clearBtn: "حذف البيانات",
+                menuGoalsLabel: "الأهداف", menuExportLabel: "تصدير", menuClearLabel: "حذف البيانات", menuSignOutLabel: "تسجيل الخروج",
+                menuHint: "كليك يمين للخيارات",
                 editSessionTitle: "تعديل الجلسة",
                 addManualSessionTitle: "إضافة جلسة دراسية",
                 manualDateLbl: "التاريخ",
@@ -1186,6 +1313,16 @@
             document.getElementById('tag-modal-save').innerText = d.tagModalSave;
             document.getElementById('btn-clear-all').innerText = d.clearBtn;
             document.getElementById('btn-export').innerText = '📥 ' + d.exportBtn;
+            const menuGoals = document.getElementById('menu-goals-label');
+            if (menuGoals) menuGoals.innerText = d.menuGoalsLabel;
+            const menuExport = document.getElementById('menu-export-label');
+            if (menuExport) menuExport.innerText = d.menuExportLabel;
+            const menuClear = document.getElementById('menu-clear-label');
+            if (menuClear) menuClear.innerText = d.menuClearLabel;
+            const menuSignOut = document.getElementById('menu-signout-label');
+            if (menuSignOut) menuSignOut.innerText = d.menuSignOutLabel;
+            const menuHint = document.getElementById('account-dropdown-hint');
+            if (menuHint) menuHint.innerText = d.menuHint;
             document.getElementById('goals-header-title').innerText = d.goalsHeaderTitle;
             document.getElementById('goals-add-btn-txt').innerText = d.goalsAddBtnTxt;
             document.getElementById('goals-empty-state').innerText = d.goalsEmptyState;
