@@ -319,7 +319,26 @@
                 <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.6C29.7 35 27 36 24 36c-5.2 0-9.6-3.3-11.2-8l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.3-4.1 5.7l6.6 5.6C40.9 36.6 44 30.9 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
                 <span id="google-signin-label">Sign in with Google</span>
             </button>
-            <div class="auth-guest-link" onclick="continueAsGuest()" id="auth-guest-link">Continue without an account</div>
+            </div>
+    </div>
+
+    <div class="auth-overlay hidden" id="pending-approval-overlay">
+        <div class="auth-card">
+            <div class="auth-logo">INDEX</div>
+            <div style="font-size:40px; margin-bottom: 10px;">⏳</div>
+            <h3 style="color: var(--text-light); margin-bottom: 8px; font-size: 16px;">Waiting for approval</h3>
+            <div class="auth-subtitle">Your account request has been sent to the site owner. You'll get access automatically once it's approved — no need to refresh.</div>
+            <button class="google-signin-btn" onclick="confirmSignOut()" style="background: transparent; border: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button>
+        </div>
+    </div>
+
+    <div class="auth-overlay hidden" id="access-revoked-overlay">
+        <div class="auth-card">
+            <div class="auth-logo">INDEX</div>
+            <div style="font-size:40px; margin-bottom: 10px;">🚫</div>
+            <h3 style="color: var(--text-light); margin-bottom: 8px; font-size: 16px;">Access revoked</h3>
+            <div class="auth-subtitle">The site owner has revoked access for this account.</div>
+            <button class="google-signin-btn" onclick="confirmSignOut()" style="background: transparent; border: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button>
         </div>
     </div>
 
@@ -330,6 +349,7 @@
             <button class="tab-trigger" onclick="activateScreen('analysis-tab', 'screen-analysis')" id="nav-btn-analysis">Analysis</button>
             <button class="tab-trigger" onclick="activateScreen('goals-tab', 'screen-goals')" id="nav-btn-goals">Goals</button>
             <button class="tab-trigger" onclick="activateScreen('habits-tab', 'screen-habits')" id="nav-btn-habits">Habits</button>
+            <button class="tab-trigger" onclick="activateScreen('admin-tab', 'screen-admin')" id="nav-btn-admin" style="display:none;">Admin ⚙️</button>
         </div>
         <div class="header-actions">
             <button class="export-btn" onclick="openGoalsSettingsModal()" id="btn-goals-settings" title="Study Goals">🎯 Goals</button>
@@ -477,6 +497,16 @@
                 </div>
                 <div class="habits-cards-grid" id="habits-grid-wrapper"></div>
                 <div class="empty-state-box" id="habits-empty-state" style="display:none;">No habits yet — start tracking one!</div>
+            </div>
+        </div>
+        <div class="screen-view glass-card" id="screen-admin">
+            <div class="dashboard-scaled-panel">
+                <div class="dash-section-header section-header-with-action">
+                    <span>User Access Requests</span>
+                    <span id="admin-pending-count" style="font-size:12px; color: var(--warning);"></span>
+                </div>
+                <div id="admin-access-list"></div>
+                <div class="empty-state-box" id="admin-empty-state" style="display:none;">No sign-up requests yet.</div>
             </div>
         </div>
     </div>
@@ -833,6 +863,11 @@
         const DB_STORE = 'appData';
         let localCacheDb = null;
 
+        // Accounts listed here skip the approval queue entirely and can see the Admin tab.
+        const ADMIN_EMAILS = ['anasharara059@gmail.com'];
+        const ACCESS_REF = rtdb.ref('indexStudyAssistant/access');
+        let myAccessListenerRef = null;
+
         function signInWithGoogle() {
             auth.signInWithPopup(googleAuthProvider).catch((err) => {
                 console.error('Sign-in error:', err);
@@ -840,79 +875,128 @@
             });
         }
 
-        function continueAsGuest() {
-            currentUser = null;
-            currentUserNamespace = 'guest';
-            APP_REF = rtdb.ref('indexStudyAssistant/appData');
-            document.getElementById('user-badge').style.display = 'none';
-            document.getElementById('auth-overlay').classList.add('hidden');
-            bootApp();
-        }
-
         function confirmSignOut() {
-            if (!currentUser) return;
-            if (confirm('Sign out of INDEX?')) auth.signOut();
+            if (myAccessListenerRef) { myAccessListenerRef.off(); myAccessListenerRef = null; }
+            auth.signOut().then(() => location.reload());
         }
 
-        // One-time recovery: the app used to store everyone's data in one shared
-        // location (indexStudyAssistant/appData) before accounts existed. The first
-        // time a given browser signs in, copy that old data into the new per-user
-        // path so nothing looks "lost". It never deletes the old copy.
-        async function migrateLegacyGuestDataIfNeeded(uid) {
-            const legacyRef = rtdb.ref('indexStudyAssistant/appData');
-            const newRef = rtdb.ref('indexStudyAssistant/users/' + uid + '/appData');
-            const migrationFlagKey = 'legacyMigration_' + uid;
-            try {
-                const alreadyMigrated = await localCacheGetRaw(migrationFlagKey);
-                if (alreadyMigrated) return;
-                const [legacySnap, newSnap] = await Promise.all([legacyRef.once('value'), newRef.once('value')]);
-                const legacyData = legacySnap.val();
-                const newData = newSnap.val();
-                const newIsEmpty = !newData || !newData.sessions || newData.sessions === '[]' || newData.sessions === 'null';
-                const legacyHasSessions = legacyData && legacyData.sessions && legacyData.sessions !== '[]' && legacyData.sessions !== 'null';
-                if (legacyHasSessions && newIsEmpty) {
-                    await newRef.set(legacyData);
-                    showToast('Data restored', 'Your previous study sessions were recovered into your account.', 'success', 5000);
-                }
-            } catch (err) {
-                console.error('Legacy migration check failed:', err);
-            } finally {
-                localCacheSetRaw(migrationFlagKey, true);
-            }
-        }
-        function localCacheSetRaw(key, value) { if (!localCacheDb) return; const tx = localCacheDb.transaction(DB_STORE, 'readwrite'); tx.objectStore(DB_STORE).put({ key: '_raw:' + key, value }); }
-        function localCacheGetRaw(key) {
-            return new Promise((resolve) => {
-                if (!localCacheDb) { resolve(undefined); return; }
-                const tx = localCacheDb.transaction(DB_STORE, 'readonly');
-                const req = tx.objectStore(DB_STORE).get('_raw:' + key);
-                req.onsuccess = () => resolve(req.result ? req.result.value : undefined);
-                req.onerror = () => resolve(undefined);
-            });
+        function hideAllAuthOverlays() {
+            document.getElementById('auth-overlay').classList.add('hidden');
+            document.getElementById('pending-approval-overlay').classList.add('hidden');
+            document.getElementById('access-revoked-overlay').classList.add('hidden');
         }
 
         auth.onAuthStateChanged(async (user) => {
             document.getElementById('auth-card-loading').style.display = 'none';
-            if (user) {
-                currentUser = user;
-                currentUserNamespace = user.uid;
-                APP_REF = rtdb.ref('indexStudyAssistant/users/' + user.uid + '/appData');
-                document.getElementById('auth-overlay').classList.add('hidden');
-                document.getElementById('user-badge').style.display = 'flex';
-                document.getElementById('user-badge-name').innerText = user.displayName || user.email || 'Account';
-                document.getElementById('user-badge-photo').src = user.photoURL || '';
-                await openLocalCache();
-                await migrateLegacyGuestDataIfNeeded(user.uid);
-                bootApp();
-            } else if (currentUserNamespace === 'guest' && APP_REF) {
-                // Already continuing as guest, nothing to do
-            } else if (appHasBooted) {
-                // A signed-in user just signed out mid-session — reload to a clean state
-                location.reload();
-            } else {
+            if (!user) {
+                hideAllAuthOverlays();
+                if (appHasBooted) { location.reload(); return; }
                 document.getElementById('auth-card-login').style.display = 'block';
+                document.getElementById('auth-overlay').classList.remove('hidden');
+                return;
             }
+
+            currentUser = user;
+            currentUserNamespace = user.uid;
+            APP_REF = rtdb.ref('indexStudyAssistant/users/' + user.uid + '/appData');
+            await openLocalCache();
+
+            const isAdmin = !!user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+            document.getElementById('user-badge').style.display = 'flex';
+            document.getElementById('user-badge-name').innerText = user.displayName || user.email || 'Account';
+            document.getElementById('user-badge-photo').src = user.photoURL || '';
+            document.getElementById('nav-btn-admin').style.display = isAdmin ? 'inline-block' : 'none';
+
+            const myAccessRef = ACCESS_REF.child(user.uid);
+
+            if (isAdmin) {
+                // Admins always have access; make sure their record reflects that.
+                await myAccessRef.set({
+                    email: user.email || '', displayName: user.displayName || '', photoURL: user.photoURL || '',
+                    status: 'approved', isAdmin: true, requestedAt: Date.now(), respondedAt: Date.now()
+                });
+                ACCESS_REF.on('value', renderAdminAccessList);
+                hideAllAuthOverlays();
+                bootApp();
+                return;
+            }
+
+            // Non-admin: listen live to this user's own access record so an approval
+            // or a revocation applies instantly, even mid-session, with no reload needed.
+            if (myAccessListenerRef) myAccessListenerRef.off();
+            myAccessListenerRef = myAccessRef;
+            myAccessRef.on('value', async (snap) => {
+                const record = snap.val();
+                if (!record) {
+                    await myAccessRef.set({
+                        email: user.email || '', displayName: user.displayName || '', photoURL: user.photoURL || '',
+                        status: 'pending', isAdmin: false, requestedAt: Date.now()
+                    });
+                    return; // the write above re-triggers this listener with the new record
+                }
+                if (record.status === 'approved') {
+                    hideAllAuthOverlays();
+                    bootApp();
+                } else if (record.status === 'banned') {
+                    hideAllAuthOverlays();
+                    document.getElementById('access-revoked-overlay').classList.remove('hidden');
+                    lockAppIfBooted();
+                } else {
+                    hideAllAuthOverlays();
+                    document.getElementById('pending-approval-overlay').classList.remove('hidden');
+                    lockAppIfBooted();
+                }
+            });
         });
+
+        function lockAppIfBooted() {
+            // If the app was already visible and access is revoked/pending mid-session, stop the timer and hide the UI underneath the overlay.
+            if (isClockRunning) pauseClock();
+        }
+
+        function renderAdminAccessList(snap) {
+            const data = snap.val() || {};
+            const listEl = document.getElementById('admin-access-list');
+            const emptyEl = document.getElementById('admin-empty-state');
+            const countEl = document.getElementById('admin-pending-count');
+            const entries = Object.entries(data).filter(([uid, rec]) => !rec.isAdmin);
+            entries.sort((a, b) => (b[1].requestedAt || 0) - (a[1].requestedAt || 0));
+            const pendingCount = entries.filter(([, rec]) => rec.status === 'pending').length;
+            countEl.innerText = pendingCount > 0 ? pendingCount + ' pending' : '';
+            if (entries.length === 0) { listEl.innerHTML = ''; emptyEl.style.display = 'block'; return; }
+            emptyEl.style.display = 'none';
+            listEl.innerHTML = entries.map(([uid, rec]) => {
+                const statusColor = rec.status === 'approved' ? 'var(--success)' : rec.status === 'banned' ? 'var(--danger)' : 'var(--warning)';
+                const requestedDate = rec.requestedAt ? new Date(rec.requestedAt).toLocaleString() : '';
+                let actions = '';
+                if (rec.status === 'pending') {
+                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">Approve</button>
+                               <button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">Reject</button>`;
+                } else if (rec.status === 'approved') {
+                    actions = `<button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">Kick / Ban</button>`;
+                } else if (rec.status === 'banned') {
+                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">Restore access</button>`;
+                }
+                return `<div class="glass-card" style="padding:14px 18px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${rec.photoURL || ''}" style="width:36px;height:36px;border-radius:50%;background:#222;">
+                        <div>
+                            <div style="font-size:13px; color:var(--text-light); font-weight:600;">${rec.displayName || '(no name)'}</div>
+                            <div style="font-size:11px; color:var(--text-gray);">${rec.email || ''}</div>
+                            <div style="font-size:10px; color:var(--text-gray);">Requested: ${requestedDate}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:11px; font-weight:700; color:${statusColor}; text-transform:uppercase;">${rec.status}</span>
+                        <div style="display:flex; gap:8px;">${actions}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function setAccessStatus(uid, status) {
+            ACCESS_REF.child(uid).update({ status, respondedAt: Date.now() });
+        }
 
         function openLocalCache() {
             return new Promise((resolve) => {
@@ -1044,6 +1128,7 @@
             }
             if (screenId === 'screen-goals') { document.getElementById('nav-btn-goals').classList.add('active'); renderGoalsScreen(); }
             if (screenId === 'screen-habits') { document.getElementById('nav-btn-habits').classList.add('active'); renderHabitsScreen(); }
+            if (screenId === 'screen-admin') { document.getElementById('nav-btn-admin').classList.add('active'); }
         }
 
         function toggleLanguageSystem() {
