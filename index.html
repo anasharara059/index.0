@@ -177,11 +177,6 @@
         .heatmap-container { display: grid; grid-template-columns: repeat(53, 1fr); gap: 3px; margin-top: 10px; }
         .heatmap-cell { aspect-ratio: 1; border-radius: 3px; background: rgba(255, 255, 255, 0.03); transition: all 0.3s; cursor: pointer; }
         .heatmap-cell:hover { transform: scale(1.3); z-index: 10; }
-        .heatmap-cell.level-1 { background: rgba(255, 115, 0, 0.2); }
-        .heatmap-cell.level-2 { background: rgba(255, 115, 0, 0.4); }
-        .heatmap-cell.level-3 { background: rgba(255, 115, 0, 0.6); }
-        .heatmap-cell.level-4 { background: rgba(255, 115, 0, 0.8); }
-        .heatmap-cell.level-5 { background: var(--accent-orange); box-shadow: 0 0 8px rgba(255, 115, 0, 0.5); }
         .sessions-table-wrapper { width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--border-soft); }
         .sessions-history-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .sessions-history-table th, .sessions-history-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-soft); }
@@ -283,6 +278,12 @@
         .shortcuts-hint { position: fixed; bottom: 20px; right: 20px; background: rgba(18, 20, 32, 0.9); border: 1px solid var(--border-soft); border-radius: 12px; padding: 12px 16px; font-size: 11px; color: var(--text-gray); z-index: 999; backdrop-filter: blur(10px); opacity: 0.6; transition: opacity 0.3s; }
         .shortcuts-hint:hover { opacity: 1; }
         .shortcuts-hint kbd { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border-soft); border-radius: 4px; padding: 2px 6px; font-size: 10px; font-family: monospace; color: var(--text-light); }
+        .weekly-day-row { transition: all 0.3s ease; }
+        .weekly-day-row:hover { background: rgba(255,255,255,0.02); border-radius: 8px; padding-left: 8px; padding-right: 8px; }
+        .stacked-segment { position: relative; cursor: pointer; }
+        .stacked-segment:hover { filter: brightness(1.2); }
+        .stacked-segment:hover::after { content: attr(data-tooltip); position: absolute; background: rgba(0,0,0,0.9); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 11px; white-space: nowrap; top: -35px; left: 50%; transform: translateX(-50%); z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
+
         @media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
     </style>
 <base target="_blank">
@@ -395,7 +396,7 @@
                 </div>
                 <div class="charts-container-box" style="margin-top:10px;">
                     <div class="charts-box-title">📅 Study Heatmap (Last 365 Days)</div>
-                    <div class="heatmap-container" id="study-heatmap"></div>
+                    <div id="study-heatmap" style="overflow-x:auto;padding:4px;"></div>
                 </div>
                 <div>
                     <div class="dash-section-header" id="hist-header-title" style="margin-top:25px;">Recent Sessions & Lectures Log</div>
@@ -670,6 +671,109 @@
         let habitsArray = [];
         let filteredSessions = [];
         let studyGoals = { daily: 4, weekly: 28, monthly: 120 };
+        let timerWorker = null;
+        let workerStartTime = null;
+        let workerPausedAccumulator = 0;
+        let workerLastPauseTime = null;
+
+        function initTimerWorker() {
+            const workerCode = `
+    let timer = null;
+    let startTime = null;
+    let pausedAccumulator = 0;
+    let lastPauseTime = null;
+    let isRunning = false;
+
+    self.onmessage = function(e) {
+        const data = e.data;
+
+        if (data.type === 'start') {
+            if (!isRunning) {
+                isRunning = true;
+                if (!startTime) {
+                    startTime = Date.now();
+                } else if (lastPauseTime) {
+                    pausedAccumulator += Date.now() - lastPauseTime;
+                    lastPauseTime = null;
+                }
+                if (timer) clearInterval(timer);
+                timer = setInterval(() => {
+                    self.postMessage({ type: 'tick', now: Date.now() });
+                }, 1000);
+            }
+        } else if (data.type === 'pause') {
+            isRunning = false;
+            lastPauseTime = Date.now();
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        } else if (data.type === 'stop') {
+            isRunning = false;
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+            startTime = null;
+            pausedAccumulator = 0;
+            lastPauseTime = null;
+        } else if (data.type === 'reset') {
+            startTime = null;
+            pausedAccumulator = 0;
+            lastPauseTime = null;
+            isRunning = false;
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        } else if (data.type === 'getState') {
+            self.postMessage({
+                type: 'state',
+                startTime: startTime,
+                pausedAccumulator: pausedAccumulator,
+                lastPauseTime: lastPauseTime,
+                isRunning: isRunning
+            });
+        }
+    };
+`;
+            const workerBlob = new Blob([workerCode], { type: 'application/javascript' });
+            timerWorker = new Worker(URL.createObjectURL(workerBlob));
+
+            timerWorker.onmessage = function(e) {
+                const data = e.data;
+                if (data.type === 'tick') {
+                    handleWorkerTick(data.now);
+                }
+            };
+        }
+
+        function handleWorkerTick(now) {
+            if (!isClockRunning) return;
+
+            const totalElapsedMs = now - workerStartTime - workerPausedAccumulator;
+            const totalElapsedSeconds = Math.floor(totalElapsedMs / 1000);
+
+            if (currentMode === 'stopwatch') {
+                runningMinutes = Math.floor(totalElapsedSeconds / 60);
+                runningSeconds = totalElapsedSeconds % 60;
+            } else {
+                const totalSetupSeconds = baseSetupMinutes * 60;
+                const remainingSeconds = totalSetupSeconds - totalElapsedSeconds;
+                runningMinutes = Math.floor(Math.max(0, remainingSeconds) / 60);
+                runningSeconds = Math.max(0, remainingSeconds) % 60;
+
+                if (remainingSeconds <= 0) {
+                    stopAndSaveClock();
+                    return;
+                }
+            }
+
+            totalElapsedSecondsTracked = totalElapsedSeconds;
+            refreshTimerDisplay();
+            updateSessionBadge();
+        }
+
 
         const firebaseConfig = {
             apiKey: "AIzaSyBk6TreuE-mwRllaxXV1vJo6cbZ9iPC3zg",
@@ -757,6 +861,7 @@
                     const langBtn = document.getElementById('lang-toggle');
                     if (langBtn) langBtn.innerText = currentSystemLanguage === 'ar' ? 'English' : 'العربية';
                 } else { await dbSet('language', currentSystemLanguage); }
+                await loadCustomTagColors();
             } catch (err) { console.error('DB init failed:', err); }
         }
 
@@ -770,6 +875,19 @@
             let hash = 0;
             for (let i = 0; i < tag.length; i++) hash = tag.charCodeAt(i) + ((hash << 5) - hash);
             return genericColorPalette[Math.abs(hash) % genericColorPalette.length];
+        }
+
+        function formatMinutesToHM(minutes) {
+            const h = Math.floor(minutes / 60);
+            const m = minutes % 60;
+            if (h > 0 && m > 0) return `${h}h:${m.toString().padStart(2, '0')}m`;
+            if (h > 0) return `${h}h`;
+            return `${m}m`;
+        }
+
+        function formatHoursToHM(hours) {
+            const totalMinutes = Math.round(hours * 60);
+            return formatMinutesToHM(totalMinutes);
         }
 
         // Toast notifications
@@ -900,6 +1018,10 @@
             else if (mode === 'stopwatch') { document.getElementById('mb-stopwatch').classList.add('active'); baseSetupMinutes = 0; runningMinutes = 0; runningSeconds = 0; }
             else if (mode === 'pomodoro') { document.getElementById('mb-pomo').classList.add('active'); baseSetupMinutes = 25; runningMinutes = 25; runningSeconds = 0; }
             totalElapsedSecondsTracked = 0;
+            workerStartTime = null;
+            workerPausedAccumulator = 0;
+            workerLastPauseTime = null;
+            if (timerWorker) timerWorker.postMessage({ type: 'reset' });
             refreshTimerDisplay();
         }
 
@@ -911,26 +1033,23 @@
             document.getElementById('ctrl-start').classList.add('active');
             if (!currentSessionStartTimeStamp) currentSessionStartTimeStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             updateSessionBadge();
-            timerIntervalEngine = setInterval(() => {
-                if (currentMode === 'stopwatch') {
-                    runningSeconds++;
-                    totalElapsedSecondsTracked++;
-                    if (runningSeconds >= 60) { runningMinutes++; runningSeconds = 0; }
-                } else {
-                    if (runningSeconds === 0) {
-                        if (runningMinutes === 0) { clearInterval(timerIntervalEngine); isClockRunning = false; stopAndSaveClock(); return; }
-                        runningMinutes--; runningSeconds = 59;
-                    } else { runningSeconds--; }
-                    totalElapsedSecondsTracked++;
-                }
-                refreshTimerDisplay();
-                updateSessionBadge();
-            }, 1000);
+
+            if (!timerWorker) initTimerWorker();
+
+            if (!workerStartTime) {
+                workerStartTime = Date.now();
+            } else if (workerLastPauseTime) {
+                workerPausedAccumulator += Date.now() - workerLastPauseTime;
+                workerLastPauseTime = null;
+            }
+
+            timerWorker.postMessage({ type: 'start' });
         }
 
         function pauseClock() {
-            clearInterval(timerIntervalEngine);
             isClockRunning = false;
+            workerLastPauseTime = Date.now();
+            if (timerWorker) timerWorker.postMessage({ type: 'pause' });
             document.getElementById('timer-numbers').classList.remove('running');
             document.getElementById('timer-numbers').classList.add('paused');
             document.getElementById('ctrl-start').classList.remove('active');
@@ -954,6 +1073,10 @@
             }
             totalElapsedSecondsTracked = 0;
             currentSessionStartTimeStamp = null;
+            workerStartTime = null;
+            workerPausedAccumulator = 0;
+            workerLastPauseTime = null;
+            if (timerWorker) timerWorker.postMessage({ type: 'reset' });
             document.getElementById('session-info-badge').style.display = 'none';
             recalculateAndRenderDashboard();
             renderHistoryGridWithPagination();
@@ -961,7 +1084,11 @@
         }
 
         function stopAndSaveClock() {
-            pauseClock();
+            isClockRunning = false;
+            if (timerWorker) timerWorker.postMessage({ type: 'stop' });
+            workerStartTime = null;
+            workerPausedAccumulator = 0;
+            workerLastPauseTime = null;
             saveCurrentSessionRecord();
             switchMode(currentMode);
         }
@@ -1039,7 +1166,17 @@
             currentTagsList.forEach(tag => {
                 const chip = document.createElement('div');
                 chip.className = `mini-tag-chip ${tag === currentlySelectedTag ? 'selected' : ''}`;
+                chip.title = currentSystemLanguage === 'ar' ? 'انقر لتختار · انقر بزر الماوس الأيمن لتغيير اللون' : 'Click to select · Right-click to change color';
                 chip.onclick = () => selectActiveTag(tag);
+                chip.oncontextmenu = (e) => { e.preventDefault(); openTagColorModal(tag); };
+                // Long press for mobile
+                let pressTimer;
+                chip.addEventListener('touchstart', (e) => {
+                    pressTimer = setTimeout(() => { e.preventDefault(); openTagColorModal(tag); }, 600);
+                });
+                chip.addEventListener('touchend', () => clearTimeout(pressTimer));
+                chip.addEventListener('touchmove', () => clearTimeout(pressTimer));
+
                 const colorDot = document.createElement('span');
                 colorDot.className = 'tag-color-dot';
                 colorDot.style.backgroundColor = getTagColor(tag);
@@ -1081,8 +1218,8 @@
                 if (archivedSessionsArray.some(s => s.date === iso)) { streak++; cursor.setDate(cursor.getDate() - 1); }
                 else break;
             }
-            document.getElementById('qs-today').innerText = (todayMinutes / 60).toFixed(1) + 'h';
-            document.getElementById('qs-week').innerText = (weekMinutes / 60).toFixed(1) + 'h';
+            document.getElementById('qs-today').innerText = formatMinutesToHM(todayMinutes);
+            document.getElementById('qs-week').innerText = formatMinutesToHM(weekMinutes);
             document.getElementById('qs-sessions').innerText = archivedSessionsArray.length;
             document.getElementById('qs-streak').innerText = streak;
         }
@@ -1114,11 +1251,11 @@
             let weeklyHours = (weekMinutes / 60).toFixed(1);
             let monthlyHours = (monthMinutes / 60).toFixed(1);
             let dayValEl = document.getElementById('m-day-val');
-            if (dayValEl) dayValEl.innerText = dailyHours;
+            if (dayValEl) dayValEl.innerText = formatMinutesToHM(todayMinutes);
             let weekValEl = document.getElementById('m-week-val');
-            if (weekValEl) weekValEl.innerText = weeklyHours;
+            if (weekValEl) weekValEl.innerText = formatMinutesToHM(weekMinutes);
             let monthValEl = document.getElementById('m-month-val');
-            if (monthValEl) monthValEl.innerText = monthlyHours;
+            if (monthValEl) monthValEl.innerText = formatMinutesToHM(monthMinutes);
             const DAILY_GOAL = studyGoals.daily || 4;
             const WEEKLY_GOAL = studyGoals.weekly || 28;
             const MONTHLY_GOAL = studyGoals.monthly || 120;
@@ -1137,16 +1274,16 @@
                 let dh = parseFloat(dailyHours), yh = parseFloat(yesterdayHours);
                 if (yh > 0 && dh > yh) {
                     let pctUp = Math.round(((dh - yh) / yh) * 100);
-                    let diff = (dh - yh).toFixed(1);
-                    daySubEl.innerText = (currentSystemLanguage === 'ar' ? pctUp + '% ' + diff + 'h ' : pctUp + '% better than yesterday (+' + diff + 'h)');
+                    let diffMin = Math.round((dh - yh) * 60);
+                    daySubEl.innerText = (currentSystemLanguage === 'ar' ? pctUp + '% ' + formatMinutesToHM(diffMin) + ' ' : pctUp + '% better than yesterday (+' + formatMinutesToHM(diffMin) + ')');
                     dayParent.className = 'subtext green';
                 } else if (dh >= DAILY_GOAL) {
-                    let over = (dh - DAILY_GOAL).toFixed(1);
-                    daySubEl.innerText = (currentSystemLanguage === 'ar' ? over + 'h ' : 'Goal exceeded by ' + over + ' hrs!');
+                    let overMin = Math.round((dh - DAILY_GOAL) * 60);
+                    daySubEl.innerText = (currentSystemLanguage === 'ar' ? formatMinutesToHM(overMin) + ' ' : 'Goal exceeded by ' + formatMinutesToHM(overMin) + '!');
                     dayParent.className = 'subtext green';
                 } else {
-                    let rem = Math.max(0, (DAILY_GOAL - dh).toFixed(1));
-                    daySubEl.innerText = (currentSystemLanguage === 'ar' ? rem + 'h ' : rem + ' hrs left to daily goal');
+                    let remMin = Math.max(0, Math.round((DAILY_GOAL - dh) * 60));
+                    daySubEl.innerText = (currentSystemLanguage === 'ar' ? formatMinutesToHM(remMin) + ' ' : formatMinutesToHM(remMin) + ' left to daily goal');
                     dayParent.className = 'subtext orange';
                 }
             }
@@ -1155,12 +1292,12 @@
                 let weekParent = weekSubEl.parentElement;
                 let wh = parseFloat(weeklyHours);
                 if (wh >= WEEKLY_GOAL) {
-                    let over = (wh - WEEKLY_GOAL).toFixed(1);
-                    weekSubEl.innerText = (currentSystemLanguage === 'ar' ? over + 'h ' : 'Weekly goal exceeded by ' + over + ' hrs!');
+                    let overMin = Math.round((wh - WEEKLY_GOAL) * 60);
+                    weekSubEl.innerText = (currentSystemLanguage === 'ar' ? formatMinutesToHM(overMin) + ' ' : 'Weekly goal exceeded by ' + formatMinutesToHM(overMin) + '!');
                     weekParent.className = 'subtext green';
                 } else {
-                    let rem = Math.max(0, (WEEKLY_GOAL - wh).toFixed(1));
-                    weekSubEl.innerText = (currentSystemLanguage === 'ar' ? rem + 'h ' : rem + ' hrs left to weekly goal');
+                    let remMin = Math.max(0, Math.round((WEEKLY_GOAL - wh) * 60));
+                    weekSubEl.innerText = (currentSystemLanguage === 'ar' ? formatMinutesToHM(remMin) + ' ' : formatMinutesToHM(remMin) + ' left to weekly goal');
                     weekParent.className = 'subtext orange';
                 }
             }
@@ -1169,12 +1306,12 @@
                 let monthParent = monthSubEl.parentElement;
                 let mh = parseFloat(monthlyHours);
                 if (mh >= MONTHLY_GOAL) {
-                    let over = (mh - MONTHLY_GOAL).toFixed(1);
-                    monthSubEl.innerText = (currentSystemLanguage === 'ar' ? over + 'h ' : 'Monthly goal exceeded by ' + over + ' hrs!');
+                    let overMin = Math.round((mh - MONTHLY_GOAL) * 60);
+                    monthSubEl.innerText = (currentSystemLanguage === 'ar' ? formatMinutesToHM(overMin) + ' ' : 'Monthly goal exceeded by ' + formatMinutesToHM(overMin) + '!');
                     monthParent.className = 'subtext green';
                 } else {
-                    let rem = Math.max(0, (MONTHLY_GOAL - mh).toFixed(1));
-                    monthSubEl.innerText = (currentSystemLanguage === 'ar' ? rem + 'h ' : rem + ' hrs left to monthly goal');
+                    let remMin = Math.max(0, Math.round((MONTHLY_GOAL - mh) * 60));
+                    monthSubEl.innerText = (currentSystemLanguage === 'ar' ? formatMinutesToHM(remMin) + ' ' : formatMinutesToHM(remMin) + ' left to monthly goal');
                     monthParent.className = 'subtext gray';
                 }
             }
@@ -1193,87 +1330,383 @@
             if (typeof renderWeeklySegmentedChart === "function") renderWeeklySegmentedChart();
         }
 
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        function getStartOfWeek(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Monday as first day
+            d.setDate(diff);
+            d.setHours(0, 0, 0, 0);
+            return d;
+        }
+
         function renderWeeklySegmentedChart() {
             const holder = document.getElementById('weekly-chart-holder');
             holder.innerHTML = '';
-            const weekdaysArabic = ["السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
-            const weekdaysEnglish = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
-            let weeklyDataArray = [
-                { index: 0, dayEN: "Sat", dayAR: "السبت", totalTime: 0, segments: [] },
-                { index: 1, dayEN: "Sun", dayAR: "الأحد", totalTime: 0, segments: [] },
-                { index: 2, dayEN: "Mon", dayAR: "الاثنين", totalTime: 0, segments: [] },
-                { index: 3, dayEN: "Tue", dayAR: "الثلاثاء", totalTime: 0, segments: [] },
-                { index: 4, dayEN: "Wed", dayAR: "الأربعاء", totalTime: 0, segments: [] },
-                { index: 5, dayEN: "Thu", dayAR: "الخميس", totalTime: 0, segments: [] },
-                { index: 6, dayEN: "Fri", dayAR: "الجمعة", totalTime: 0, segments: [] }
-            ];
+
+            const weekdaysArabic = ["الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"];
+            const weekdaysEnglish = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+            // Get current week (Week 30 of 2026)
+            const now = new Date();
+            const currentWeekNum = getWeekNumber(now);
+            const currentYear = now.getFullYear();
+            const weekStart = getStartOfWeek(now);
+
+            // Add week header
+            const weekHeader = document.createElement('div');
+            weekHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border-soft);';
+            weekHeader.innerHTML = `
+                <div style="font-size:14px;font-weight:700;color:var(--text-light);">
+                    ${currentSystemLanguage === 'ar' ? 'الأسبوع' : 'Week'} ${currentWeekNum}, ${currentYear}
+                </div>
+                <div style="font-size:11px;color:var(--text-gray);">
+                    ${weekStart.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric' })} - 
+                    ${new Date(weekStart.getTime() + 6 * 86400000).toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric' })}
+                </div>
+            `;
+            holder.appendChild(weekHeader);
+
+            let weeklyDataArray = [];
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(weekStart);
+                dayDate.setDate(dayDate.getDate() + i);
+                weeklyDataArray.push({
+                    index: i,
+                    date: dayDate,
+                    dateISO: dayDate.toISOString().split('T')[0],
+                    dayEN: weekdaysEnglish[i],
+                    dayAR: weekdaysArabic[i],
+                    totalTime: 0,
+                    segments: [],
+                    isToday: dayDate.toISOString().split('T')[0] === now.toISOString().split('T')[0]
+                });
+            }
+
+            // Filter sessions for current week only
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 7);
+
             archivedSessionsArray.forEach(session => {
-                let sDate = new Date(session.date);
-                let dayNum = sDate.getDay();
-                let mappedIndex = dayNum === 6 ? 0 : dayNum + 1;
-                let minsVal = parseInt(session.duration) || 0;
-                let dayObj = weeklyDataArray[mappedIndex];
-                dayObj.totalTime += minsVal;
-                let seg = dayObj.segments.find(s => s.tag === session.tag);
-                if (seg) seg.time += minsVal;
-                else dayObj.segments.push({ tag: session.tag, time: minsVal });
+                const sDate = new Date(session.date + 'T00:00:00');
+                if (sDate >= weekStart && sDate < weekEnd) {
+                    const dayIndex = Math.floor((sDate - weekStart) / 86400000);
+                    if (dayIndex >= 0 && dayIndex < 7) {
+                        const minsVal = parseInt(session.duration) || 0;
+                        const dayObj = weeklyDataArray[dayIndex];
+                        dayObj.totalTime += minsVal;
+                        let seg = dayObj.segments.find(s => s.tag === session.tag);
+                        if (seg) seg.time += minsVal;
+                        else dayObj.segments.push({ tag: session.tag, time: minsVal });
+                    }
+                }
             });
+
+            // Find max daily minutes for scaling
             let maxDailyMinutes = 0;
             weeklyDataArray.forEach(d => { if (d.totalTime > maxDailyMinutes) maxDailyMinutes = d.totalTime; });
-            if (maxDailyMinutes === 0) maxDailyMinutes = 60;
+            if (maxDailyMinutes === 0) maxDailyMinutes = 60; // Minimum scale
+
+            // Calculate total week study time
+            const totalWeekMinutes = weeklyDataArray.reduce((sum, d) => sum + d.totalTime, 0);
+
+            // Add total week summary
+            const weekSummary = document.createElement('div');
+            weekSummary.style.cssText = 'display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;';
+            weekSummary.innerHTML = `
+                <div style="background:rgba(255,115,0,0.1);border:1px solid rgba(255,115,0,0.2);border-radius:12px;padding:10px 18px;">
+                    <div style="font-size:11px;color:var(--text-gray);font-weight:600;">${currentSystemLanguage === 'ar' ? 'إجمالي الأسبوع' : 'Week Total'}</div>
+                    <div style="font-size:20px;font-weight:800;color:var(--accent-orange);">${formatMinutesToHM(totalWeekMinutes)}</div>
+                </div>
+                <div style="background:rgba(130,0,255,0.1);border:1px solid rgba(130,0,255,0.2);border-radius:12px;padding:10px 18px;">
+                    <div style="font-size:11px;color:var(--text-gray);font-weight:600;">${currentSystemLanguage === 'ar' ? 'الأيام النشطة' : 'Active Days'}</div>
+                    <div style="font-size:20px;font-weight:800;color:var(--accent-purple);">${weeklyDataArray.filter(d => d.totalTime > 0).length}/7</div>
+                </div>
+            `;
+            holder.appendChild(weekSummary);
+
+            // Render each day
             weeklyDataArray.forEach(day => {
                 const dayRow = document.createElement('div');
                 dayRow.className = 'weekly-day-row';
-                const label = document.createElement('div');
-                label.className = 'weekly-day-label';
-                label.innerText = currentSystemLanguage === 'ar' ? day.dayAR : day.dayEN;
-                const barTrack = document.createElement('div');
-                barTrack.className = 'weekly-stacked-track';
-                let trackOverallWidthPercent = (day.totalTime / maxDailyMinutes) * 100;
-                barTrack.style.width = trackOverallWidthPercent > 0 ? `${trackOverallWidthPercent}%` : '5%';
-                day.segments.forEach(segment => {
-                    let segmentPercent = day.totalTime > 0 ? (segment.time / day.totalTime) * 100 : 0;
-                    const segBlock = document.createElement('div');
-                    segBlock.className = 'stacked-segment';
-                    segBlock.style.width = `${segmentPercent}%`;
-                    segBlock.style.backgroundColor = getTagColor(segment.tag);
-                    segBlock.setAttribute('data-tooltip', `${segment.tag}: ${segment.time} Min`);
-                    barTrack.appendChild(segBlock);
-                });
-                dayRow.appendChild(label);
-                dayRow.appendChild(barTrack);
+                dayRow.style.cssText = 'display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.03);';
+
+                // Day label with date
+                const labelCol = document.createElement('div');
+                labelCol.style.cssText = 'width:70px;flex-shrink:0;';
+                const dayLabel = document.createElement('div');
+                dayLabel.className = 'weekly-day-label';
+                dayLabel.style.cssText = 'font-size:13px;font-weight:700;color:' + (day.isToday ? 'var(--accent-orange)' : 'var(--text-light)') + ';';
+                dayLabel.innerText = currentSystemLanguage === 'ar' ? day.dayAR : day.dayEN;
+                const dateLabel = document.createElement('div');
+                dateLabel.style.cssText = 'font-size:10px;color:var(--text-gray);margin-top:2px;';
+                dateLabel.innerText = day.date.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { month: 'numeric', day: 'numeric' });
+                labelCol.appendChild(dayLabel);
+                labelCol.appendChild(dateLabel);
+
+                // Content column
+                const contentCol = document.createElement('div');
+                contentCol.style.cssText = 'flex:1;min-width:0;';
+
+                if (day.totalTime === 0) {
+                    // No study data for this day
+                    const noData = document.createElement('div');
+                    noData.style.cssText = 'color:var(--text-gray);font-size:12px;font-style:italic;padding:8px 0;';
+                    noData.innerText = currentSystemLanguage === 'ar' ? 'لا توجد جلسات' : 'No sessions';
+                    contentCol.appendChild(noData);
+                } else {
+                    // Stacked bar showing tags with percentages
+                    const barTrack = document.createElement('div');
+                    barTrack.className = 'weekly-stacked-track';
+                    barTrack.style.cssText = 'height:28px;border-radius:14px;overflow:hidden;display:flex;width:100%;background:rgba(255,255,255,0.03);';
+
+                    day.segments.forEach(segment => {
+                        const segmentPercent = day.totalTime > 0 ? (segment.time / day.totalTime) * 100 : 0;
+                        const segBlock = document.createElement('div');
+                        segBlock.style.cssText = `height:100%;transition:width 0.5s ease;position:relative;background-color:${getTagColor(segment.tag)};width:${segmentPercent}%;`;
+                        segBlock.setAttribute('data-tooltip', `${segment.tag}: ${segment.time} Min (${Math.round(segmentPercent)}%)`);
+
+                        // Show percentage on the bar if it's wide enough
+                        if (segmentPercent > 15) {
+                            const pctLabel = document.createElement('span');
+                            pctLabel.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.5);';
+                            pctLabel.innerText = Math.round(segmentPercent) + '%';
+                            segBlock.appendChild(pctLabel);
+                        }
+
+                        barTrack.appendChild(segBlock);
+                    });
+
+                    contentCol.appendChild(barTrack);
+
+                    // Tags legend below bar
+                    const tagsLegend = document.createElement('div');
+                    tagsLegend.style.cssText = 'display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;';
+
+                    day.segments.forEach(segment => {
+                        const segmentPercent = day.totalTime > 0 ? (segment.time / day.totalTime) * 100 : 0;
+                        const tagItem = document.createElement('div');
+                        tagItem.style.cssText = 'display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-gray);';
+                        tagItem.innerHTML = `
+                            <span style="width:8px;height:8px;border-radius:50%;background-color:${getTagColor(segment.tag)};display:inline-block;"></span>
+                            <span style="font-weight:600;color:var(--text-light);">${segment.tag}</span>
+                            <span>${formatMinutesToHM(segment.time)}</span>
+                            <span style="color:var(--accent-orange);font-weight:700;">(${Math.round(segmentPercent)}%)</span>
+                        `;
+                        tagsLegend.appendChild(tagItem);
+                    });
+
+                    // Total time for the day
+                    const dayTotal = document.createElement('div');
+                    dayTotal.style.cssText = 'font-size:11px;color:var(--text-gray);margin-top:6px;font-weight:600;';
+                    dayTotal.innerText = `${currentSystemLanguage === 'ar' ? 'الإجمالي' : 'Total'}: ${formatMinutesToHM(day.totalTime)}`;
+
+                    contentCol.appendChild(tagsLegend);
+                    contentCol.appendChild(dayTotal);
+                }
+
+                dayRow.appendChild(labelCol);
+                dayRow.appendChild(contentCol);
                 holder.appendChild(dayRow);
             });
+
+            // Add tag distribution summary for the week
+            if (totalWeekMinutes > 0) {
+                const weekDistHeader = document.createElement('div');
+                weekDistHeader.style.cssText = 'font-size:13px;font-weight:700;color:var(--text-light);margin-top:24px;margin-bottom:12px;padding-top:16px;border-top:1px solid var(--border-soft);';
+                weekDistHeader.innerText = currentSystemLanguage === 'ar' ? 'توزيع المواد هذا الأسبوع' : 'Weekly Tag Distribution';
+                holder.appendChild(weekDistHeader);
+
+                // Aggregate all tags for the week
+                const weekTagMap = {};
+                weeklyDataArray.forEach(day => {
+                    day.segments.forEach(seg => {
+                        if (weekTagMap[seg.tag]) weekTagMap[seg.tag] += seg.time;
+                        else weekTagMap[seg.tag] = seg.time;
+                    });
+                });
+
+                const distGrid = document.createElement('div');
+                distGrid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;';
+
+                Object.entries(weekTagMap).forEach(([tag, minutes]) => {
+                    const pct = Math.round((minutes / totalWeekMinutes) * 100);
+                    const distItem = document.createElement('div');
+                    distItem.style.cssText = 'background:rgba(255,255,255,0.03);border:1px solid var(--border-soft);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;';
+                    distItem.innerHTML = `
+                        <div style="width:36px;height:36px;border-radius:10px;background:${getTagColor(tag)};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;">${pct}%</div>
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:13px;font-weight:700;color:var(--text-light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${tag}</div>
+                            <div style="font-size:11px;color:var(--text-gray);">${formatMinutesToHM(minutes)}</div>
+                        </div>
+                    `;
+                    distGrid.appendChild(distItem);
+                });
+
+                holder.appendChild(distGrid);
+            }
         }
 
         function renderHeatmap() {
             const container = document.getElementById('study-heatmap');
             if (!container) return;
             container.innerHTML = '';
-            let today = new Date();
+
+            const today = new Date();
             today.setHours(0, 0, 0, 0);
+
+            // Build minutes map from all sessions
             let dayMinutesMap = {};
             archivedSessionsArray.forEach(s => {
                 let mins = parseInt(s.duration) || 0;
                 dayMinutesMap[s.date] = (dayMinutesMap[s.date] || 0) + mins;
             });
-            for (let i = 364; i >= 0; i--) {
+
+            // Find max minutes for scaling
+            let maxMinutes = Math.max(...Object.values(dayMinutesMap), 1);
+
+            // Create heatmap wrapper with month labels
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'display:flex;flex-direction:column;gap:4px;';
+
+            // Month labels row
+            const monthRow = document.createElement('div');
+            monthRow.style.cssText = 'display:flex;gap:3px;margin-bottom:4px;padding-left:30px;';
+
+            let lastMonth = -1;
+            for (let i = 364; i >= 0; i -= 7) {
                 let d = new Date(today);
                 d.setDate(d.getDate() - i);
-                let iso = d.toISOString().split('T')[0];
-                let mins = dayMinutesMap[iso] || 0;
-                let cell = document.createElement('div');
-                cell.className = 'heatmap-cell';
-                let level = 0;
-                if (mins > 0) level = 1;
-                if (mins >= 30) level = 2;
-                if (mins >= 60) level = 3;
-                if (mins >= 120) level = 4;
-                if (mins >= 180) level = 5;
-                if (level > 0) cell.classList.add(`level-${level}`);
-                cell.title = `${iso}: ${mins} min`;
-                container.appendChild(cell);
+                let month = d.getMonth();
+                if (month !== lastMonth) {
+                    const monthLabel = document.createElement('span');
+                    monthLabel.style.cssText = 'font-size:10px;color:var(--text-gray);font-weight:600;width:28px;';
+                    monthLabel.innerText = d.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { month: 'short' }).slice(0, 3);
+                    monthRow.appendChild(monthLabel);
+                    lastMonth = month;
+                } else {
+                    const spacer = document.createElement('span');
+                    spacer.style.cssText = 'width:28px;';
+                    monthRow.appendChild(spacer);
+                }
             }
+            wrapper.appendChild(monthRow);
+
+            // Create grid with day labels
+            const gridWrapper = document.createElement('div');
+            gridWrapper.style.cssText = 'display:flex;gap:8px;';
+
+            // Day labels column
+            const dayLabels = document.createElement('div');
+            dayLabels.style.cssText = 'display:flex;flex-direction:column;gap:3px;padding-top:2px;';
+            const dayNames = currentSystemLanguage === 'ar' ? ['س','ح','ن','ث','ر','خ','ج'] : ['M','T','W','T','F','S','S'];
+            dayNames.forEach((dn, idx) => {
+                const dl = document.createElement('div');
+                dl.style.cssText = `font-size:9px;color:${idx % 2 === 0 ? 'var(--text-gray)' : 'transparent'};font-weight:600;height:12px;line-height:12px;text-align:center;`;
+                dl.innerText = dn;
+                dayLabels.appendChild(dl);
+            });
+            gridWrapper.appendChild(dayLabels);
+
+            // Heatmap grid
+            const grid = document.createElement('div');
+            grid.style.cssText = 'display:grid;grid-template-columns:repeat(53, 1fr);gap:3px;';
+
+            // Build 53 weeks × 7 days grid
+            // Start from 52 weeks ago, align to Monday
+            const startDate = new Date(today);
+            startDate.setDate(startDate.getDate() - 364);
+            const startDay = startDate.getDay();
+            const offsetToMonday = startDay === 0 ? 6 : startDay - 1;
+            startDate.setDate(startDate.getDate() - offsetToMonday);
+
+            for (let week = 0; week < 53; week++) {
+                for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+                    const cellDate = new Date(startDate);
+                    cellDate.setDate(cellDate.getDate() + (week * 7) + dayOfWeek);
+
+                    const iso = cellDate.toISOString().split('T')[0];
+                    const mins = dayMinutesMap[iso] || 0;
+                    const isToday = iso === today.toISOString().split('T')[0];
+                    const isFuture = cellDate > today;
+
+                    const cell = document.createElement('div');
+                    cell.style.cssText = 'width:12px;height:12px;border-radius:3px;transition:all 0.3s;cursor:pointer;position:relative;';
+
+                    if (isFuture) {
+                        cell.style.background = 'rgba(255,255,255,0.02)';
+                    } else if (mins === 0) {
+                        cell.style.background = 'rgba(255,255,255,0.04)';
+                    } else {
+                        // Dynamic color based on intensity (0 to max)
+                        const intensity = Math.min(1, mins / Math.max(maxMinutes, 60));
+                        const alpha = 0.15 + (intensity * 0.85);
+                        cell.style.background = `rgba(255, 115, 0, ${alpha})`;
+                        cell.style.boxShadow = intensity > 0.7 ? `0 0 6px rgba(255, 115, 0, ${alpha * 0.5})` : 'none';
+                    }
+
+                    if (isToday) {
+                        cell.style.border = '2px solid var(--accent-orange)';
+                        cell.style.transform = 'scale(1.2)';
+                        cell.style.zIndex = '10';
+                    }
+
+                    // Tooltip on hover
+                    cell.addEventListener('mouseenter', (e) => {
+                        const tooltip = document.createElement('div');
+                        tooltip.id = 'heatmap-tooltip';
+                        tooltip.style.cssText = `
+                            position: fixed; z-index: 10000; background: rgba(0,0,0,0.95);
+                            color: #fff; padding: 8px 14px; border-radius: 10px;
+                            font-size: 12px; border: 1px solid rgba(255,255,255,0.1);
+                            box-shadow: 0 8px 30px rgba(0,0,0,0.5); pointer-events: none;
+                            white-space: nowrap;
+                        `;
+                        const dayName = cellDate.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+                        if (mins > 0) {
+                            tooltip.innerHTML = `<div style="font-weight:700;color:var(--accent-orange);">${dayName}</div><div>${formatMinutesToHM(mins)} of study</div>`;
+                        } else {
+                            tooltip.innerHTML = `<div style="font-weight:700;color:var(--text-gray);">${dayName}</div><div>No study</div>`;
+                        }
+                        document.body.appendChild(tooltip);
+
+                        const rect = cell.getBoundingClientRect();
+                        tooltip.style.left = (rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+                        tooltip.style.top = (rect.top - tooltip.offsetHeight - 8) + 'px';
+                    });
+
+                    cell.addEventListener('mouseleave', () => {
+                        const tt = document.getElementById('heatmap-tooltip');
+                        if (tt) tt.remove();
+                    });
+
+                    grid.appendChild(cell);
+                }
+            }
+
+            gridWrapper.appendChild(grid);
+            wrapper.appendChild(gridWrapper);
+
+            // Legend
+            const legend = document.createElement('div');
+            legend.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:12px;font-size:11px;color:var(--text-gray);';
+            legend.innerHTML = `
+                <span>Less</span>
+                <div style="display:flex;gap:2px;">
+                    ${[0.1, 0.3, 0.5, 0.7, 0.9].map(a => `<div style="width:12px;height:12px;border-radius:3px;background:rgba(255,115,0,${a});"></div>`).join('')}
+                </div>
+                <span>More</span>
+            `;
+            wrapper.appendChild(legend);
+
+            container.appendChild(wrapper);
         }
 
         function updateFilterOptions() {
@@ -1722,6 +2155,63 @@
             document.getElementById('add-manual-btn-txt').innerText = d.addManualBtn;
         }
 
+
+        // ============================================
+        // TAG COLOR CUSTOMIZATION
+        // ============================================
+        function openTagColorModal(tagName) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay modal-open';
+            modal.id = 'tag-color-modal-dynamic';
+            modal.innerHTML = `
+                <div class="modal-box">
+                    <h3>${currentSystemLanguage === 'ar' ? 'لون التاج' : 'Tag Color'}: ${tagName}</h3>
+                    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:16px 0;">
+                        ${['#3498db','#e67e22','#1abc9c','#e84393','#2ecc71','#9b59b6','#e74c3c','#f1c40f','#16a085','#d35400','#8e44ad','#2c3e50','#ff7300','#8200ff','#00d26a','#3498db','#e74c3c','#f39c12'].map(c => `
+                            <div onclick="setTagColor('${tagName}', '${c}'); document.getElementById('tag-color-modal-dynamic').remove();" 
+                                 style="width:40px;height:40px;border-radius:10px;background:${c};cursor:pointer;border:2px solid transparent;transition:all 0.2s;"
+                                 onmouseover="this.style.borderColor='#fff';this.style.transform='scale(1.15)';"
+                                 onmouseout="this.style.borderColor='transparent';this.style.transform='scale(1)';"
+                            ></div>
+                        `).join('')}
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label style="font-size:11px;color:var(--text-gray);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">${currentSystemLanguage === 'ar' ? 'لون مخصص' : 'Custom Color'}</label>
+                        <input type="color" id="custom-tag-color-picker" value="${getTagColor(tagName)}" style="width:100%;height:40px;border-radius:10px;border:none;cursor:pointer;background:transparent;">
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="modal-btn cancel" onclick="document.getElementById('tag-color-modal-dynamic').remove();">${currentSystemLanguage === 'ar' ? 'إلغاء' : 'Cancel'}</button>
+                        <button class="modal-btn confirm" onclick="setTagColor('${tagName}', document.getElementById('custom-tag-color-picker').value); document.getElementById('tag-color-modal-dynamic').remove();">${currentSystemLanguage === 'ar' ? 'حفظ' : 'Save'}</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        let customTagColors = {};
+
+        function setTagColor(tag, color) {
+            customTagColors[tag] = color;
+            tagPaletteColors[tag] = color;
+            dbSet('customTagColors', customTagColors);
+            renderTagsChips();
+            recalculateAndRenderDashboard();
+            renderHistoryGridWithPagination();
+            renderHeatmap();
+            renderWeeklySegmentedChart();
+            showToast(currentSystemLanguage === 'ar' ? 'تم تحديث اللون!' : 'Color Updated!', tag, 'success');
+        }
+
+        async function loadCustomTagColors() {
+            const saved = await dbGet('customTagColors');
+            if (saved) {
+                customTagColors = saved;
+                Object.entries(saved).forEach(([tag, color]) => {
+                    tagPaletteColors[tag] = color;
+                });
+            }
+        }
+
         // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -1745,6 +2235,7 @@
             syncLanguageInterfaceStrings();
             updateQuickStats();
             renderHeatmap();
+            renderWeeklySegmentedChart();
         });
     </script>
 <script>
