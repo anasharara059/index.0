@@ -1191,8 +1191,7 @@
                     currentSystemLanguage = savedLanguage;
                     document.documentElement.setAttribute('dir', currentSystemLanguage === 'ar' ? 'rtl' : 'ltr');
                     document.documentElement.setAttribute('lang', currentSystemLanguage);
-                    const langBtn = document.getElementById('lang-toggle');
-                    if (langBtn) langBtn.innerText = currentSystemLanguage === 'ar' ? 'English' : 'العربية';
+                    // Language toggle is now inside account dropdown menu
                 } else { await dbSet('language', currentSystemLanguage); }
                 await loadCustomTagColors();
             } catch (err) { console.error('DB init failed:', err); }
@@ -1264,7 +1263,11 @@
             const htmlNode = document.documentElement;
             htmlNode.setAttribute('dir', currentSystemLanguage === 'ar' ? 'rtl' : 'ltr');
             htmlNode.setAttribute('lang', currentSystemLanguage);
-            document.getElementById('lang-toggle').innerText = currentSystemLanguage === 'ar' ? 'English' : 'العربية';
+            // Update language label in dropdown menu if it exists
+            const menuLangLabel = document.getElementById('menu-lang-label');
+            if (menuLangLabel) {
+                menuLangLabel.innerText = currentSystemLanguage === 'ar' ? 'Language' : 'اللغة';
+            }
             syncLanguageInterfaceStrings();
             recalculateAndRenderDashboard();
             renderHistoryGridWithPagination();
@@ -1317,6 +1320,9 @@
             if (goalsSettingsBtn) goalsSettingsBtn.innerText = '🎯 ' + (d.menuGoalsLabel || 'Goals');
             const menuLang = document.getElementById('menu-lang-label');
             if (menuLang) menuLang.innerText = d.menuLangLabel;
+            // Update language icon/label direction
+            const menuLangIcon = menuLang?.parentElement?.querySelector('.account-menu-icon');
+            if (menuLangIcon) menuLangIcon.innerText = '🌐';
             const menuExport = document.getElementById('menu-export-label');
             if (menuExport) menuExport.innerText = d.menuExportLabel;
             const menuClear = document.getElementById('menu-clear-label');
@@ -2631,18 +2637,25 @@ function toggleAccountMenu(event) {
     if (event.target.closest('.account-menu-item')) return;
     event.stopPropagation();
     const menu = document.getElementById('account-dropdown-menu');
+    const badge = document.getElementById('user-badge');
     if (!menu) return;
     if (menu.classList.contains('is-visible')) {
         menu.classList.remove('is-visible');
+        if (badge) badge.classList.remove('active-menu');
     } else {
         menu.classList.add('is-visible');
+        if (badge) badge.classList.add('active-menu');
     }
 }
 
 function hideAccountMenu() {
     const menu = document.getElementById('account-dropdown-menu');
+    const badge = document.getElementById('user-badge');
     if (menu) {
         menu.classList.remove('is-visible');
+    }
+    if (badge) {
+        badge.classList.remove('active-menu');
     }
 }
 
