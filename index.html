@@ -885,6 +885,13 @@
             return `${m}m`;
         }
 
+        function getLocalISODate(date) {
+            const d = new Date(date);
+            const offset = d.getTimezoneOffset();
+            const localDate = new Date(d.getTime() - offset * 60000);
+            return localDate.toISOString().split('T')[0];
+        }
+
         function formatHoursToHM(hours) {
             const totalMinutes = Math.round(hours * 60);
             return formatMinutesToHM(totalMinutes);
@@ -1058,7 +1065,7 @@
         function saveCurrentSessionRecord() {
             let finalEndTimeStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             let minutesFormattedString = Math.round(totalElapsedSecondsTracked / 60) + " Min";
-            let fullISODate = new Date().toISOString().split('T')[0];
+            let fullISODate = getLocalISODate(new Date());
             let rawSessionTitle = document.getElementById('session-current-title').value;
             if (!rawSessionTitle.trim()) rawSessionTitle = currentSystemLanguage === 'ar' ? "جلسة دراسة غير معنونة" : "Untitled Session";
             if (totalElapsedSecondsTracked > 1) {
@@ -1207,14 +1214,14 @@
         }
 
         function updateQuickStats() {
-            let today = new Date().toISOString().split('T')[0];
+            let today = getLocalISODate(new Date());
             let todayMinutes = archivedSessionsArray.filter(s => s.date === today).reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
             let weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay());
             let weekMinutes = archivedSessionsArray.filter(s => new Date(s.date) >= weekStart).reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
             let streak = 0;
             let cursor = new Date(); cursor.setHours(0, 0, 0, 0);
             while (true) {
-                let iso = cursor.toISOString().split('T')[0];
+                let iso = getLocalISODate(cursor);
                 if (archivedSessionsArray.some(s => s.date === iso)) { streak++; cursor.setDate(cursor.getDate() - 1); }
                 else break;
             }
@@ -1225,13 +1232,13 @@
         }
 
         function recalculateAndRenderDashboard() {
-            const todayISO = new Date().toISOString().split('T')[0];
+            const todayISO = getLocalISODate(new Date());
             const yesterdayDate = new Date(); yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-            const yesterdayISO = yesterdayDate.toISOString().split('T')[0];
+            const yesterdayISO = getLocalISODate(yesterdayDate);
             const weekStart = new Date();
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
             weekStart.setHours(0, 0, 0, 0);
-            const monthPrefix = new Date().toISOString().slice(0, 7);
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+            const monthPrefix = getLocalISODate(new Date()).slice(0, 7);
             let todayMinutes = 0, yesterdayMinutes = 0, weekMinutes = 0, monthMinutes = 0;
             let totalAccumulatedStudyMinutes = 0;
             let tagMinutesSumMap = {};
@@ -1381,12 +1388,12 @@
                 weeklyDataArray.push({
                     index: i,
                     date: dayDate,
-                    dateISO: dayDate.toISOString().split('T')[0],
+                    dateISO: getLocalISODate(dayDate),
                     dayEN: weekdaysEnglish[i],
                     dayAR: weekdaysArabic[i],
                     totalTime: 0,
                     segments: [],
-                    isToday: dayDate.toISOString().split('T')[0] === now.toISOString().split('T')[0]
+                    isToday: getLocalISODate(dayDate) === getLocalISODate(now)
                 });
             }
 
@@ -1561,125 +1568,171 @@
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
+            const todayISO = getLocalISODate(today);
+            const currentYear = today.getFullYear();
 
-            // Build minutes map from all sessions
+            // Build minutes map
             let dayMinutesMap = {};
             archivedSessionsArray.forEach(s => {
                 let mins = parseInt(s.duration) || 0;
                 dayMinutesMap[s.date] = (dayMinutesMap[s.date] || 0) + mins;
             });
 
-            // Find max minutes for scaling
             let maxMinutes = Math.max(...Object.values(dayMinutesMap), 1);
 
-            // Create heatmap wrapper with month labels
+            // Full year: Jan 1 to Dec 31 of current year
+            const yearStart = new Date(currentYear, 0, 1); // Jan 1
+            yearStart.setHours(0, 0, 0, 0);
+            const yearEnd = new Date(currentYear, 11, 31); // Dec 31
+            yearEnd.setHours(0, 0, 0, 0);
+
+            // Align start to Saturday before or on Jan 1
+            const jan1Day = yearStart.getDay(); // 0=Sun, 6=Sat
+            const daysBeforeJan1 = (jan1Day + 1) % 7; // Days back to Saturday
+            const gridStart = new Date(yearStart);
+            gridStart.setDate(gridStart.getDate() - daysBeforeJan1);
+
+            // Align end to Friday after or on Dec 31
+            const dec31Day = yearEnd.getDay();
+            const daysAfterDec31 = (5 - dec31Day + 7) % 7; // Days forward to Friday
+            const gridEnd = new Date(yearEnd);
+            gridEnd.setDate(gridEnd.getDate() + daysAfterDec31);
+
+            // Total weeks
+            const totalDays = Math.ceil((gridEnd - gridStart) / 86400000) + 1;
+            const totalWeeks = Math.ceil(totalDays / 7);
+
+            // Wrapper
             const wrapper = document.createElement('div');
-            wrapper.style.cssText = 'display:flex;flex-direction:column;gap:4px;';
+            wrapper.style.cssText = 'display:flex;flex-direction:column;gap:6px;overflow-x:auto;padding-bottom:4px;';
 
-            // Month labels row
+            // Month labels - show month name above first week of each month
             const monthRow = document.createElement('div');
-            monthRow.style.cssText = 'display:flex;gap:3px;margin-bottom:4px;padding-left:30px;';
+            monthRow.style.cssText = 'display:flex;gap:3px;padding-left:34px;height:18px;';
 
-            let lastMonth = -1;
-            for (let i = 364; i >= 0; i -= 7) {
-                let d = new Date(today);
-                d.setDate(d.getDate() - i);
-                let month = d.getMonth();
-                if (month !== lastMonth) {
-                    const monthLabel = document.createElement('span');
-                    monthLabel.style.cssText = 'font-size:10px;color:var(--text-gray);font-weight:600;width:28px;';
-                    monthLabel.innerText = d.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { month: 'short' }).slice(0, 3);
-                    monthRow.appendChild(monthLabel);
-                    lastMonth = month;
-                } else {
-                    const spacer = document.createElement('span');
-                    spacer.style.cssText = 'width:28px;';
-                    monthRow.appendChild(spacer);
+            let shownMonths = new Set();
+            for (let w = 0; w < totalWeeks; w++) {
+                const weekStart = new Date(gridStart);
+                weekStart.setDate(weekStart.getDate() + (w * 7));
+
+                const weekMonth = weekStart.getMonth(); // 0-11
+                const weekYear = weekStart.getFullYear();
+
+                const labelDiv = document.createElement('div');
+                labelDiv.style.cssText = 'font-size:10px;color:var(--text-gray);font-weight:600;width:11px;text-align:center;';
+
+                // Show month name for first week of each month (only for current year)
+                const monthKey = `${weekYear}-${weekMonth}`;
+                if (weekYear === currentYear && !shownMonths.has(monthKey) && weekStart.getDate() <= 7) {
+                    const monthName = weekStart.toLocaleDateString(
+                        currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
+                        { month: 'short' }
+                    );
+                    labelDiv.innerText = monthName;
+                    shownMonths.add(monthKey);
                 }
+
+                monthRow.appendChild(labelDiv);
             }
             wrapper.appendChild(monthRow);
 
-            // Create grid with day labels
-            const gridWrapper = document.createElement('div');
-            gridWrapper.style.cssText = 'display:flex;gap:8px;';
+            // Main area: day labels + grid
+            const mainArea = document.createElement('div');
+            mainArea.style.cssText = 'display:flex;gap:4px;';
 
-            // Day labels column
-            const dayLabels = document.createElement('div');
-            dayLabels.style.cssText = 'display:flex;flex-direction:column;gap:3px;padding-top:2px;';
-            const dayNames = currentSystemLanguage === 'ar' ? ['س','ح','ن','ث','ر','خ','ج'] : ['M','T','W','T','F','S','S'];
+            // Day labels (Sat to Fri - Arabic week)
+            const dayLabelsCol = document.createElement('div');
+            dayLabelsCol.style.cssText = 'display:flex;flex-direction:column;gap:3px;padding-top:2px;width:30px;flex-shrink:0;';
+
+            const dayNames = currentSystemLanguage === 'ar'
+                ? ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج']
+                : ['S', 'S', 'M', 'T', 'W', 'T', 'F'];
+
             dayNames.forEach((dn, idx) => {
                 const dl = document.createElement('div');
-                dl.style.cssText = `font-size:9px;color:${idx % 2 === 0 ? 'var(--text-gray)' : 'transparent'};font-weight:600;height:12px;line-height:12px;text-align:center;`;
+                const showLabel = idx === 0 || idx === 2 || idx === 4 || idx === 6;
+                dl.style.cssText = `font-size:9px;color:${showLabel ? 'var(--text-gray)' : 'transparent'};font-weight:600;height:11px;line-height:11px;text-align:right;padding-right:6px;`;
                 dl.innerText = dn;
-                dayLabels.appendChild(dl);
+                dayLabelsCol.appendChild(dl);
             });
-            gridWrapper.appendChild(dayLabels);
+            mainArea.appendChild(dayLabelsCol);
 
-            // Heatmap grid
+            // Grid: flex columns, each column = one week (Sat to Fri)
             const grid = document.createElement('div');
-            grid.style.cssText = 'display:grid;grid-template-columns:repeat(53, 1fr);gap:3px;';
+            grid.style.cssText = 'display:flex;gap:3px;';
 
-            // Build 53 weeks × 7 days grid
-            // Start from 52 weeks ago, align to Monday
-            const startDate = new Date(today);
-            startDate.setDate(startDate.getDate() - 364);
-            const startDay = startDate.getDay();
-            const offsetToMonday = startDay === 0 ? 6 : startDay - 1;
-            startDate.setDate(startDate.getDate() - offsetToMonday);
+            for (let week = 0; week < totalWeeks; week++) {
+                const weekCol = document.createElement('div');
+                weekCol.style.cssText = 'display:flex;flex-direction:column;gap:3px;';
 
-            for (let week = 0; week < 53; week++) {
                 for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-                    const cellDate = new Date(startDate);
+                    const cellDate = new Date(gridStart);
                     cellDate.setDate(cellDate.getDate() + (week * 7) + dayOfWeek);
 
-                    const iso = cellDate.toISOString().split('T')[0];
+                    const iso = getLocalISODate(cellDate);
                     const mins = dayMinutesMap[iso] || 0;
-                    const isToday = iso === today.toISOString().split('T')[0];
-                    const isFuture = cellDate > today;
+                    const isToday = iso === todayISO;
+                    const inYear = cellDate >= yearStart && cellDate <= yearEnd;
 
                     const cell = document.createElement('div');
-                    cell.style.cssText = 'width:12px;height:12px;border-radius:3px;transition:all 0.3s;cursor:pointer;position:relative;';
+                    cell.style.cssText = 'width:11px;height:11px;border-radius:2px;transition:all 0.2s;cursor:pointer;box-sizing:border-box;';
 
-                    if (isFuture) {
+                    if (!inYear) {
+                        // Days outside the year (padding) - very subtle
                         cell.style.background = 'rgba(255,255,255,0.02)';
                     } else if (mins === 0) {
-                        cell.style.background = 'rgba(255,255,255,0.04)';
+                        cell.style.background = 'rgba(255,255,255,0.05)';
                     } else {
-                        // Dynamic color based on intensity (0 to max)
-                        const intensity = Math.min(1, mins / Math.max(maxMinutes, 60));
-                        const alpha = 0.15 + (intensity * 0.85);
+                        const intensity = Math.min(1, mins / Math.max(maxMinutes, 30));
+                        const alpha = 0.2 + (intensity * 0.8);
                         cell.style.background = `rgba(255, 115, 0, ${alpha})`;
-                        cell.style.boxShadow = intensity > 0.7 ? `0 0 6px rgba(255, 115, 0, ${alpha * 0.5})` : 'none';
+                        if (intensity > 0.5) {
+                            cell.style.boxShadow = `0 0 3px rgba(255, 115, 0, ${alpha * 0.3})`;
+                        }
                     }
 
-                    if (isToday) {
-                        cell.style.border = '2px solid var(--accent-orange)';
-                        cell.style.transform = 'scale(1.2)';
+                    if (isToday && inYear) {
+                        cell.style.border = '1.5px solid var(--accent-orange)';
+                        cell.style.transform = 'scale(1.3)';
                         cell.style.zIndex = '10';
+                        cell.style.position = 'relative';
                     }
 
-                    // Tooltip on hover
+                    // Tooltip
                     cell.addEventListener('mouseenter', (e) => {
+                        if (!inYear) return;
+                        const existing = document.getElementById('heatmap-tooltip');
+                        if (existing) existing.remove();
+
                         const tooltip = document.createElement('div');
                         tooltip.id = 'heatmap-tooltip';
                         tooltip.style.cssText = `
-                            position: fixed; z-index: 10000; background: rgba(0,0,0,0.95);
-                            color: #fff; padding: 8px 14px; border-radius: 10px;
-                            font-size: 12px; border: 1px solid rgba(255,255,255,0.1);
-                            box-shadow: 0 8px 30px rgba(0,0,0,0.5); pointer-events: none;
-                            white-space: nowrap;
+                            position: fixed; z-index: 10000; background: rgba(8,9,13,0.98);
+                            color: #fff; padding: 10px 16px; border-radius: 12px;
+                            font-size: 12px; border: 1px solid rgba(255,115,0,0.3);
+                            box-shadow: 0 8px 30px rgba(0,0,0,0.7); pointer-events: none;
+                            white-space: nowrap; backdrop-filter: blur(10px);
                         `;
-                        const dayName = cellDate.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+                        const dayName = cellDate.toLocaleDateString(
+                            currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
+                            { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
+                        );
                         if (mins > 0) {
-                            tooltip.innerHTML = `<div style="font-weight:700;color:var(--accent-orange);">${dayName}</div><div>${formatMinutesToHM(mins)} of study</div>`;
+                            tooltip.innerHTML = `
+                                <div style="font-weight:800;color:var(--accent-orange);margin-bottom:4px;">${dayName}</div>
+                                <div style="color:var(--text-light);font-weight:600;">${formatMinutesToHM(mins)} of study</div>
+                            `;
                         } else {
-                            tooltip.innerHTML = `<div style="font-weight:700;color:var(--text-gray);">${dayName}</div><div>No study</div>`;
+                            tooltip.innerHTML = `
+                                <div style="font-weight:700;color:var(--text-gray);margin-bottom:4px;">${dayName}</div>
+                                <div style="color:var(--text-gray);">No study</div>
+                            `;
                         }
                         document.body.appendChild(tooltip);
 
                         const rect = cell.getBoundingClientRect();
-                        tooltip.style.left = (rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
-                        tooltip.style.top = (rect.top - tooltip.offsetHeight - 8) + 'px';
+                        tooltip.style.left = Math.max(10, rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+                        tooltip.style.top = Math.max(10, rect.top - tooltip.offsetHeight - 10) + 'px';
                     });
 
                     cell.addEventListener('mouseleave', () => {
@@ -1687,20 +1740,21 @@
                         if (tt) tt.remove();
                     });
 
-                    grid.appendChild(cell);
+                    weekCol.appendChild(cell);
                 }
+                grid.appendChild(weekCol);
             }
 
-            gridWrapper.appendChild(grid);
-            wrapper.appendChild(gridWrapper);
+            mainArea.appendChild(grid);
+            wrapper.appendChild(mainArea);
 
             // Legend
             const legend = document.createElement('div');
-            legend.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:12px;font-size:11px;color:var(--text-gray);';
+            legend.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:12px;padding-left:34px;font-size:11px;color:var(--text-gray);';
             legend.innerHTML = `
                 <span>Less</span>
                 <div style="display:flex;gap:2px;">
-                    ${[0.1, 0.3, 0.5, 0.7, 0.9].map(a => `<div style="width:12px;height:12px;border-radius:3px;background:rgba(255,115,0,${a});"></div>`).join('')}
+                    ${[0.15, 0.35, 0.55, 0.75, 0.95].map(a => `<div style="width:11px;height:11px;border-radius:2px;background:rgba(255,115,0,${a});"></div>`).join('')}
                 </div>
                 <span>More</span>
             `;
@@ -1729,9 +1783,9 @@
                 let matchSearch = s.title.toLowerCase().includes(searchTerm) || s.tag.toLowerCase().includes(searchTerm);
                 let matchTag = !tagFilter || s.tag === tagFilter;
                 let matchDate = true;
-                if (dateFilter === 'today') matchDate = s.date === new Date().toISOString().split('T')[0];
-                else if (dateFilter === 'week') { let ws = new Date(); ws.setDate(ws.getDate() - ws.getDay()); matchDate = new Date(s.date) >= ws; }
-                else if (dateFilter === 'month') { matchDate = s.date.startsWith(new Date().toISOString().slice(0, 7)); }
+                if (dateFilter === 'today') matchDate = s.date === getLocalISODate(new Date());
+                else if (dateFilter === 'week') { let ws = new Date(); ws.setHours(0,0,0,0); ws.setDate(ws.getDate() - ws.getDay()); matchDate = new Date(s.date + 'T00:00:00') >= ws; }
+                else if (dateFilter === 'month') { matchDate = s.date.startsWith(getLocalISODate(new Date()).slice(0, 7)); }
                 return matchSearch && matchTag && matchDate;
             });
             paginationCurrentPage = 1;
@@ -1808,7 +1862,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `index-study-data-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `index-study-data-${getLocalISODate(new Date())}.json`;
             a.click();
             URL.revokeObjectURL(url);
             showToast('Data Exported!', 'Your study data has been downloaded.', 'success');
@@ -1935,7 +1989,7 @@
             showToast(d.toastHabitAdded, name, 'success');
         }
         document.getElementById('modal-habit-name').addEventListener('keypress', function (e) { if (e.key === 'Enter') saveHabitFromModal(); });
-        function todayISODateString() { return new Date().toISOString().split('T')[0]; }
+        function todayISODateString() { return getLocalISODate(new Date()); }
         function toggleHabitToday(habitId) {
             const habit = habitsArray.find(h => h.id === habitId);
             if (!habit) return;
@@ -1957,7 +2011,7 @@
             let streak = 0;
             let cursor = new Date(); cursor.setHours(0, 0, 0, 0);
             while (true) {
-                const iso = cursor.toISOString().split('T')[0];
+                const iso = getLocalISODate(cursor);
                 if (habit.completedDates.includes(iso)) { streak++; cursor.setDate(cursor.getDate() - 1); }
                 else break;
             }
@@ -1978,12 +2032,12 @@
             for (let i = 6; i >= 0; i--) { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - i); last7Days.push(d); }
             const todayISO = todayISODateString();
             habitsArray.forEach(habit => {
-                const doneCount = last7Days.filter(d => habit.completedDates.includes(d.toISOString().split('T')[0])).length;
+                const doneCount = last7Days.filter(d => habit.completedDates.includes(getLocalISODate(d))).length;
                 const pct = Math.round((doneCount / 7) * 100);
                 const streak = calculateHabitStreak(habit);
                 const isDoneToday = habit.completedDates.includes(todayISO);
                 const dotsHtml = last7Days.map(d => {
-                    const iso = d.toISOString().split('T')[0];
+                    const iso = getLocalISODate(d);
                     const isDone = habit.completedDates.includes(iso);
                     const isToday = iso === todayISO;
                     const letter = dayLetters[d.getDay()];
@@ -2072,7 +2126,7 @@
 
         // Add Manual Session functionality
         function openManualSessionModal() {
-            const today = new Date().toISOString().split('T')[0];
+            const today = getLocalISODate(new Date());
             document.getElementById('manual-session-date').value = today;
             document.getElementById('manual-session-title').value = '';
             document.getElementById('manual-session-duration').value = 25;
