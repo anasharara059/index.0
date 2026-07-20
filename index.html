@@ -1694,8 +1694,8 @@
 
         
 
-        // ===== WEEK NAVIGATION & ARCHIVE SYSTEM =====
-        function getWeekStartDate(offset = 0) {
+        // ===== WEEK NAVIGATION HELPERS =====
+        function getWeekStartDate(offset) {
             const now = new Date();
             const dayOfWeek = now.getDay();
             const daysToSaturday = dayOfWeek === 6 ? 0 : dayOfWeek + 1;
@@ -1721,9 +1721,9 @@
         function formatWeekRange(weekStart) {
             const weekEnd = getWeekEndDate(weekStart);
             const opts = { month: 'short', day: 'numeric' };
-            const startStr = weekStart.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', opts);
-            const endStr = weekEnd.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', opts);
-            return startStr + ' - ' + endStr;
+            const s = weekStart.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', opts);
+            const e = weekEnd.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', opts);
+            return s + ' - ' + e;
         }
         function navigateWeek(direction) {
             currentViewedWeekOffset += direction;
@@ -1737,59 +1737,40 @@
             return weekStart.getFullYear() + '-W' + getWeekNumber(weekStart);
         }
         function archiveWeekByOffset(offset) {
-            const weekStart = getWeekStartDate(offset);
-            const weekEnd = getWeekEndDate(weekStart);
-            const weekKey = getWeekKey(weekStart);
-            let weekData = {
-                weekNumber: getWeekNumber(weekStart),
-                year: weekStart.getFullYear(),
-                startDate: getLocalISODate(weekStart),
-                endDate: getLocalISODate(weekEnd),
-                totalMinutes: 0,
-                dailyBreakdown: {},
-                tagBreakdown: {},
-                sessions: []
-            };
-            archivedSessionsArray.forEach(session => {
-                const sDate = new Date(session.date + 'T00:00:00');
-                if (sDate >= weekStart && sDate <= weekEnd) {
-                    const mins = parseInt(session.duration) || 0;
-                    weekData.totalMinutes += mins;
-                    weekData.sessions.push(session);
-                    if (!weekData.tagBreakdown[session.tag]) weekData.tagBreakdown[session.tag] = 0;
-                    weekData.tagBreakdown[session.tag] += mins;
-                    if (!weekData.dailyBreakdown[session.date]) weekData.dailyBreakdown[session.date] = 0;
-                    weekData.dailyBreakdown[session.date] += mins;
+            const ws = getWeekStartDate(offset);
+            const we = getWeekEndDate(ws);
+            const wk = getWeekKey(ws);
+            let wd = { weekNumber: getWeekNumber(ws), year: ws.getFullYear(), startDate: getLocalISODate(ws), endDate: getLocalISODate(we), totalMinutes: 0, dailyBreakdown: {}, tagBreakdown: {}, sessions: [] };
+            archivedSessionsArray.forEach(s => {
+                const sd = new Date(s.date + 'T00:00:00');
+                if (sd >= ws && sd <= we) {
+                    const m = parseInt(s.duration) || 0;
+                    wd.totalMinutes += m; wd.sessions.push(s);
+                    if (!wd.tagBreakdown[s.tag]) wd.tagBreakdown[s.tag] = 0;
+                    wd.tagBreakdown[s.tag] += m;
+                    if (!wd.dailyBreakdown[s.date]) wd.dailyBreakdown[s.date] = 0;
+                    wd.dailyBreakdown[s.date] += m;
                 }
             });
-            archivedWeeks[weekKey] = weekData;
+            archivedWeeks[wk] = wd;
             dbSet('archivedWeeks', archivedWeeks);
-            return weekData;
+            return wd;
         }
         async function loadArchivedWeeks() {
             const saved = await dbGet('archivedWeeks');
             if (saved) archivedWeeks = saved;
         }
-        function getArchivedWeekData(weekOffset) {
-            const weekStart = getWeekStartDate(weekOffset);
-            const weekKey = getWeekKey(weekStart);
-            return archivedWeeks[weekKey] || null;
+        function getArchivedWeekData(offset) {
+            return archivedWeeks[getWeekKey(getWeekStartDate(offset))] || null;
         }
         async function checkAndArchivePreviousWeek() {
             const now = new Date();
-            const dayOfWeek = now.getDay();
-            if (dayOfWeek === 6) {
-                const lastWeekStart = getWeekStartDate(-1);
-                const lastWeekKey = getWeekKey(lastWeekStart);
-                if (!archivedWeeks[lastWeekKey]) {
-                    const archived = archiveWeekByOffset(-1);
-                    if (archived && archived.totalMinutes > 0) {
-                        showToast(
-                            currentSystemLanguage === 'ar' ? 'تم أرشفة الأسبوع!' : 'Week Archived!',
-                            (currentSystemLanguage === 'ar' ? 'الأسبوع ' : 'Week ') + archived.weekNumber + ': ' + formatMinutesToHM(archived.totalMinutes),
-                            'success'
-                        );
-                    }
+            if (now.getDay() === 6) {
+                const lws = getWeekStartDate(-1);
+                const lwk = getWeekKey(lws);
+                if (!archivedWeeks[lwk]) {
+                    const a = archiveWeekByOffset(-1);
+                    if (a && a.totalMinutes > 0) showToast(currentSystemLanguage === 'ar' ? 'تم أرشفة الأسبوع!' : 'Week Archived!', (currentSystemLanguage === 'ar' ? 'الأسبوع ' : 'Week ') + a.weekNumber + ': ' + formatMinutesToHM(a.totalMinutes), 'success');
                 }
             }
         }
@@ -1798,7 +1779,7 @@
             const holder = document.getElementById('weekly-chart-holder');
             holder.innerHTML = '';
 
-            // Days ordered Saturday to Friday (Arabic week)
+            // Saturday to Friday (Arabic week)
             const weekdaysArabic = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
             const weekdaysEnglish = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
 
@@ -1811,80 +1792,51 @@
 
             // ===== WEEK NAVIGATION HEADER =====
             const navHeader = document.createElement('div');
-            navHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding:16px 20px;background:linear-gradient(135deg, rgba(255,115,0,0.08), rgba(130,0,255,0.05));border-radius:16px;border:1px solid rgba(255,115,0,0.15);';
+            navHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:14px 18px;background:linear-gradient(135deg, rgba(255,115,0,0.06), rgba(130,0,255,0.04));border-radius:14px;border:1px solid rgba(255,115,0,0.12);';
 
             const prevBtn = document.createElement('button');
             prevBtn.innerHTML = currentSystemLanguage === 'ar' ? '▶' : '◀';
-            prevBtn.style.cssText = 'background:rgba(255,115,0,0.15);border:1px solid rgba(255,115,0,0.3);color:var(--accent-orange);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
-            prevBtn.onmouseover = function() { this.style.background = 'rgba(255,115,0,0.3)'; this.style.transform = 'scale(1.1)'; };
-            prevBtn.onmouseout = function() { this.style.background = 'rgba(255,115,0,0.15)'; this.style.transform = 'scale(1)'; };
+            prevBtn.style.cssText = 'background:rgba(255,115,0,0.12);border:1px solid rgba(255,115,0,0.25);color:var(--accent-orange);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:12px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
+            prevBtn.onmouseover = function() { this.style.background='rgba(255,115,0,0.25)'; this.style.transform='scale(1.1)'; };
+            prevBtn.onmouseout = function() { this.style.background='rgba(255,115,0,0.12)'; this.style.transform='scale(1)'; };
             prevBtn.onclick = function() { navigateWeek(-1); };
             prevBtn.title = currentSystemLanguage === 'ar' ? 'الأسبوع السابق' : 'Previous Week';
 
             const nextBtn = document.createElement('button');
             nextBtn.innerHTML = currentSystemLanguage === 'ar' ? '◀' : '▶';
-            nextBtn.style.cssText = 'background:rgba(255,115,0,0.15);border:1px solid rgba(255,115,0,0.3);color:var(--accent-orange);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
-            nextBtn.onmouseover = function() { this.style.background = 'rgba(255,115,0,0.3)'; this.style.transform = 'scale(1.1)'; };
-            nextBtn.onmouseout = function() { this.style.background = 'rgba(255,115,0,0.15)'; this.style.transform = 'scale(1)'; };
+            nextBtn.style.cssText = 'background:rgba(255,115,0,0.12);border:1px solid rgba(255,115,0,0.25);color:var(--accent-orange);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:12px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
+            nextBtn.onmouseover = function() { this.style.background='rgba(255,115,0,0.25)'; this.style.transform='scale(1.1)'; };
+            nextBtn.onmouseout = function() { this.style.background='rgba(255,115,0,0.12)'; this.style.transform='scale(1)'; };
             nextBtn.onclick = function() { navigateWeek(1); };
             nextBtn.title = currentSystemLanguage === 'ar' ? 'الأسبوع القادم' : 'Next Week';
 
             const weekInfo = document.createElement('div');
             weekInfo.style.cssText = 'text-align:center;flex:1;';
-
             const weekBadge = document.createElement('div');
-            weekBadge.style.cssText = 'font-size:18px;font-weight:800;margin-bottom:4px;color:' + (isCurrentWeek ? 'var(--accent-orange)' : 'var(--text-light)') + ';';
+            weekBadge.style.cssText = 'font-size:16px;font-weight:800;margin-bottom:3px;color:' + (isCurrentWeek ? 'var(--accent-orange)' : 'var(--text-light)') + ';';
             weekBadge.innerHTML = (currentSystemLanguage === 'ar' ? 'الأسبوع ' : 'Week ') + weekNum + ', ' + year;
-            if (isCurrentWeek) {
-                weekBadge.innerHTML += ' <span style="font-size:11px;background:var(--accent-orange);color:#000;padding:2px 8px;border-radius:8px;margin-' + (currentSystemLanguage === 'ar' ? 'right' : 'left') + ':8px;">' + (currentSystemLanguage === 'ar' ? 'الحالي' : 'CURRENT') + '</span>';
-            } else if (isPastWeek) {
-                const archivedData = getArchivedWeekData(currentViewedWeekOffset);
-                if (archivedData && archivedData.totalMinutes > 0) {
-                    weekBadge.innerHTML += ' <span style="font-size:10px;color:var(--success);background:rgba(0,210,106,0.1);padding:2px 8px;border-radius:6px;margin-top:4px;display:inline-block;">✓ ' + (currentSystemLanguage === 'ar' ? 'مؤرشف' : 'Archived') + '</span>';
-                }
-            }
-
+            if (isCurrentWeek) weekBadge.innerHTML += ' <span style="font-size:10px;background:var(--accent-orange);color:#000;padding:1px 6px;border-radius:6px;margin-' + (currentSystemLanguage === 'ar' ? 'right' : 'left') + ':6px;">' + (currentSystemLanguage === 'ar' ? 'الحالي' : 'NOW') + '</span>';
+            else if (isPastWeek && getArchivedWeekData(currentViewedWeekOffset)) weekBadge.innerHTML += ' <span style="font-size:9px;color:var(--success);">✓</span>';
             const weekRange = document.createElement('div');
-            weekRange.style.cssText = 'font-size:12px;color:var(--text-gray);font-weight:600;';
+            weekRange.style.cssText = 'font-size:11px;color:var(--text-gray);font-weight:500;';
             weekRange.innerText = formatWeekRange(weekStart);
-
             weekInfo.appendChild(weekBadge);
             weekInfo.appendChild(weekRange);
 
             const currentBtn = document.createElement('button');
             currentBtn.innerHTML = '◎';
-            currentBtn.style.cssText = 'background:rgba(0,210,106,0.1);border:1px solid rgba(0,210,106,0.3);color:var(--success);width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:16px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
-            currentBtn.onmouseover = function() { this.style.background = 'rgba(0,210,106,0.25)'; this.style.transform = 'scale(1.1)'; };
-            currentBtn.onmouseout = function() { this.style.background = 'rgba(0,210,106,0.1)'; this.style.transform = 'scale(1)'; };
+            currentBtn.style.cssText = 'background:rgba(0,210,106,0.08);border:1px solid rgba(0,210,106,0.2);color:var(--success);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
+            currentBtn.onmouseover = function() { this.style.background='rgba(0,210,106,0.2)'; this.style.transform='scale(1.1)'; };
+            currentBtn.onmouseout = function() { this.style.background='rgba(0,210,106,0.08)'; this.style.transform='scale(1)'; };
             currentBtn.onclick = function() { goToCurrentWeek(); };
             currentBtn.title = currentSystemLanguage === 'ar' ? 'الأسبوع الحالي' : 'Current Week';
 
             if (currentSystemLanguage === 'ar') {
-                navHeader.appendChild(nextBtn);
-                navHeader.appendChild(weekInfo);
-                navHeader.appendChild(currentBtn);
-                navHeader.appendChild(prevBtn);
+                navHeader.appendChild(nextBtn); navHeader.appendChild(weekInfo); navHeader.appendChild(currentBtn); navHeader.appendChild(prevBtn);
             } else {
-                navHeader.appendChild(prevBtn);
-                navHeader.appendChild(weekInfo);
-                navHeader.appendChild(currentBtn);
-                navHeader.appendChild(nextBtn);
+                navHeader.appendChild(prevBtn); navHeader.appendChild(weekInfo); navHeader.appendChild(currentBtn); navHeader.appendChild(nextBtn);
             }
             holder.appendChild(navHeader);
-
-            // Add week header
-            const weekHeader = document.createElement('div');
-            weekHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border-soft);';
-            weekHeader.innerHTML = `
-                <div style="font-size:14px;font-weight:700;color:var(--text-light);">
-                    ${currentSystemLanguage === 'ar' ? 'الأسبوع' : 'Week'} ${currentWeekNum}, ${currentYear}
-                </div>
-                <div style="font-size:11px;color:var(--text-gray);">
-                    ${weekStart.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric' })} - 
-                    ${new Date(weekStart.getTime() + 6 * 86400000).toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric' })}
-                </div>
-            `;
-            holder.appendChild(weekHeader);
 
             let weeklyDataArray = [];
             for (let i = 0; i < 7; i++) {
@@ -1902,7 +1854,6 @@
                 });
             }
 
-            // Filter sessions for the viewed week (Saturday to Friday)
             archivedSessionsArray.forEach(session => {
                 const sDate = new Date(session.date + 'T00:00:00');
                 if (sDate >= weekStart && sDate <= weekEnd) {
@@ -1923,33 +1874,16 @@
             weeklyDataArray.forEach(d => { if (d.totalTime > maxDailyMinutes) maxDailyMinutes = d.totalTime; });
             if (maxDailyMinutes === 0) maxDailyMinutes = 60; // Minimum scale
 
-            // Calculate total week study time
             const totalWeekMinutes = weeklyDataArray.reduce((sum, d) => sum + d.totalTime, 0);
             const activeDays = weeklyDataArray.filter(d => d.totalTime > 0).length;
 
-            // Add total week summary
             const weekSummary = document.createElement('div');
             weekSummary.style.cssText = 'display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;';
-            let summaryHTML = `
-                <div style="background:rgba(255,115,0,0.1);border:1px solid rgba(255,115,0,0.2);border-radius:12px;padding:10px 18px;">
-                    <div style="font-size:11px;color:var(--text-gray);font-weight:600;">${currentSystemLanguage === 'ar' ? 'إجمالي الأسبوع' : 'Week Total'}</div>
-                    <div style="font-size:20px;font-weight:800;color:var(--accent-orange);">${formatMinutesToHM(totalWeekMinutes)}</div>
-                </div>
-                <div style="background:rgba(130,0,255,0.1);border:1px solid rgba(130,0,255,0.2);border-radius:12px;padding:10px 18px;">
-                    <div style="font-size:11px;color:var(--text-gray);font-weight:600;">${currentSystemLanguage === 'ar' ? 'الأيام النشطة' : 'Active Days'}</div>
-                    <div style="font-size:20px;font-weight:800;color:var(--accent-purple);">${activeDays}/7</div>
-                </div>
-            `;
+            let summaryHTML = '<div style="background:rgba(255,115,0,0.1);border:1px solid rgba(255,115,0,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (currentSystemLanguage === 'ar' ? 'إجمالي الأسبوع' : 'Week Total') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-orange);">' + formatMinutesToHM(totalWeekMinutes) + '</div></div>';
+            summaryHTML += '<div style="background:rgba(130,0,255,0.1);border:1px solid rgba(130,0,255,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (currentSystemLanguage === 'ar' ? 'الأيام النشطة' : 'Active Days') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-purple);">' + activeDays + '/7</div></div>';
             if (isPastWeek) {
                 const archData = getArchivedWeekData(currentViewedWeekOffset);
-                summaryHTML += `
-                <div style="background:rgba(0,210,106,0.1);border:1px solid rgba(0,210,106,0.2);border-radius:12px;padding:10px 18px;">
-                    <div style="font-size:11px;color:var(--text-gray);font-weight:600;">${currentSystemLanguage === 'ar' ? 'حالة الأرشفة' : 'Archive Status'}</div>
-                    <div style="font-size:14px;font-weight:700;color:var(--success);">
-                        ${archData ? '✓ ' + (currentSystemLanguage === 'ar' ? 'مؤرشف' : 'Archived') : (currentSystemLanguage === 'ar' ? 'غير مؤرشف' : 'Not Archived')}
-                    </div>
-                </div>
-                `;
+                summaryHTML += '<div style="background:rgba(0,210,106,0.08);border:1px solid rgba(0,210,106,0.15);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (currentSystemLanguage === 'ar' ? 'الأرشفة' : 'Archive') + '</div><div style="font-size:14px;font-weight:700;color:' + (archData ? 'var(--success)' : 'var(--text-gray)') + ';">' + (archData ? '✓ ' + (currentSystemLanguage === 'ar' ? 'مؤرشف' : 'Saved') : (currentSystemLanguage === 'ar' ? '—' : '—')) + '</div></div>';
             }
             weekSummary.innerHTML = summaryHTML;
             holder.appendChild(weekSummary);
