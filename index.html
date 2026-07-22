@@ -842,6 +842,182 @@
             .review-ratio-container { flex-direction: column; gap: 20px; }
             .productivity-breakdown { grid-template-columns: 1fr; }
         }
+
+        /* ===== Quick Analytics in Timer Screen ===== */
+        .timer-screen-layout .advanced-analytics-section {
+            width: 100%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease-out 0.3s both;
+        }
+        .timer-screen-layout .tags-label.quick-stats-label {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .timer-screen-layout .tags-label.quick-stats-label::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--accent-orange);
+            border-radius: 2px;
+        }
+        .timer-screen-layout .advanced-metrics-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 10px !important;
+        }
+        .timer-screen-layout .advanced-metric-card {
+            padding: 14px 12px !important;
+            border-radius: 14px !important;
+        }
+        .timer-screen-layout .advanced-metric-card .metric-header {
+            margin-bottom: 10px !important;
+            gap: 8px !important;
+        }
+        .timer-screen-layout .advanced-metric-card .metric-icon {
+            width: 28px !important;
+            height: 28px !important;
+            font-size: 14px !important;
+            border-radius: 8px !important;
+        }
+        .timer-screen-layout .advanced-metric-card .metric-title {
+            font-size: 9px !important;
+        }
+        .timer-screen-layout .advanced-metric-card .metric-value {
+            font-size: 20px !important;
+            margin-bottom: 2px !important;
+        }
+        .timer-screen-layout .advanced-metric-card .metric-subtext {
+            font-size: 9px !important;
+        }
+        .timer-screen-layout .best-day-container {
+            gap: 10px !important;
+            padding: 8px 0 !important;
+        }
+        .timer-screen-layout .best-day-emoji {
+            font-size: 28px !important;
+        }
+        .timer-screen-layout .best-day-name {
+            font-size: 16px !important;
+        }
+        .timer-screen-layout .best-day-detail {
+            font-size: 10px !important;
+        }
+        .timer-screen-layout .peak-hour-container {
+            gap: 10px !important;
+            padding: 8px 0 !important;
+        }
+        .timer-screen-layout .peak-hour-clock {
+            width: 60px !important;
+            height: 60px !important;
+            border-width: 2px !important;
+        }
+        .timer-screen-layout .peak-hour-clock .hour-hand {
+            height: 18px !important;
+        }
+        .timer-screen-layout .peak-hour-clock .minute-hand {
+            height: 24px !important;
+        }
+        .timer-screen-layout .peak-hour-time {
+            font-size: 18px !important;
+        }
+        .timer-screen-layout .peak-hour-detail {
+            font-size: 9px !important;
+        }
+        .timer-screen-layout .review-ratio-container {
+            gap: 10px !important;
+            padding: 8px 0 !important;
+        }
+        .timer-screen-layout .review-ratio-donut {
+            width: 70px !important;
+            height: 70px !important;
+        }
+        .timer-screen-layout .review-ratio-donut-inner {
+            width: 50px !important;
+            height: 50px !important;
+        }
+        .timer-screen-layout .review-ratio-donut-inner .pct {
+            font-size: 14px !important;
+        }
+        .timer-screen-layout .review-ratio-donut-inner .label {
+            font-size: 8px !important;
+        }
+        .timer-screen-layout .review-ratio-legend {
+            gap: 6px !important;
+        }
+        .timer-screen-layout .review-ratio-legend-item {
+            font-size: 10px !important;
+            gap: 6px !important;
+        }
+        .timer-screen-layout .review-ratio-legend-item .dot {
+            width: 8px !important;
+            height: 8px !important;
+        }
+        .timer-screen-layout .gap-rate-container {
+            gap: 10px !important;
+            padding: 8px 0 !important;
+        }
+        .timer-screen-layout .gap-rate-bar {
+            height: 16px !important;
+            border-radius: 8px !important;
+        }
+        .timer-screen-layout .gap-rate-fill {
+            font-size: 9px !important;
+            padding-right: 6px !important;
+        }
+        .timer-screen-layout .gap-rate-stats .stat .value {
+            font-size: 14px !important;
+        }
+        .timer-screen-layout .gap-rate-stats .stat .label {
+            font-size: 8px !important;
+        }
+        .timer-screen-layout .productivity-index-container {
+            padding: 8px 0 !important;
+        }
+        .timer-screen-layout .productivity-gauge {
+            width: 120px !important;
+            height: 60px !important;
+            margin-bottom: 8px !important;
+        }
+        .timer-screen-layout .productivity-gauge-bg {
+            width: 120px !important;
+            height: 60px !important;
+        }
+        .timer-screen-layout .productivity-gauge-fill {
+            height: 55px !important;
+        }
+        .timer-screen-layout .productivity-gauge-center {
+            width: 70px !important;
+            height: 35px !important;
+            padding-bottom: 4px !important;
+        }
+        .timer-screen-layout .productivity-gauge-center .score {
+            font-size: 20px !important;
+        }
+        .timer-screen-layout .productivity-gauge-center .label {
+            font-size: 8px !important;
+        }
+        .timer-screen-layout .productivity-breakdown {
+            gap: 6px !important;
+            margin-top: 8px !important;
+        }
+        .timer-screen-layout .productivity-breakdown-item {
+            padding: 6px !important;
+            border-radius: 8px !important;
+        }
+        .timer-screen-layout .productivity-breakdown-item .score {
+            font-size: 14px !important;
+        }
+        .timer-screen-layout .productivity-breakdown-item .label {
+            font-size: 8px !important;
+        }
+        @media (max-width: 768px) {
+            .timer-screen-layout .advanced-metrics-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
 @media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
     </style>
 <base target="_blank">
@@ -879,7 +1055,145 @@
             <div style="font-size:40px; margin-bottom: 10px;">🚫</div>
             <h3 style="color: var(--text-light); margin-bottom: 8px; font-size: 16px;">Access revoked</h3>
             <div class="auth-subtitle">The site owner has revoked access for this account.</div>
-            <button class="google-signin-btn" onclick="confirmSignOut()" style="background: transparent; border: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button>
+            <button class="google-signin-btn" onclick="confirmSignOut()" style="background: transparent; b
+                <!-- Quick Analytics -->
+                <div class="advanced-analytics-section">
+                    <div class="tags-label quick-stats-label" id="quick-analytics-label">Quick Analytics</div>
+<!-- ===== تحليلات متقدمة ===== -->
+                <div class="advanced-analytics-section">
+                    <div class="analytics-sub-header">
+                        <span class="icon">📊</span>
+                        <span id="advanced-analytics-title">Advanced Analytics</span>
+                    </div>
+
+                    <!-- صف المقاييس المتقدمة -->
+                    <div class="advanced-metrics-grid">
+                        <!-- متوسط مدة الجلسة -->
+                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">⏱</div>
+                                <div class="metric-title" id="avg-session-title">Avg Session Duration</div>
+                            </div>
+                            <div class="metric-value" style="font-size:22px;margin-bottom:4px;" id="avg-session-value">--</div>
+                            <div class="metric-subtext" style="font-size:10px;" id="avg-session-sub">Based on <strong id="avg-session-count">0</strong> sessions</div>
+                        </div>
+
+                        <!-- أفضل يوم -->
+                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">🏆</div>
+                                <div class="metric-title" id="best-day-title">Best Day of Week</div>
+                            </div>
+                            <div class="best-day-container" id="best-day-content">
+                                <div class="best-day-emoji">📅</div>
+                                <div class="best-day-info">
+                                    <div class="best-day-name" id="best-day-name">--</div>
+                                    <div class="best-day-detail" id="best-day-detail">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- أكثر ساعة إنتاجية -->
+                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">🕒</div>
+                                <div class="metric-title" id="peak-hour-title">Peak Productivity Hour</div>
+                            </div>
+                            <div class="peak-hour-container" id="peak-hour-content">
+                                <div class="peak-hour-clock">
+                                    <div class="hour-hand" id="peak-hour-hand-h"></div>
+                                    <div class="minute-hand" id="peak-hour-hand-m"></div>
+                                    <div class="center-dot"></div>
+                                </div>
+                                <div class="peak-hour-info">
+                                    <div class="peak-hour-time" id="peak-hour-time">--:--</div>
+                                    <div class="peak-hour-detail" id="peak-hour-detail">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- نسبة المراجعة -->
+                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">🧠</div>
+                                <div class="metric-title" id="review-ratio-title">Review vs New Study</div>
+                            </div>
+                            <div class="review-ratio-container" id="review-ratio-content">
+                                <div class="review-ratio-donut" id="review-donut">
+                                    <div class="review-ratio-donut-inner">
+                                        <div class="pct" id="review-pct">--%</div>
+                                        <div class="label" id="review-pct-label">Review</div>
+                                    </div>
+                                </div>
+                                <div class="review-ratio-legend" id="review-legend">
+                                    <!-- يتم ملؤه ديناميكياً -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- معدل الانقطاع -->
+                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">📉</div>
+                                <div class="metric-title" id="gap-rate-title">Gap Rate</div>
+                            </div>
+                            <div class="gap-rate-container" id="gap-rate-content">
+                                <div class="gap-rate-bar">
+                                    <div class="gap-rate-fill" id="gap-rate-fill">--</div>
+                                </div>
+                                <div class="gap-rate-stats">
+                                    <div class="stat">
+                                        <div class="value" id="gap-avg">--</div>
+                                        <div class="label" id="gap-avg-label">Avg Gap</div>
+                                    </div>
+                                    <div class="stat">
+                                        <div class="value" id="gap-longest">--</div>
+                                        <div class="label" id="gap-longest-label">Longest</div>
+                                    </div>
+                                    <div class="stat">
+                                        <div class="value" id="gap-consistency">--</div>
+                                        <div class="label" id="gap-consistency-label">Consistency</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- مؤشر الإنتاجية -->
+                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
+                            <div class="metric-header">
+                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">💯</div>
+                                <div class="metric-title" id="productivity-index-title">Productivity Index</div>
+                            </div>
+                            <div class="productivity-index-container" id="productivity-index-content">
+                                <div class="productivity-gauge">
+                                    <div class="productivity-gauge-bg"></div>
+                                    <div class="productivity-gauge-fill" id="productivity-needle"></div>
+                                    <div class="productivity-gauge-center">
+                                        <div class="score" id="productivity-score">--</div>
+                                        <div class="label" id="productivity-score-label">/ 100</div>
+                                    </div>
+                                </div>
+                                <div class="productivity-breakdown">
+                                    <div class="productivity-breakdown-item">
+                                        <div class="score" id="prod-time-score">--</div>
+                                        <div class="label" id="prod-time-label">Time</div>
+                                    </div>
+                                    <div class="productivity-breakdown-item">
+                                        <div class="score" id="prod-consistency-score">--</div>
+                                        <div class="label" id="prod-consistency-label">Consistency</div>
+                                    </div>
+                                    <div class="productivity-breakdown-item">
+                                        <div class="score" id="prod-goals-score">--</div>
+                                        <div class="label" id="prod-goals-label">Goals</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button>
         </div>
     </div>
 
@@ -1014,178 +1328,7 @@
                 </div>
                 <div>
 
-                <!-- ===== تحليلات متقدمة ===== -->
-                <div class="advanced-analytics-section">
-                    <div class="analytics-sub-header">
-                        <span class="icon">📊</span>
-                        <span id="advanced-analytics-title">Advanced Analytics</span>
-                    </div>
-
-                    <!-- صف المقاييس المتقدمة -->
-                    <div class="advanced-metrics-grid">
-                        <!-- متوسط مدة الجلسة -->
-                        <div class="advanced-metric-card">
-                            <div class="metric-header">
-                                <div class="metric-icon">⏱</div>
-                                <div class="metric-title" id="avg-session-title">Avg Session Duration</div>
-                            </div>
-                            <div class="metric-value" id="avg-session-value">--</div>
-                            <div class="metric-subtext" id="avg-session-sub">Based on <strong id="avg-session-count">0</strong> sessions</div>
-                        </div>
-
-                        <!-- أفضل يوم -->
-                        <div class="advanced-metric-card">
-                            <div class="metric-header">
-                                <div class="metric-icon">🏆</div>
-                                <div class="metric-title" id="best-day-title">Best Day of Week</div>
-                            </div>
-                            <div class="best-day-container" id="best-day-content">
-                                <div class="best-day-emoji">📅</div>
-                                <div class="best-day-info">
-                                    <div class="best-day-name" id="best-day-name">--</div>
-                                    <div class="best-day-detail" id="best-day-detail">--</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- أكثر ساعة إنتاجية -->
-                        <div class="advanced-metric-card">
-                            <div class="metric-header">
-                                <div class="metric-icon">🕒</div>
-                                <div class="metric-title" id="peak-hour-title">Peak Productivity Hour</div>
-                            </div>
-                            <div class="peak-hour-container" id="peak-hour-content">
-                                <div class="peak-hour-clock">
-                                    <div class="hour-hand" id="peak-hour-hand-h"></div>
-                                    <div class="minute-hand" id="peak-hour-hand-m"></div>
-                                    <div class="center-dot"></div>
-                                </div>
-                                <div class="peak-hour-info">
-                                    <div class="peak-hour-time" id="peak-hour-time">--:--</div>
-                                    <div class="peak-hour-detail" id="peak-hour-detail">--</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- نسبة المراجعة -->
-                        <div class="advanced-metric-card">
-                            <div class="metric-header">
-                                <div class="metric-icon">🧠</div>
-                                <div class="metric-title" id="review-ratio-title">Review vs New Study</div>
-                            </div>
-                            <div class="review-ratio-container" id="review-ratio-content">
-                                <div class="review-ratio-donut" id="review-donut">
-                                    <div class="review-ratio-donut-inner">
-                                        <div class="pct" id="review-pct">--%</div>
-                                        <div class="label" id="review-pct-label">Review</div>
-                                    </div>
-                                </div>
-                                <div class="review-ratio-legend" id="review-legend">
-                                    <!-- يتم ملؤه ديناميكياً -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- معدل الانقطاع -->
-                        <div class="advanced-metric-card">
-                            <div class="metric-header">
-                                <div class="metric-icon">📉</div>
-                                <div class="metric-title" id="gap-rate-title">Gap Rate</div>
-                            </div>
-                            <div class="gap-rate-container" id="gap-rate-content">
-                                <div class="gap-rate-bar">
-                                    <div class="gap-rate-fill" id="gap-rate-fill">--</div>
-                                </div>
-                                <div class="gap-rate-stats">
-                                    <div class="stat">
-                                        <div class="value" id="gap-avg">--</div>
-                                        <div class="label" id="gap-avg-label">Avg Gap</div>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value" id="gap-longest">--</div>
-                                        <div class="label" id="gap-longest-label">Longest</div>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value" id="gap-consistency">--</div>
-                                        <div class="label" id="gap-consistency-label">Consistency</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- مؤشر الإنتاجية -->
-                        <div class="advanced-metric-card">
-                            <div class="metric-header">
-                                <div class="metric-icon">💯</div>
-                                <div class="metric-title" id="productivity-index-title">Productivity Index</div>
-                            </div>
-                            <div class="productivity-index-container" id="productivity-index-content">
-                                <div class="productivity-gauge">
-                                    <div class="productivity-gauge-bg"></div>
-                                    <div class="productivity-gauge-fill" id="productivity-needle"></div>
-                                    <div class="productivity-gauge-center">
-                                        <div class="score" id="productivity-score">--</div>
-                                        <div class="label" id="productivity-score-label">/ 100</div>
-                                    </div>
-                                </div>
-                                <div class="productivity-breakdown">
-                                    <div class="productivity-breakdown-item">
-                                        <div class="score" id="prod-time-score">--</div>
-                                        <div class="label" id="prod-time-label">Time</div>
-                                    </div>
-                                    <div class="productivity-breakdown-item">
-                                        <div class="score" id="prod-consistency-score">--</div>
-                                        <div class="label" id="prod-consistency-label">Consistency</div>
-                                    </div>
-                                    <div class="productivity-breakdown-item">
-                                        <div class="score" id="prod-goals-score">--</div>
-                                        <div class="label" id="prod-goals-label">Goals</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- منحنى تطور ساعات الدراسة -->
-                    <div class="trend-chart-container">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
-                            <div class="charts-box-title" id="trend-chart-title" style="margin:0;">
-                                <span>📈</span>
-                                <span>Weekly Study Hours Trend</span>
-                            </div>
-                            <div class="trend-period-selector" style="display:flex;align-items:center;gap:8px;">
-                                <div class="trend-dropdown-wrapper" style="position:relative;">
-                                    <button class="trend-dropdown-btn" id="trend-period-btn" onclick="toggleTrendDropdown()" style="background:rgba(255,255,255,0.04);border:1.5px solid var(--border-soft);color:var(--text-light);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s;min-width:100px;justify-content:space-between;">
-                                        <span id="trend-period-label">Week</span>
-                                        <span style="font-size:10px;transition:transform 0.2s;" id="trend-dropdown-arrow">▼</span>
-                                    </button>
-                                    <div class="trend-dropdown-menu" id="trend-dropdown-menu" style="position:absolute;top:calc(100% + 6px);right:0;background:linear-gradient(160deg,#141622,#1a1c2e);border:1px solid rgba(217,165,74,0.2);border-radius:14px;padding:6px 0;box-shadow:0 16px 40px rgba(0,0,0,0.6);z-index:1000;display:none;opacity:0;transform:translateY(-8px) scale(0.95);transition:all 0.25s cubic-bezier(0.4,0,0.2,1);min-width:140px;backdrop-filter:blur(20px);overflow:hidden;">
-                                        <div class="trend-dropdown-item" data-period="week" onclick="setTrendPeriod('week')" style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;">
-                                            <span id="trend-opt-week">Week</span>
-                                            <span class="trend-check" id="trend-check-week" style="color:var(--accent-orange);font-size:14px;opacity:0;">✓</span>
-                                        </div>
-                                        <div class="trend-dropdown-item" data-period="month" onclick="setTrendPeriod('month')" style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;">
-                                            <span id="trend-opt-month">Month</span>
-                                            <span class="trend-check" id="trend-check-month" style="color:var(--accent-orange);font-size:14px;opacity:0;">✓</span>
-                                        </div>
-                                        <div class="trend-dropdown-item" data-period="year" onclick="setTrendPeriod('year')" style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;">
-                                            <span id="trend-opt-year">Year</span>
-                                            <span class="trend-check" id="trend-check-year" style="color:var(--accent-orange);font-size:14px;opacity:0;">✓</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="trend-nav-arrows" style="display:flex;align-items:center;gap:4px;">
-                                    <button onclick="navigateTrend(-1)" class="trend-nav-btn" style="background:rgba(255,255,255,0.04);border:1.5px solid var(--border-soft);color:var(--text-gray);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">‹</button>
-                                    <span id="trend-current-period" style="font-size:13px;font-weight:700;color:var(--text-light);min-width:80px;text-align:center;">Jul</span>
-                                    <button onclick="navigateTrend(1)" class="trend-nav-btn" style="background:rgba(255,255,255,0.04);border:1.5px solid var(--border-soft);color:var(--text-gray);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">›</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="trend-chart-wrapper">
-                            <canvas id="study-trend-chart"></canvas>
-                        </div>
-                    </div>
-                </div>
+                
 
                     <div class="dash-section-header" id="hist-header-title" style="margin-top:25px;">Recent Sessions & Lectures Log</div>
                     <button class="add-item-pill-btn" onclick="openManualSessionModal()" id="add-manual-session-btn" style="margin-bottom: 15px;">+ <span id="add-manual-btn-txt">Add Past Session</span></button>
@@ -1454,6 +1597,7 @@
                 trendOptWeek: "أسبوع",
                 trendOptMonth: "شهر",
                 trendOptYear: "سنة",
+                quickAnalyticsLabel: "تحليلات سريعة",
                 advancedAnalyticsTitle: "تحليلات متقدمة",
                 avgSessionTitle: "متوسط مدة الجلسة",
                 bestDayTitle: "أفضل يوم في الأسبوع",
@@ -2032,6 +2176,8 @@
             const d = languageDictionary[currentSystemLanguage];
             const titleEl = document.getElementById('advanced-analytics-title');
             if (titleEl) titleEl.innerText = d.advancedAnalyticsTitle || 'Advanced Analytics';
+            const quickLabel = document.getElementById('quick-analytics-label');
+            if (quickLabel) quickLabel.innerText = d.quickAnalyticsLabel || 'Quick Analytics';
 
             const avgTitle = document.getElementById('avg-session-title');
             if (avgTitle) avgTitle.innerText = d.avgSessionTitle || 'Avg Session Duration';
