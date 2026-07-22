@@ -800,6 +800,43 @@
             font-weight: 600;
         }
 
+        /* ===== Trend Dropdown Styles ===== */
+        .trend-dropdown-btn:hover {
+            border-color: var(--accent-orange) !important;
+            color: var(--accent-orange) !important;
+        }
+        .trend-dropdown-btn.active {
+            border-color: var(--accent-orange) !important;
+            background: rgba(217, 165, 74, 0.08) !important;
+        }
+        .trend-dropdown-menu.is-visible {
+            display: block !important;
+            opacity: 1 !important;
+            transform: translateY(0) scale(1) !important;
+        }
+        .trend-dropdown-item:hover {
+            background: rgba(217, 165, 74, 0.08) !important;
+            color: var(--accent-orange) !important;
+        }
+        .trend-dropdown-item.selected {
+            color: var(--accent-orange) !important;
+        }
+        .trend-dropdown-item.selected .trend-check {
+            opacity: 1 !important;
+        }
+        .trend-nav-btn:hover {
+            border-color: var(--accent-orange) !important;
+            color: var(--accent-orange) !important;
+            background: rgba(217, 165, 74, 0.08) !important;
+        }
+        html[dir="rtl"] .trend-dropdown-menu {
+            right: auto !important;
+            left: 0 !important;
+        }
+        html[dir="rtl"] .trend-nav-arrows {
+            flex-direction: row-reverse;
+        }
+
         @media (max-width: 768px) {
             .advanced-metrics-grid { grid-template-columns: 1fr; }
             .review-ratio-container { flex-direction: column; gap: 20px; }
@@ -1111,9 +1148,38 @@
 
                     <!-- منحنى تطور ساعات الدراسة -->
                     <div class="trend-chart-container">
-                        <div class="charts-box-title" id="trend-chart-title">
-                            <span>📈</span>
-                            <span>Weekly Study Hours Trend</span>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+                            <div class="charts-box-title" id="trend-chart-title" style="margin:0;">
+                                <span>📈</span>
+                                <span>Weekly Study Hours Trend</span>
+                            </div>
+                            <div class="trend-period-selector" style="display:flex;align-items:center;gap:8px;">
+                                <div class="trend-dropdown-wrapper" style="position:relative;">
+                                    <button class="trend-dropdown-btn" id="trend-period-btn" onclick="toggleTrendDropdown()" style="background:rgba(255,255,255,0.04);border:1.5px solid var(--border-soft);color:var(--text-light);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s;min-width:100px;justify-content:space-between;">
+                                        <span id="trend-period-label">Week</span>
+                                        <span style="font-size:10px;transition:transform 0.2s;" id="trend-dropdown-arrow">▼</span>
+                                    </button>
+                                    <div class="trend-dropdown-menu" id="trend-dropdown-menu" style="position:absolute;top:calc(100% + 6px);right:0;background:linear-gradient(160deg,#141622,#1a1c2e);border:1px solid rgba(217,165,74,0.2);border-radius:14px;padding:6px 0;box-shadow:0 16px 40px rgba(0,0,0,0.6);z-index:1000;display:none;opacity:0;transform:translateY(-8px) scale(0.95);transition:all 0.25s cubic-bezier(0.4,0,0.2,1);min-width:140px;backdrop-filter:blur(20px);overflow:hidden;">
+                                        <div class="trend-dropdown-item" data-period="week" onclick="setTrendPeriod('week')" style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;">
+                                            <span id="trend-opt-week">Week</span>
+                                            <span class="trend-check" id="trend-check-week" style="color:var(--accent-orange);font-size:14px;opacity:0;">✓</span>
+                                        </div>
+                                        <div class="trend-dropdown-item" data-period="month" onclick="setTrendPeriod('month')" style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;">
+                                            <span id="trend-opt-month">Month</span>
+                                            <span class="trend-check" id="trend-check-month" style="color:var(--accent-orange);font-size:14px;opacity:0;">✓</span>
+                                        </div>
+                                        <div class="trend-dropdown-item" data-period="year" onclick="setTrendPeriod('year')" style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;">
+                                            <span id="trend-opt-year">Year</span>
+                                            <span class="trend-check" id="trend-check-year" style="color:var(--accent-orange);font-size:14px;opacity:0;">✓</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="trend-nav-arrows" style="display:flex;align-items:center;gap:4px;">
+                                    <button onclick="navigateTrend(-1)" class="trend-nav-btn" style="background:rgba(255,255,255,0.04);border:1.5px solid var(--border-soft);color:var(--text-gray);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">‹</button>
+                                    <span id="trend-current-period" style="font-size:13px;font-weight:700;color:var(--text-light);min-width:80px;text-align:center;">Jul</span>
+                                    <button onclick="navigateTrend(1)" class="trend-nav-btn" style="background:rgba(255,255,255,0.04);border:1.5px solid var(--border-soft);color:var(--text-gray);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">›</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="trend-chart-wrapper">
                             <canvas id="study-trend-chart"></canvas>
@@ -1385,6 +1451,9 @@
                 sessionUpdated: "تم تحديث الجلسة!",
                 sessionAdded: "تم إضافة الجلسة بنجاح!",
                 addManualBtn: "+ إضافة جلسة سابقة",
+                trendOptWeek: "أسبوع",
+                trendOptMonth: "شهر",
+                trendOptYear: "سنة",
                 advancedAnalyticsTitle: "تحليلات متقدمة",
                 avgSessionTitle: "متوسط مدة الجلسة",
                 bestDayTitle: "أفضل يوم في الأسبوع",
@@ -3378,6 +3447,12 @@ document.addEventListener('click', function(e) {
     if (menu && badge && !badge.contains(e.target)) {
         hideAccountMenu();
     }
+    // إغلاق trend dropdown
+    const trendMenu = document.getElementById('trend-dropdown-menu');
+    const trendBtn = document.getElementById('trend-period-btn');
+    if (trendMenu && trendBtn && !trendBtn.contains(e.target) && !trendMenu.contains(e.target)) {
+        hideTrendDropdown();
+    }
 });
 
 document.addEventListener('keydown', function(e) {
@@ -3706,39 +3781,176 @@ document.addEventListener('keydown', function(e) {
         }
 
         let trendChartInstance = null;
+        let currentTrendPeriod = 'week'; // week, month, year
+        let currentTrendOffset = 0;
+
+        function toggleTrendDropdown() {
+            const menu = document.getElementById('trend-dropdown-menu');
+            const btn = document.getElementById('trend-period-btn');
+            const arrow = document.getElementById('trend-dropdown-arrow');
+            if (!menu) return;
+            if (menu.classList.contains('is-visible')) {
+                menu.classList.remove('is-visible');
+                btn.classList.remove('active');
+                arrow.style.transform = 'rotate(0deg)';
+            } else {
+                menu.classList.add('is-visible');
+                btn.classList.add('active');
+                arrow.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function hideTrendDropdown() {
+            const menu = document.getElementById('trend-dropdown-menu');
+            const btn = document.getElementById('trend-period-btn');
+            const arrow = document.getElementById('trend-dropdown-arrow');
+            if (menu) menu.classList.remove('is-visible');
+            if (btn) btn.classList.remove('active');
+            if (arrow) arrow.style.transform = 'rotate(0deg)';
+        }
+
+        function setTrendPeriod(period) {
+            currentTrendPeriod = period;
+            currentTrendOffset = 0;
+            hideTrendDropdown();
+            updateTrendPeriodUI();
+            renderStudyTrendChart();
+        }
+
+        function navigateTrend(direction) {
+            currentTrendOffset += direction;
+            renderStudyTrendChart();
+        }
+
+        function updateTrendPeriodUI() {
+            const d = languageDictionary[currentSystemLanguage];
+            const labelEl = document.getElementById('trend-period-label');
+            const periodText = {
+                week: d.trendOptWeek || 'Week',
+                month: d.trendOptMonth || 'Month',
+                year: d.trendOptYear || 'Year'
+            };
+            if (labelEl) labelEl.innerText = periodText[currentTrendPeriod] || currentTrendPeriod;
+
+            // تحديث علامات الاختيار
+            ['week', 'month', 'year'].forEach(p => {
+                const item = document.querySelector('.trend-dropdown-item[data-period="' + p + '"]');
+                const check = document.getElementById('trend-check-' + p);
+                if (item) {
+                    if (p === currentTrendPeriod) {
+                        item.classList.add('selected');
+                        if (check) check.style.opacity = '1';
+                    } else {
+                        item.classList.remove('selected');
+                        if (check) check.style.opacity = '0';
+                    }
+                }
+            });
+        }
+
+        function getTrendData() {
+            const now = new Date();
+            const labels = [];
+            const data = [];
+            const d = languageDictionary[currentSystemLanguage];
+
+            if (currentTrendPeriod === 'week') {
+                // 12 أسبوع
+                for (let i = 11; i >= 0; i--) {
+                    const offset = i + (currentTrendOffset * 12);
+                    const weekStart = new Date(now);
+                    weekStart.setDate(weekStart.getDate() - weekStart.getDay() - (offset * 7));
+                    weekStart.setHours(0, 0, 0, 0);
+                    const weekEnd = new Date(weekStart);
+                    weekEnd.setDate(weekEnd.getDate() + 6);
+                    weekEnd.setHours(23, 59, 59, 999);
+
+                    const mins = archivedSessionsArray
+                        .filter(s => {
+                            const sDate = new Date(s.date + 'T00:00:00');
+                            return sDate >= weekStart && sDate <= weekEnd;
+                        })
+                        .reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
+
+                    data.push((mins / 60).toFixed(1));
+                    const label = weekStart.toLocaleDateString(
+                        currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
+                        { month: 'short', day: 'numeric' }
+                    );
+                    labels.push(label);
+                }
+
+                // تحديث عنوان الفترة الحالي
+                const currentWeekStart = new Date(now);
+                currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay() - (currentTrendOffset * 7 * 12));
+                const periodLabel = currentWeekStart.toLocaleDateString(
+                    currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
+                    { month: 'short', year: 'numeric' }
+                );
+                const periodEl = document.getElementById('trend-current-period');
+                if (periodEl) periodEl.innerText = periodLabel;
+
+            } else if (currentTrendPeriod === 'month') {
+                // 12 شهر
+                for (let i = 11; i >= 0; i--) {
+                    const monthDate = new Date(now.getFullYear(), now.getMonth() - i - (currentTrendOffset * 12), 1);
+                    const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+                    const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0, 23, 59, 59, 999);
+                    const monthPrefix = getLocalISODate(monthStart).slice(0, 7);
+
+                    const mins = archivedSessionsArray
+                        .filter(s => s.date.startsWith(monthPrefix))
+                        .reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
+
+                    data.push((mins / 60).toFixed(1));
+                    const label = monthDate.toLocaleDateString(
+                        currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
+                        { month: 'short' }
+                    );
+                    labels.push(label);
+                }
+
+                const currentMonth = new Date(now.getFullYear(), now.getMonth() - (currentTrendOffset * 12), 1);
+                const periodLabel = currentMonth.toLocaleDateString(
+                    currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
+                    { year: 'numeric' }
+                );
+                const periodEl = document.getElementById('trend-current-period');
+                if (periodEl) periodEl.innerText = periodLabel;
+
+            } else if (currentTrendPeriod === 'year') {
+                // 5 سنوات
+                for (let i = 4; i >= 0; i--) {
+                    const year = now.getFullYear() - i - (currentTrendOffset * 5);
+                    const yearStart = new Date(year, 0, 1);
+                    const yearEnd = new Date(year, 11, 31, 23, 59, 59, 999);
+
+                    const mins = archivedSessionsArray
+                        .filter(s => {
+                            const sDate = new Date(s.date + 'T00:00:00');
+                            return sDate >= yearStart && sDate <= yearEnd;
+                        })
+                        .reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
+
+                    data.push((mins / 60).toFixed(1));
+                    labels.push(year.toString());
+                }
+
+                const startYear = now.getFullYear() - (currentTrendOffset * 5);
+                const endYear = startYear + 4;
+                const periodEl = document.getElementById('trend-current-period');
+                if (periodEl) periodEl.innerText = startYear + ' - ' + endYear;
+            }
+
+            return { labels, data };
+        }
 
         function renderStudyTrendChart() {
             const canvas = document.getElementById('study-trend-chart');
             if (!canvas) return;
 
-            // حساب ساعات الدراسة لآخر 12 أسبوع
-            const weeksData = [];
-            const weekLabels = [];
-            const now = new Date();
-
-            for (let i = 11; i >= 0; i--) {
-                const weekStart = new Date(now);
-                weekStart.setDate(weekStart.getDate() - weekStart.getDay() - (i * 7));
-                weekStart.setHours(0, 0, 0, 0);
-                const weekEnd = new Date(weekStart);
-                weekEnd.setDate(weekEnd.getDate() + 6);
-                weekEnd.setHours(23, 59, 59, 999);
-
-                const weekMinutes = archivedSessionsArray
-                    .filter(s => {
-                        const sDate = new Date(s.date + 'T00:00:00');
-                        return sDate >= weekStart && sDate <= weekEnd;
-                    })
-                    .reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
-
-                weeksData.push((weekMinutes / 60).toFixed(1));
-
-                const label = weekStart.toLocaleDateString(
-                    currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
-                    { month: 'short', day: 'numeric' }
-                );
-                weekLabels.push(label);
-            }
+            const chartData = getTrendData();
+            const d = languageDictionary[currentSystemLanguage];
 
             if (trendChartInstance) {
                 trendChartInstance.destroy();
@@ -3748,10 +3960,10 @@ document.addEventListener('keydown', function(e) {
             trendChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: weekLabels,
+                    labels: chartData.labels,
                     datasets: [{
-                        label: currentSystemLanguage === 'ar' ? 'ساعات الدراسة' : 'Study Hours',
-                        data: weeksData,
+                        label: d.studyHoursLabel || (currentSystemLanguage === 'ar' ? 'ساعات الدراسة' : 'Study Hours'),
+                        data: chartData.data,
                         borderColor: '#d9a54a',
                         backgroundColor: 'rgba(217, 165, 74, 0.1)',
                         borderWidth: 3,
@@ -3779,7 +3991,7 @@ document.addEventListener('keydown', function(e) {
                             cornerRadius: 12,
                             callbacks: {
                                 label: function(context) {
-                                    return (currentSystemLanguage === 'ar' ? 'الساعات: ' : 'Hours: ') + context.parsed.y + 'h';
+                                    return (d.hoursLabel || (currentSystemLanguage === 'ar' ? 'الساعات: ' : 'Hours: ')) + context.parsed.y + 'h';
                                 }
                             }
                         }
@@ -3801,6 +4013,8 @@ document.addEventListener('keydown', function(e) {
                     }
                 }
             });
+
+            updateTrendPeriodUI();
         }
 
         function renderAllAdvancedAnalytics() {
