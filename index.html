@@ -837,12 +837,6 @@
             flex-direction: row-reverse;
         }
 
-        @media (max-width: 768px) {
-            .advanced-metrics-grid { grid-template-columns: 1fr; }
-            .review-ratio-container { flex-direction: column; gap: 20px; }
-            .productivity-breakdown { grid-template-columns: 1fr; }
-        }
-
         /* ===== Quick Analytics in Timer Screen ===== */
         .timer-screen-layout .advanced-analytics-section {
             width: 100%;
@@ -879,7 +873,7 @@
         .timer-screen-layout .advanced-metric-card .metric-icon {
             width: 28px !important;
             height: 28px !important;
-            font-size: 14px !important;
+            font-size: 16px !important;
             border-radius: 8px !important;
         }
         .timer-screen-layout .advanced-metric-card .metric-title {
@@ -1021,7 +1015,6 @@
 @media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
     </style>
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
     <div class="toast-container" id="toast-container"></div>
@@ -1056,145 +1049,7 @@
             <div style="font-size:40px; margin-bottom: 10px;">🚫</div>
             <h3 style="color: var(--text-light); margin-bottom: 8px; font-size: 16px;">Access revoked</h3>
             <div class="auth-subtitle">The site owner has revoked access for this account.</div>
-            <button class="google-signin-btn" onclick="confirmSignOut()" style="background: transparent; b
-                <!-- Quick Analytics -->
-                <div class="advanced-analytics-section">
-                    <div class="tags-label quick-stats-label" id="quick-analytics-label">Quick Analytics</div>
-<!-- ===== تحليلات متقدمة ===== -->
-                <div class="advanced-analytics-section">
-                    <div class="analytics-sub-header">
-                        <span class="icon">📊</span>
-                        <span id="advanced-analytics-title">Advanced Analytics</span>
-                    </div>
-
-                    <!-- صف المقاييس المتقدمة -->
-                    <div class="advanced-metrics-grid">
-                        <!-- متوسط مدة الجلسة -->
-                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
-                            <div class="metric-header">
-                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">⏱</div>
-                                <div class="metric-title" id="avg-session-title">Avg Session Duration</div>
-                            </div>
-                            <div class="metric-value" style="font-size:22px;margin-bottom:4px;" id="avg-session-value">--</div>
-                            <div class="metric-subtext" style="font-size:10px;" id="avg-session-sub">Based on <strong id="avg-session-count">0</strong> sessions</div>
-                        </div>
-
-                        <!-- أفضل يوم -->
-                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
-                            <div class="metric-header">
-                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">🏆</div>
-                                <div class="metric-title" id="best-day-title">Best Day of Week</div>
-                            </div>
-                            <div class="best-day-container" id="best-day-content">
-                                <div class="best-day-emoji">📅</div>
-                                <div class="best-day-info">
-                                    <div class="best-day-name" id="best-day-name">--</div>
-                                    <div class="best-day-detail" id="best-day-detail">--</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- أكثر ساعة إنتاجية -->
-                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
-                            <div class="metric-header">
-                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">🕒</div>
-                                <div class="metric-title" id="peak-hour-title">Peak Productivity Hour</div>
-                            </div>
-                            <div class="peak-hour-container" id="peak-hour-content">
-                                <div class="peak-hour-clock">
-                                    <div class="hour-hand" id="peak-hour-hand-h"></div>
-                                    <div class="minute-hand" id="peak-hour-hand-m"></div>
-                                    <div class="center-dot"></div>
-                                </div>
-                                <div class="peak-hour-info">
-                                    <div class="peak-hour-time" id="peak-hour-time">--:--</div>
-                                    <div class="peak-hour-detail" id="peak-hour-detail">--</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- نسبة المراجعة -->
-                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
-                            <div class="metric-header">
-                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">🧠</div>
-                                <div class="metric-title" id="review-ratio-title">Review vs New Study</div>
-                            </div>
-                            <div class="review-ratio-container" id="review-ratio-content">
-                                <div class="review-ratio-donut" id="review-donut">
-                                    <div class="review-ratio-donut-inner">
-                                        <div class="pct" id="review-pct">--%</div>
-                                        <div class="label" id="review-pct-label">Review</div>
-                                    </div>
-                                </div>
-                                <div class="review-ratio-legend" id="review-legend">
-                                    <!-- يتم ملؤه ديناميكياً -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- معدل الانقطاع -->
-                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
-                            <div class="metric-header">
-                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">📉</div>
-                                <div class="metric-title" id="gap-rate-title">Gap Rate</div>
-                            </div>
-                            <div class="gap-rate-container" id="gap-rate-content">
-                                <div class="gap-rate-bar">
-                                    <div class="gap-rate-fill" id="gap-rate-fill">--</div>
-                                </div>
-                                <div class="gap-rate-stats">
-                                    <div class="stat">
-                                        <div class="value" id="gap-avg">--</div>
-                                        <div class="label" id="gap-avg-label">Avg Gap</div>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value" id="gap-longest">--</div>
-                                        <div class="label" id="gap-longest-label">Longest</div>
-                                    </div>
-                                    <div class="stat">
-                                        <div class="value" id="gap-consistency">--</div>
-                                        <div class="label" id="gap-consistency-label">Consistency</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- مؤشر الإنتاجية -->
-                        <div class="advanced-metric-card" style="padding:16px;border-radius:16px;">
-                            <div class="metric-header">
-                                <div class="metric-icon" style="width:32px;height:32px;font-size:16px;border-radius:10px;">💯</div>
-                                <div class="metric-title" id="productivity-index-title">Productivity Index</div>
-                            </div>
-                            <div class="productivity-index-container" id="productivity-index-content">
-                                <div class="productivity-gauge">
-                                    <div class="productivity-gauge-bg"></div>
-                                    <div class="productivity-gauge-fill" id="productivity-needle"></div>
-                                    <div class="productivity-gauge-center">
-                                        <div class="score" id="productivity-score">--</div>
-                                        <div class="label" id="productivity-score-label">/ 100</div>
-                                    </div>
-                                </div>
-                                <div class="productivity-breakdown">
-                                    <div class="productivity-breakdown-item">
-                                        <div class="score" id="prod-time-score">--</div>
-                                        <div class="label" id="prod-time-label">Time</div>
-                                    </div>
-                                    <div class="productivity-breakdown-item">
-                                        <div class="score" id="prod-consistency-score">--</div>
-                                        <div class="label" id="prod-consistency-label">Consistency</div>
-                                    </div>
-                                    <div class="productivity-breakdown-item">
-                                        <div class="score" id="prod-goals-score">--</div>
-                                        <div class="label" id="prod-goals-label">Goals</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    
-                </div>
-order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button>
+            <button class="google-signin-btn" onclick="confirmSignOut()" style="background: transparent; border: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button>
         </div>
     </div>
 
@@ -1273,7 +1128,121 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
                     <div class="tags-label" id="tags-section-header">Subjects & Preparations (Click to select):</div>
                     <div class="tags-list" id="tags-box-wrapper"></div>
                 </div>
-            </div>
+            
+
+                <!-- Quick Analytics -->
+                <div class="advanced-analytics-section" style="width:100%;max-width:600px;margin-top:16px;">
+                    <div class="tags-label quick-stats-label" id="quick-analytics-label" style="font-size:12px;color:var(--text-gray);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+                        <span style="width:4px;height:16px;background:var(--accent-orange);border-radius:2px;"></span>
+                        <span>Quick Analytics</span>
+                    </div>
+                    <div class="advanced-metrics-grid" style="grid-template-columns:repeat(3,1fr);gap:10px;">
+
+                        <!-- ⏱ Avg Session Duration -->
+                        <div class="advanced-metric-card" style="padding:14px 12px;border-radius:14px;">
+                            <div class="metric-header" style="margin-bottom:10px;gap:8px;">
+                                <div class="metric-icon" style="width:28px;height:28px;font-size:14px;border-radius:8px;">⏱</div>
+                                <div class="metric-title" style="font-size:9px;">Avg Session</div>
+                            </div>
+                            <div class="metric-value" style="font-size:20px;margin-bottom:2px;" id="avg-session-val">--</div>
+                            <div class="metric-subtext" style="font-size:9px;">Based on <strong id="avg-session-count">0</strong> sessions</div>
+                        </div>
+
+                        <!-- 🏆 Best Day -->
+                        <div class="advanced-metric-card" style="padding:14px 12px;border-radius:14px;">
+                            <div class="metric-header" style="margin-bottom:10px;gap:8px;">
+                                <div class="metric-icon" style="width:28px;height:28px;font-size:14px;border-radius:8px;">🏆</div>
+                                <div class="metric-title" style="font-size:9px;">Best Day</div>
+                            </div>
+                            <div class="best-day-container" style="gap:10px;padding:8px 0;">
+                                <div class="best-day-emoji" style="font-size:28px;">📅</div>
+                                <div class="best-day-info">
+                                    <div class="best-day-name" style="font-size:16px;color:var(--accent-orange);" id="best-day-name">--</div>
+                                    <div class="best-day-detail" style="font-size:10px;" id="best-day-detail">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 🕒 Peak Hour -->
+                        <div class="advanced-metric-card" style="padding:14px 12px;border-radius:14px;">
+                            <div class="metric-header" style="margin-bottom:10px;gap:8px;">
+                                <div class="metric-icon" style="width:28px;height:28px;font-size:14px;border-radius:8px;">🕒</div>
+                                <div class="metric-title" style="font-size:9px;">Peak Hour</div>
+                            </div>
+                            <div class="peak-hour-container" style="gap:10px;padding:8px 0;">
+                                <div class="peak-hour-clock" style="width:60px;height:60px;border-width:2px;">
+                                    <div class="hour-hand" style="height:18px;" id="peak-hour-hand-h"></div>
+                                    <div class="minute-hand" style="height:24px;" id="peak-hour-hand-m"></div>
+                                    <div class="center-dot"></div>
+                                </div>
+                                <div class="peak-hour-info">
+                                    <div class="peak-hour-time" style="font-size:18px;" id="peak-hour-time">--:--</div>
+                                    <div class="peak-hour-detail" style="font-size:9px;" id="peak-hour-detail">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 🧠 Review Ratio -->
+                        <div class="advanced-metric-card" style="padding:14px 12px;border-radius:14px;">
+                            <div class="metric-header" style="margin-bottom:10px;gap:8px;">
+                                <div class="metric-icon" style="width:28px;height:28px;font-size:14px;border-radius:8px;">🧠</div>
+                                <div class="metric-title" style="font-size:9px;">Review Ratio</div>
+                            </div>
+                            <div class="review-ratio-container" style="gap:10px;padding:8px 0;">
+                                <div class="review-ratio-donut" style="width:70px;height:70px;" id="review-donut">
+                                    <div class="review-ratio-donut-inner" style="width:50px;height:50px;">
+                                        <div class="pct" style="font-size:14px;" id="review-pct">--%</div>
+                                        <div class="label" style="font-size:8px;" id="review-pct-label">Review</div>
+                                    </div>
+                                </div>
+                                <div class="review-ratio-legend" style="gap:6px;" id="review-legend"></div>
+                            </div>
+                        </div>
+
+                        <!-- 📉 Gap Rate -->
+                        <div class="advanced-metric-card" style="padding:14px 12px;border-radius:14px;">
+                            <div class="metric-header" style="margin-bottom:10px;gap:8px;">
+                                <div class="metric-icon" style="width:28px;height:28px;font-size:14px;border-radius:8px;">📉</div>
+                                <div class="metric-title" style="font-size:9px;">Gap Rate</div>
+                            </div>
+                            <div class="gap-rate-container" style="gap:10px;padding:8px 0;">
+                                <div class="gap-rate-bar" style="height:16px;border-radius:8px;">
+                                    <div class="gap-rate-fill" style="font-size:9px;padding-right:6px;" id="gap-rate-fill">--</div>
+                                </div>
+                                <div class="gap-rate-stats">
+                                    <div class="stat"><div class="value" style="font-size:14px;" id="gap-avg">--</div><div class="label" style="font-size:8px;" id="gap-avg-label">Avg Gap</div></div>
+                                    <div class="stat"><div class="value" style="font-size:14px;" id="gap-longest">--</div><div class="label" style="font-size:8px;" id="gap-longest-label">Longest</div></div>
+                                    <div class="stat"><div class="value" style="font-size:14px;" id="gap-consistency">--</div><div class="label" style="font-size:8px;" id="gap-consistency-label">Consistency</div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 💯 Productivity Index -->
+                        <div class="advanced-metric-card" style="padding:14px 12px;border-radius:14px;">
+                            <div class="metric-header" style="margin-bottom:10px;gap:8px;">
+                                <div class="metric-icon" style="width:28px;height:28px;font-size:14px;border-radius:8px;">💯</div>
+                                <div class="metric-title" style="font-size:9px;">Productivity</div>
+                            </div>
+                            <div class="productivity-index-container" style="padding:8px 0;">
+                                <div class="productivity-gauge" style="width:120px;height:60px;margin-bottom:8px;">
+                                    <div class="productivity-gauge-bg" style="width:120px;height:60px;"></div>
+                                    <div class="productivity-gauge-fill" style="height:55px;" id="productivity-needle"></div>
+                                    <div class="productivity-gauge-center" style="width:70px;height:35px;padding-bottom:4px;">
+                                        <div class="score" style="font-size:20px;" id="productivity-score">--</div>
+                                        <div class="label" style="font-size:8px;" id="productivity-score-label">/ 100</div>
+                                    </div>
+                                </div>
+                                <div class="productivity-breakdown" style="gap:6px;margin-top:8px;">
+                                    <div class="productivity-breakdown-item" style="padding:6px;border-radius:8px;"><div class="score" style="font-size:14px;" id="prod-time-score">--</div><div class="label" style="font-size:8px;" id="prod-time-label">Time</div></div>
+                                    <div class="productivity-breakdown-item" style="padding:6px;border-radius:8px;"><div class="score" style="font-size:14px;" id="prod-consistency-score">--</div><div class="label" style="font-size:8px;" id="prod-consistency-label">Consistency</div></div>
+                                    <div class="productivity-breakdown-item" style="padding:6px;border-radius:8px;"><div class="score" style="font-size:14px;" id="prod-goals-score">--</div><div class="label" style="font-size:8px;" id="prod-goals-label">Goals</div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+</div>
         </div>
         <div class="screen-view glass-card analysis-screen-layout" id="screen-analysis">
             <div class="dashboard-scaled-panel">
@@ -1327,10 +1296,48 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
                     <div class="charts-box-title">📅 Study Heatmap (Last 365 Days)</div>
                     <div id="study-heatmap" style="overflow-x:auto;padding:4px;"></div>
                 </div>
+
+                    <!-- منحنى تطور ساعات الدراسة -->
+                    <div class="trend-chart-container">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+                            <div class="charts-box-title" id="trend-chart-title" style="margin:0;">
+                                <span>📈</span>
+                                <span>Weekly Study Hours Trend</span>
+                            </div>
+                            <div class="trend-period-selector" style="display:flex;align-items:center;gap:8px;">
+                                <div class="trend-dropdown-wrapper" style="position:relative;">
+                                    <button class="trend-dropdown-btn" id="trend-period-btn" onclick="toggleTrendDropdown()" style="background:rgba(255,255,255,0.04);border:1.5px solid var(--border-soft);color:var(--text-light);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s;min-width:100px;justify-content:space-between;">
+                                        <span id="trend-period-label">Week</span>
+                                        <span style="font-size:10px;transition:transform 0.2s;" id="trend-dropdown-arrow">▼</span>
+                                    </button>
+                                    <div class="trend-dropdown-menu" id="trend-dropdown-menu" style="position:absolute;top:calc(100% + 6px);right:0;background:linear-gradient(160deg,#141622,#1a1c2e);border:1px solid rgba(217,165,74,0.2);border-radius:14px;padding:6px 0;box-shadow:0 16px 40px rgba(0,0,0,0.6);z-index:1000;display:none;opacity:0;transform:translateY(-8px) scale(0.95);transition:all 0.25s cubic-bezier(0.4,0,0.2,1);min-width:140px;backdrop-filter:blur(20px);overflow:hidden;">
+                                        <div class="trend-dropdown-item" data-period="week" onclick="setTrendPeriod('week')" style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;">
+                                            <span id="trend-opt-week">Week</span>
+                                            <span class="trend-check" id="trend-check-week" style="color:var(--accent-orange);font-size:14px;opacity:0;">✓</span>
+                                        </div>
+                                        <div class="trend-dropdown-item" data-period="month" onclick="setTrendPeriod('month')" style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;">
+                                            <span id="trend-opt-month">Month</span>
+                                            <span class="trend-check" id="trend-check-month" style="color:var(--accent-orange);font-size:14px;opacity:0;">✓</span>
+                                        </div>
+                                        <div class="trend-dropdown-item" data-period="year" onclick="setTrendPeriod('year')" style="padding:10px 16px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:space-between;">
+                                            <span id="trend-opt-year">Year</span>
+                                            <span class="trend-check" id="trend-check-year" style="color:var(--accent-orange);font-size:14px;opacity:0;">✓</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="trend-nav-arrows" style="display:flex;align-items:center;gap:4px;">
+                                    <button onclick="navigateTrend(-1)" class="trend-nav-btn" style="background:rgba(255,255,255,0.04);border:1.5px solid var(--border-soft);color:var(--text-gray);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">‹</button>
+                                    <span id="trend-current-period" style="font-size:13px;font-weight:700;color:var(--text-light);min-width:80px;text-align:center;">Jul</span>
+                                    <button onclick="navigateTrend(1)" class="trend-nav-btn" style="background:rgba(255,255,255,0.04);border:1.5px solid var(--border-soft);color:var(--text-gray);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">›</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trend-chart-wrapper">
+                            <canvas id="study-trend-chart"></canvas>
+                        </div>
+                    </div>
+
                 <div>
-
-                
-
                     <div class="dash-section-header" id="hist-header-title" style="margin-top:25px;">Recent Sessions & Lectures Log</div>
                     <button class="add-item-pill-btn" onclick="openManualSessionModal()" id="add-manual-session-btn" style="margin-bottom: 15px;">+ <span id="add-manual-btn-txt">Add Past Session</span></button>
 
@@ -1594,74 +1601,7 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
                 addSessionBtn: "إضافة الجلسة",
                 sessionUpdated: "تم تحديث الجلسة!",
                 sessionAdded: "تم إضافة الجلسة بنجاح!",
-                addManualBtn: "+ إضافة جلسة سابقة",
-                trendOptWeek: "أسبوع",
-                trendOptMonth: "شهر",
-                trendOptYear: "سنة",
-                quickAnalyticsLabel: "تحليلات سريعة",
-                advancedAnalyticsTitle: "تحليلات متقدمة",
-                avgSessionTitle: "متوسط مدة الجلسة",
-                bestDayTitle: "أفضل يوم في الأسبوع",
-                peakHourTitle: "أكثر ساعة إنتاجية",
-                reviewRatioTitle: "نسبة المراجعة إلى الدراسة الجديدة",
-                gapRateTitle: "معدل الانقطاع بين الجلسات",
-                productivityIndexTitle: "مؤشر الإنتاجية",
-                trendChartTitle: "منحنى تطور ساعات الدراسة أسبوعيًا",
-                productivityScoreLabel: "من 100",
-                prodTimeLabel: "الوقت",
-                prodConsistencyLabel: "الانتظام",
-                prodGoalsLabel: "الأهداف",
-                reviewLabel: "مراجعة",
-                newStudyLabel: "دراسة جديدة",
-                avgGapLabel: "متوسط الانقطاع",
-                longestGapLabel: "أطول انقطاع",
-                consistencyLabel: "الانتظام",
-                sessionsLabel: "جلسة",
-                noDataLabel: "لا توجد بيانات",
-                weekTotalLabel: "إجمالي الأسبوع",
-                activeDaysLabel: "الأيام النشطة",
-                archiveLabel: "الأرشفة",
-                archivedLabel: "مؤرشف",
-                currentLabel: "الحالي",
-                previousWeekLabel: "الأسبوع السابق",
-                nextWeekLabel: "الأسبوع القادم",
-                currentWeekLabel: "الأسبوع الحالي",
-                noSessionsLabel: "لا توجد جلسات",
-                totalLabel: "الإجمالي",
-                weeklyTagDistLabel: "توزيع المواد هذا الأسبوع",
-                lessLabel: "أقل",
-                moreLabel: "أكثر",
-                studyHoursLabel: "ساعات الدراسة",
-                hoursLabel: "الساعات",
-                dayStudyLabel: "الدراسة اليومية",
-                weekProgressLabel: "تقدم الأسبوع الحالي",
-                monthStatsLabel: "إجمالي هذا الشهر",
-                hoursUnit: "ساعة",
-                dayUpTxt: "ارتفع بنسبة 12% عن أمس",
-                monthStreakTxt: "تم إنجاز 19 يوم دراسة متتالي",
-                goalExceededDaily: "تجاوزت الهدف اليومي بـ",
-                goalExceededWeekly: "تجاوزت الهدف الأسبوعي بـ",
-                goalExceededMonthly: "تجاوزت الهدف الشهري بـ",
-                leftToDailyGoal: "متبقي للهدف اليومي",
-                leftToWeeklyGoal: "متبقي للهدف الأسبوعي",
-                leftToMonthlyGoal: "متبقي للهدف الشهري",
-                betterThanYesterday: "أفضل من الأمس بـ",
-                weekArchived: "تم أرشفة الأسبوع!",
-                weekLabel: "الأسبوع",
-                noSignUpRequests: "لا توجد طلبات تسجيل حتى الآن",
-                pendingLabel: "قيد الانتظار",
-                approveLabel: "موافقة",
-                rejectLabel: "رفض",
-                kickBanLabel: "طرد / حظر",
-                restoreAccessLabel: "استعادة الوصول",
-                accessRevoked: "تم إلغاء الوصول",
-                waitingApproval: "في انتظار الموافقة",
-                signOutLabel: "تسجيل الخروج",
-                installPrompt: "تثبيت INDEX كتطبيق على جهازك؟",
-                installYes: "نعم",
-                installNo: "لا",
-                dataExported: "تم تصدير البيانات!",
-                dataExportMsg: "تم تحميل بيانات الدراسة الخاصة بك.",
+                addManualBtn: "+ إضافة جلسة سابقة"
             }
         };
 
@@ -1905,21 +1845,20 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
             const entries = Object.entries(data).filter(([uid, rec]) => !rec.isAdmin);
             entries.sort((a, b) => (b[1].requestedAt || 0) - (a[1].requestedAt || 0));
             const pendingCount = entries.filter(([, rec]) => rec.status === 'pending').length;
-            countEl.innerText = pendingCount > 0 ? pendingCount + ' ' + (d7.pendingLabel || 'pending') : '';
-            const d7 = languageDictionary[currentSystemLanguage];
-            if (entries.length === 0) { listEl.innerHTML = ''; emptyEl.innerText = d7.noSignUpRequests || 'No sign-up requests yet.'; emptyEl.style.display = 'block'; return; }
+            countEl.innerText = pendingCount > 0 ? pendingCount + ' pending' : '';
+            if (entries.length === 0) { listEl.innerHTML = ''; emptyEl.style.display = 'block'; return; }
             emptyEl.style.display = 'none';
             listEl.innerHTML = entries.map(([uid, rec]) => {
                 const statusColor = rec.status === 'approved' ? 'var(--success)' : rec.status === 'banned' ? 'var(--danger)' : 'var(--warning)';
                 const requestedDate = rec.requestedAt ? new Date(rec.requestedAt).toLocaleString() : '';
                 let actions = '';
                 if (rec.status === 'pending') {
-                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">${d7.approveLabel || 'Approve'}</button>
-                               <button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">${d7.rejectLabel || 'Reject'}</button>`;
+                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">Approve</button>
+                               <button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">Reject</button>`;
                 } else if (rec.status === 'approved') {
-                    actions = `<button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">${d7.kickBanLabel || 'Kick / Ban'}</button>`;
+                    actions = `<button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">Kick / Ban</button>`;
                 } else if (rec.status === 'banned') {
-                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">${d7.restoreAccessLabel || 'Restore access'}</button>`;
+                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">Restore access</button>`;
                 }
                 return `<div class="glass-card" style="padding:14px 18px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                     <div style="display:flex; align-items:center; gap:10px;">
@@ -2170,63 +2109,11 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
             renderGoalsScreen();
             renderHabitsScreen();
             updateEditAddModalLabels();
-            updateAdvancedAnalyticsLabels();
-        }
-
-        function updateAdvancedAnalyticsLabels() {
-            const d = languageDictionary[currentSystemLanguage];
-            const titleEl = document.getElementById('advanced-analytics-title');
-            if (titleEl) titleEl.innerText = d.advancedAnalyticsTitle || 'Advanced Analytics';
             const quickLabel = document.getElementById('quick-analytics-label');
-            if (quickLabel) quickLabel.innerText = d.quickAnalyticsLabel || 'Quick Analytics';
-
-            const avgTitle = document.getElementById('avg-session-title');
-            if (avgTitle) avgTitle.innerText = d.avgSessionTitle || 'Avg Session Duration';
-
-            const bestDayTitle = document.getElementById('best-day-title');
-            if (bestDayTitle) bestDayTitle.innerText = d.bestDayTitle || 'Best Day of Week';
-
-            const peakHourTitle = document.getElementById('peak-hour-title');
-            if (peakHourTitle) peakHourTitle.innerText = d.peakHourTitle || 'Peak Productivity Hour';
-
-            const reviewTitle = document.getElementById('review-ratio-title');
-            if (reviewTitle) reviewTitle.innerText = d.reviewRatioTitle || 'Review vs New Study';
-
-            const gapTitle = document.getElementById('gap-rate-title');
-            if (gapTitle) gapTitle.innerText = d.gapRateTitle || 'Gap Rate';
-
-            const prodTitle = document.getElementById('productivity-index-title');
-            if (prodTitle) prodTitle.innerText = d.productivityIndexTitle || 'Productivity Index';
-
-            const trendTitle = document.getElementById('trend-chart-title');
-            if (trendTitle) trendTitle.innerHTML = '<span>📈</span><span>' + (d.trendChartTitle || 'Weekly Study Hours Trend') + '</span>';
-
-            const scoreLabel = document.getElementById('productivity-score-label');
-            if (scoreLabel) scoreLabel.innerText = d.productivityScoreLabel || '/ 100';
-
-            const timeLabel = document.getElementById('prod-time-label');
-            if (timeLabel) timeLabel.innerText = d.prodTimeLabel || 'Time';
-
-            const consistencyLabel = document.getElementById('prod-consistency-label');
-            if (consistencyLabel) consistencyLabel.innerText = d.prodConsistencyLabel || 'Consistency';
-
-            const goalsLabel = document.getElementById('prod-goals-label');
-            if (goalsLabel) goalsLabel.innerText = d.prodGoalsLabel || 'Goals';
-
-            const reviewPctLabel = document.getElementById('review-pct-label');
-            if (reviewPctLabel) reviewPctLabel.innerText = d.reviewLabel || 'Review';
-
-            const avgGapLabel = document.getElementById('gap-avg-label');
-            if (avgGapLabel) avgGapLabel.innerText = d.avgGapLabel || 'Avg Gap';
-
-            const longestGapLabel = document.getElementById('gap-longest-label');
-            if (longestGapLabel) longestGapLabel.innerText = d.longestGapLabel || 'Longest';
-
-            const gapConsistencyLabel = document.getElementById('gap-consistency-label');
-            if (gapConsistencyLabel) gapConsistencyLabel.innerText = d.consistencyLabel || 'Consistency';
-
-            // إعادة رسم التحليلات المتقدمة باللغة الجديدة
-            renderAllAdvancedAnalytics();
+            if (quickLabel) {
+                const span = quickLabel.querySelector('span:last-child');
+                if (span) span.innerText = d.quickAnalyticsLabel || 'Quick Analytics';
+            }
         }
 
         function switchMode(mode) {
@@ -2553,7 +2440,6 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
                 });
             }
             if (typeof renderWeeklySegmentedChart === "function") renderWeeklySegmentedChart();
-            if (typeof renderAllAdvancedAnalytics === "function") renderAllAdvancedAnalytics();
         }
 
         
@@ -2633,10 +2519,7 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
                 const lwk = getWeekKey(lws);
                 if (!archivedWeeks[lwk]) {
                     const a = archiveWeekByOffset(-1);
-                    if (a && a.totalMinutes > 0) {
-                        const d6 = languageDictionary[currentSystemLanguage];
-                        showToast(d6.weekArchived || 'Week Archived!', (d6.weekLabel || 'Week ') + a.weekNumber + ': ' + formatMinutesToHM(a.totalMinutes), 'success');
-                    }
+                    if (a && a.totalMinutes > 0) showToast(currentSystemLanguage === 'ar' ? 'تم أرشفة الأسبوع!' : 'Week Archived!', (currentSystemLanguage === 'ar' ? 'الأسبوع ' : 'Week ') + a.weekNumber + ': ' + formatMinutesToHM(a.totalMinutes), 'success');
                 }
             }
         }
@@ -2664,7 +2547,7 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
             prevBtn.onmouseover = function() { this.style.background='rgba(217,165,74,0.25)'; this.style.transform='scale(1.1)'; };
             prevBtn.onmouseout = function() { this.style.background='rgba(217,165,74,0.12)'; this.style.transform='scale(1)'; };
             prevBtn.onclick = function() { navigateWeek(-1); };
-            prevBtn.title = (languageDictionary[currentSystemLanguage] && languageDictionary[currentSystemLanguage].previousWeekLabel) || (currentSystemLanguage === 'ar' ? 'الأسبوع السابق' : 'Previous Week');
+            prevBtn.title = currentSystemLanguage === 'ar' ? 'الأسبوع السابق' : 'Previous Week';
 
             const nextBtn = document.createElement('button');
             nextBtn.innerHTML = currentSystemLanguage === 'ar' ? '◀' : '▶';
@@ -2672,7 +2555,7 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
             nextBtn.onmouseover = function() { this.style.background='rgba(217,165,74,0.25)'; this.style.transform='scale(1.1)'; };
             nextBtn.onmouseout = function() { this.style.background='rgba(217,165,74,0.12)'; this.style.transform='scale(1)'; };
             nextBtn.onclick = function() { navigateWeek(1); };
-            nextBtn.title = (languageDictionary[currentSystemLanguage] && languageDictionary[currentSystemLanguage].nextWeekLabel) || (currentSystemLanguage === 'ar' ? 'الأسبوع القادم' : 'Next Week');
+            nextBtn.title = currentSystemLanguage === 'ar' ? 'الأسبوع القادم' : 'Next Week';
 
             const weekInfo = document.createElement('div');
             weekInfo.style.cssText = 'text-align:center;flex:1;';
@@ -2693,7 +2576,7 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
             currentBtn.onmouseover = function() { this.style.background='rgba(0,210,106,0.2)'; this.style.transform='scale(1.1)'; };
             currentBtn.onmouseout = function() { this.style.background='rgba(0,210,106,0.08)'; this.style.transform='scale(1)'; };
             currentBtn.onclick = function() { goToCurrentWeek(); };
-            currentBtn.title = (languageDictionary[currentSystemLanguage] && languageDictionary[currentSystemLanguage].currentWeekLabel) || (currentSystemLanguage === 'ar' ? 'الأسبوع الحالي' : 'Current Week');
+            currentBtn.title = currentSystemLanguage === 'ar' ? 'الأسبوع الحالي' : 'Current Week';
 
             if (currentSystemLanguage === 'ar') {
                 navHeader.appendChild(nextBtn); navHeader.appendChild(weekInfo); navHeader.appendChild(currentBtn); navHeader.appendChild(prevBtn);
@@ -2742,9 +2625,8 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
 
             const weekSummary = document.createElement('div');
             weekSummary.style.cssText = 'display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;';
-            const d2 = languageDictionary[currentSystemLanguage];
-            let summaryHTML = '<div style="background:rgba(217,165,74,0.1);border:1px solid rgba(217,165,74,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (d2.weekTotalLabel || 'Week Total') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-orange);">' + formatMinutesToHM(totalWeekMinutes) + '</div></div>';
-            summaryHTML += '<div style="background:rgba(62,92,138,0.1);border:1px solid rgba(62,92,138,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (d2.activeDaysLabel || 'Active Days') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-purple);">' + activeDays + '/7</div></div>';
+            let summaryHTML = '<div style="background:rgba(217,165,74,0.1);border:1px solid rgba(217,165,74,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (currentSystemLanguage === 'ar' ? 'إجمالي الأسبوع' : 'Week Total') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-orange);">' + formatMinutesToHM(totalWeekMinutes) + '</div></div>';
+            summaryHTML += '<div style="background:rgba(62,92,138,0.1);border:1px solid rgba(62,92,138,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (currentSystemLanguage === 'ar' ? 'الأيام النشطة' : 'Active Days') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-purple);">' + activeDays + '/7</div></div>';
             if (isPastWeek) {
                 const archData = getArchivedWeekData(currentViewedWeekOffset);
                 summaryHTML += '<div style="background:rgba(0,210,106,0.08);border:1px solid rgba(0,210,106,0.15);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (currentSystemLanguage === 'ar' ? 'الأرشفة' : 'Archive') + '</div><div style="font-size:14px;font-weight:700;color:' + (archData ? 'var(--success)' : 'var(--text-gray)') + ';">' + (archData ? '✓ ' + (currentSystemLanguage === 'ar' ? 'مؤرشف' : 'Saved') : (currentSystemLanguage === 'ar' ? '—' : '—')) + '</div></div>';
@@ -2772,11 +2654,10 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
                 const contentCol = document.createElement('div');
                 contentCol.style.cssText = 'flex:1;min-width:0;';
 
-                const d4 = languageDictionary[currentSystemLanguage];
                 if (day.totalTime === 0) {
                     const noData = document.createElement('div');
                     noData.style.cssText = 'color:var(--text-gray);font-size:12px;font-style:italic;padding:8px 0;';
-                    noData.innerText = d4.noSessionsLabel || (currentSystemLanguage === 'ar' ? 'لا توجد جلسات' : 'No sessions');
+                    noData.innerText = currentSystemLanguage === 'ar' ? 'لا توجد جلسات' : 'No sessions';
                     contentCol.appendChild(noData);
                 } else {
                     const barTrack = document.createElement('div');
@@ -2819,7 +2700,7 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
 
                     const dayTotal = document.createElement('div');
                     dayTotal.style.cssText = 'font-size:11px;color:var(--text-gray);margin-top:6px;font-weight:600;';
-                    dayTotal.innerText = `${d4.totalLabel || 'Total'}: ${formatMinutesToHM(day.totalTime)}`;
+                    dayTotal.innerText = `${currentSystemLanguage === 'ar' ? 'الإجمالي' : 'Total'}: ${formatMinutesToHM(day.totalTime)}`;
 
                     contentCol.appendChild(tagsLegend);
                     contentCol.appendChild(dayTotal);
@@ -3041,13 +2922,12 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
 
             const legend = document.createElement('div');
             legend.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:12px;padding-left:34px;font-size:11px;color:var(--text-gray);';
-            const d5 = languageDictionary[currentSystemLanguage];
             legend.innerHTML = `
-                <span>${d5.lessLabel || 'Less'}</span>
+                <span>Less</span>
                 <div style="display:flex;gap:2px;">
                     ${[0.15, 0.35, 0.55, 0.75, 0.95].map(a => `<div style="width:11px;height:11px;border-radius:2px;background:rgba(217,165,74,${a});"></div>`).join('')}
                 </div>
-                <span>${d5.moreLabel || 'More'}</span>
+                <span>More</span>
             `;
             wrapper.appendChild(legend);
 
@@ -3156,8 +3036,7 @@ order: 1px solid var(--border-soft); color: var(--text-light);">Sign out</button
             a.download = `index-study-data-${getLocalISODate(new Date())}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            const d8 = languageDictionary[currentSystemLanguage];
-            showToast(d8.dataExported || 'Data Exported!', d8.dataExportMsg || 'Your study data has been downloaded.', 'success');
+            showToast('Data Exported!', 'Your study data has been downloaded.', 'success');
         }
 
         function generateUniqueRecordId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
@@ -3594,7 +3473,6 @@ document.addEventListener('click', function(e) {
     if (menu && badge && !badge.contains(e.target)) {
         hideAccountMenu();
     }
-    // إغلاق trend dropdown
     const trendMenu = document.getElementById('trend-dropdown-menu');
     const trendBtn = document.getElementById('trend-period-btn');
     if (trendMenu && trendBtn && !trendBtn.contains(e.target) && !trendMenu.contains(e.target)) {
@@ -3619,19 +3497,11 @@ document.addEventListener('keydown', function(e) {
 
         function renderAvgSessionDuration() {
             const data = calculateAvgSessionDuration();
-            const valueEl = document.getElementById('avg-session-value');
-            const subEl = document.getElementById('avg-session-sub');
-            const countEl = document.getElementById('avg-session-count');
+            const valueEl = document.getElementById('avg-session-val');
+            const subEl = document.getElementById('avg-session-count');
 
             if (valueEl) valueEl.innerText = data.avg > 0 ? formatMinutesToHM(data.avg) : '--';
-            if (countEl) countEl.innerText = data.count;
-            if (subEl) {
-                if (currentSystemLanguage === 'ar') {
-                    subEl.innerHTML = 'بناءً على <strong>' + data.count + '</strong> جلسة';
-                } else {
-                    subEl.innerHTML = 'Based on <strong>' + data.count + '</strong> sessions';
-                }
-            }
+            if (subEl) subEl.innerText = data.count;
         }
 
         function calculateBestDayOfWeek() {
@@ -3713,10 +3583,7 @@ document.addEventListener('keydown', function(e) {
                 if (mins > maxMins) { maxMins = mins; peakHour = h; }
             });
 
-            if (maxMins === 0) {
-                // fallback: استخدام الوقت الحالي كتقريب
-                return null;
-            }
+            if (maxMins === 0) return null;
 
             const nextHour = (peakHour + 1) % 24;
             const timeRange = peakHour.toString().padStart(2, '0') + ':00 - ' + nextHour.toString().padStart(2, '0') + ':00';
@@ -3739,8 +3606,8 @@ document.addEventListener('keydown', function(e) {
             if (!data) {
                 if (timeEl) timeEl.innerText = '--:--';
                 if (detailEl) detailEl.innerText = '--';
-                if (handH) handH.style.transform = 'rotate(0deg)';
-                if (handM) handM.style.transform = 'rotate(0deg)';
+                if (handH) handH.style.transform = 'translateX(-50%) rotate(0deg)';
+                if (handM) handM.style.transform = 'translateX(-50%) rotate(0deg)';
                 return;
             }
 
@@ -3753,14 +3620,12 @@ document.addEventListener('keydown', function(e) {
                 }
             }
 
-            // تحريك عقارب الساعة
             const hourAngle = (data.hour % 12) * 30;
             if (handH) handH.style.transform = 'translateX(-50%) rotate(' + hourAngle + 'deg)';
             if (handM) handM.style.transform = 'translateX(-50%) rotate(0deg)';
         }
 
         function calculateReviewRatio() {
-            // نفترض أن الجلسات التي تحتوي على كلمات "review" أو "مراجعة" أو "revision" هي مراجعة
             const reviewKeywords = ['review', 'revision', 'مراجعة', 'مراجعه', 'recap', 'summary', 'تلخيص'];
             let reviewMinutes = 0;
             let newStudyMinutes = 0;
@@ -3798,7 +3663,6 @@ document.addEventListener('keydown', function(e) {
 
             if (pctEl) pctEl.innerText = data.reviewPct + '%';
 
-            // تحديث Donut
             if (donut) {
                 donut.style.background = `conic-gradient(var(--accent-orange) ${data.reviewPct * 3.6}deg, var(--accent-purple) 0deg)`;
             }
@@ -3839,7 +3703,6 @@ document.addEventListener('keydown', function(e) {
             const avgGap = Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length);
             const longestGap = Math.max(...gaps);
 
-            // درجة الانتظام: كلما كان المتوسط أقل كانت الدرجة أعلى
             let consistencyScore = Math.max(0, Math.round(100 - (avgGap - 1) * 10));
             if (avgGap <= 1) consistencyScore = 100;
             if (avgGap > 10) consistencyScore = Math.max(0, 100 - (avgGap * 5));
@@ -3878,7 +3741,6 @@ document.addEventListener('keydown', function(e) {
         function calculateProductivityIndex() {
             if (archivedSessionsArray.length === 0) return { total: 0, timeScore: 0, consistencyScore: 0, goalsScore: 0 };
 
-            // درجة الوقت: مقارنة بالهدف اليومي
             const todayISO = getLocalISODate(new Date());
             const todayMinutes = archivedSessionsArray
                 .filter(s => s.date === todayISO)
@@ -3886,22 +3748,17 @@ document.addEventListener('keydown', function(e) {
             const dailyGoalMinutes = (studyGoals.daily || 4) * 60;
             const timeScore = Math.min(100, Math.round((todayMinutes / dailyGoalMinutes) * 100));
 
-            // درجة الانتظام
             const gapData = calculateGapRate();
             const consistencyScore = gapData.consistencyScore;
 
-            // درجة الأهداف
             let goalsScore = 0;
             if (goalsArray.length > 0) {
-                const completedGoals = goalsArray.filter(g => g.target > 0 && (g.current / g.target) >= 1).length;
-                const totalGoals = goalsArray.length;
                 const progressSum = goalsArray.reduce((sum, g) => sum + (g.target > 0 ? Math.min(1, g.current / g.target) : 0), 0);
-                goalsScore = Math.round((progressSum / totalGoals) * 100);
+                goalsScore = Math.round((progressSum / goalsArray.length) * 100);
             } else {
-                goalsScore = 50; // محايد إذا لم تكن هناك أهداف
+                goalsScore = 50;
             }
 
-            // المجموع المرجح
             const total = Math.round((timeScore * 0.4) + (consistencyScore * 0.35) + (goalsScore * 0.25));
 
             return { total, timeScore, consistencyScore, goalsScore };
@@ -3920,7 +3777,6 @@ document.addEventListener('keydown', function(e) {
             if (consistencyEl) consistencyEl.innerText = data.consistencyScore;
             if (goalsEl) goalsEl.innerText = data.goalsScore;
 
-            // تحريك الإبرة
             if (needleEl) {
                 const angle = (data.total / 100) * 180 - 90;
                 needleEl.style.transform = 'translateX(-50%) rotate(' + angle + 'deg)';
@@ -3928,7 +3784,7 @@ document.addEventListener('keydown', function(e) {
         }
 
         let trendChartInstance = null;
-        let currentTrendPeriod = 'week'; // week, month, year
+        let currentTrendPeriod = 'week';
         let currentTrendOffset = 0;
 
         function toggleTrendDropdown() {
@@ -3979,7 +3835,6 @@ document.addEventListener('keydown', function(e) {
             };
             if (labelEl) labelEl.innerText = periodText[currentTrendPeriod] || currentTrendPeriod;
 
-            // تحديث علامات الاختيار
             ['week', 'month', 'year'].forEach(p => {
                 const item = document.querySelector('.trend-dropdown-item[data-period="' + p + '"]');
                 const check = document.getElementById('trend-check-' + p);
@@ -4002,7 +3857,6 @@ document.addEventListener('keydown', function(e) {
             const d = languageDictionary[currentSystemLanguage];
 
             if (currentTrendPeriod === 'week') {
-                // 12 أسبوع
                 for (let i = 11; i >= 0; i--) {
                     const offset = i + (currentTrendOffset * 12);
                     const weekStart = new Date(now);
@@ -4027,7 +3881,6 @@ document.addEventListener('keydown', function(e) {
                     labels.push(label);
                 }
 
-                // تحديث عنوان الفترة الحالي
                 const currentWeekStart = new Date(now);
                 currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay() - (currentTrendOffset * 7 * 12));
                 const periodLabel = currentWeekStart.toLocaleDateString(
@@ -4038,11 +3891,9 @@ document.addEventListener('keydown', function(e) {
                 if (periodEl) periodEl.innerText = periodLabel;
 
             } else if (currentTrendPeriod === 'month') {
-                // 12 شهر
                 for (let i = 11; i >= 0; i--) {
                     const monthDate = new Date(now.getFullYear(), now.getMonth() - i - (currentTrendOffset * 12), 1);
                     const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
-                    const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0, 23, 59, 59, 999);
                     const monthPrefix = getLocalISODate(monthStart).slice(0, 7);
 
                     const mins = archivedSessionsArray
@@ -4066,7 +3917,6 @@ document.addEventListener('keydown', function(e) {
                 if (periodEl) periodEl.innerText = periodLabel;
 
             } else if (currentTrendPeriod === 'year') {
-                // 5 سنوات
                 for (let i = 4; i >= 0; i--) {
                     const year = now.getFullYear() - i - (currentTrendOffset * 5);
                     const yearStart = new Date(year, 0, 1);
@@ -4109,7 +3959,7 @@ document.addEventListener('keydown', function(e) {
                 data: {
                     labels: chartData.labels,
                     datasets: [{
-                        label: d.studyHoursLabel || (currentSystemLanguage === 'ar' ? 'ساعات الدراسة' : 'Study Hours'),
+                        label: d.studyHoursLabel || 'Study Hours',
                         data: chartData.data,
                         borderColor: '#d9a54a',
                         backgroundColor: 'rgba(217, 165, 74, 0.1)',
@@ -4138,7 +3988,7 @@ document.addEventListener('keydown', function(e) {
                             cornerRadius: 12,
                             callbacks: {
                                 label: function(context) {
-                                    return (d.hoursLabel || (currentSystemLanguage === 'ar' ? 'الساعات: ' : 'Hours: ')) + context.parsed.y + 'h';
+                                    return (d.hoursLabel || 'Hours: ') + context.parsed.y + 'h';
                                 }
                             }
                         }
