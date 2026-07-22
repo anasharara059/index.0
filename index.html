@@ -15,6 +15,9 @@
     <meta name="description" content="Track your study sessions, set goals, build habits, and analyze your progress with INDEX.">
     <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIklOREVYIC0gUHJlbWl1bSBTdHVkeSBBc3Npc3RhbnQiLAogICJzaG9ydF9uYW1lIjogIklOREVYIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwODA5MGQiLAogICJ0aGVtZV9jb2xvciI6ICIjMDgwOTBkIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQtcHJpbWFyeSIsCiAgImljb25zIjogWwogICAgeyAic3JjIjogImljb24tNzIucG5nIiwgInNpemVzIjogIjcyeDcyIiwgInR5cGUiOiAiaW1hZ2UvcG5nIiB9LAogICAgeyAic3JjIjogImljb24tOTYucG5nIiwgInNpemVzIjogIjk2eDk2IiwgInR5cGUiOiAiaW1hZ2UvcG5nIiB9LAogICAgeyAic3JjIjogImljb24tMTI4LnBuZyIsICJzaXplcyI6ICIxMjh4MTI4IiwgInR5cGUiOiAiaW1hZ2UvcG5nIiB9LAogICAgeyAic3JjIjogImljb24tMTQ0LnBuZyIsICJzaXplcyI6ICIxNDR4MTQ0IiwgInR5cGUiOiAiaW1hZ2UvcG5nIiB9LAogICAgeyAic3JjIjogImljb24tMTUyLnBuZyIsICJzaXplcyI6ICIxNTJ4MTUyIiwgInR5cGUiOiAiaW1hZ2UvcG5nIiB9LAogICAgeyAic3JjIjogImljb24tMTkyLnBuZyIsICJzaXplcyI6ICIxOTJ4MTkyIiwgInR5cGUiOiAiaW1hZ2UvcG5nIiB9LAogICAgeyAic3JjIjogImljb24tMzg0LnBuZyIsICJzaXplcyI6ICIzODR4Mzg0IiwgInR5cGUiOiAiaW1hZ2UvcG5nIiB9LAogICAgeyAic3JjIjogImljb24tNTEyLnBuZyIsICJzaXplcyI6ICI1MTJ4NTEyIiwgInR5cGUiOiAiaW1hZ2UvcG5nIiB9CiAgXQp9">
     <link rel="preconnect" href="https://fonts.cdnfonts.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
     <style>
         @import url('https://fonts.cdnfonts.com/css/digital-7-mono');
     </style>
@@ -23,13 +26,13 @@
         :root {
             --bg-deep: #08090d;
             --panel-bg: rgba(18, 20, 32, 0.7);
-            --accent-orange: #ff7300;
-            --accent-purple: #8200ff;
+            --accent-orange: #d9a54a;
+            --accent-purple: #3e5c8a;
             --text-light: #ffffff;
             --text-gray: #7a7f91;
-            --border-glow: rgba(130, 0, 255, 0.15);
+            --border-glow: rgba(62, 92, 138, 0.15);
             --border-soft: rgba(255, 255, 255, 0.06);
-            --panel-accent: rgba(255, 115, 0, 0.1);
+            --panel-accent: rgba(217, 165, 74, 0.1);
             --success: #00d26a;
             --danger: #e74c3c;
             --warning: #f39c12;
@@ -51,29 +54,27 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--accent-orange); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(255,115,0,0.3); } 50% { box-shadow: 0 0 40px rgba(255,115,0,0.6); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
-        @keyframes ringPulse { 0% { filter: drop-shadow(0 0 8px rgba(255,115,0,0.5)); } 50% { filter: drop-shadow(0 0 20px rgba(255,115,0,0.8)); } 100% { filter: drop-shadow(0 0 8px rgba(255,115,0,0.5)); } }
+        @keyframes ringPulse { 0% { filter: drop-shadow(0 0 5px rgba(217,165,74,0.35)); } 50% { filter: drop-shadow(0 0 11px rgba(217,165,74,0.55)); } 100% { filter: drop-shadow(0 0 5px rgba(217,165,74,0.35)); } }
         @keyframes countUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
         @keyframes toastSlide { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes toastSlideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .header-navigation { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; background: rgba(8, 9, 13, 0.95); border-bottom: 1px solid var(--border-soft); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 1000; animation: fadeIn 0.5s ease-out; }
-        .logo-area { font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; animation: float 3s ease-in-out infinite; }
+        .logo-area { font-family: 'Source Serif 4', Georgia, serif; font-size: 24px; font-weight: 700; color: var(--text-light); letter-spacing: 0.5px; border-bottom: 2px solid var(--accent-orange); padding-bottom: 2px; }
         .nav-tabs { display: flex; gap: 6px; background: rgba(0, 0, 0, 0.4); padding: 5px; border-radius: 30px; border: 1px solid var(--border-soft); }
         .tab-trigger { background: transparent; border: none; color: var(--text-gray); padding: 10px 22px; font-size: 13px; font-weight: 600; border-radius: 25px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
-        .tab-trigger::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); opacity: 0; transition: opacity 0.3s; border-radius: 25px; z-index: -1; }
+        .tab-trigger::before { content: ''; position: absolute; inset: 0; background: var(--accent-orange); opacity: 0; transition: opacity 0.3s; border-radius: 25px; z-index: -1; }
         .tab-trigger:hover { color: var(--text-light); transform: translateY(-1px); }
-        .tab-trigger.active { color: var(--text-light); }
+        .tab-trigger.active { color: #000; font-weight: 700; }
         .tab-trigger.active::before { opacity: 1; }
-        .tab-trigger.active { box-shadow: 0 4px 20px rgba(130, 0, 255, 0.4); }
+        .tab-trigger.active { box-shadow: 0 4px 20px rgba(62, 92, 138, 0.4); }
         .header-actions { display: flex; gap: 10px; align-items: center; }
-        .clear-btn { background: rgba(231, 76, 60, 0.1); border: 1px solid rgba(231, 76, 60, 0.3); color: var(--danger); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
+        .clear-btn { background: rgba(231, 76, 60, 0.1); border: 1px solid rgba(231, 76, 60, 0.3); color: var(--danger); padding: 8px 16px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
         .clear-btn:hover { background: var(--danger); color: #fff; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4); }
-        .export-btn { background: rgba(0, 210, 106, 0.1); border: 1px solid rgba(0, 210, 106, 0.3); color: var(--success); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
+        .export-btn { background: rgba(0, 210, 106, 0.1); border: 1px solid rgba(0, 210, 106, 0.3); color: var(--success); padding: 8px 16px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
         .export-btn:hover { background: var(--success); color: #000; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 210, 106, 0.4); }
-        .lang-button { background: var(--panel-bg); border: 1px solid var(--border-soft); color: var(--text-light); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s; }
+        .lang-button { background: var(--panel-bg); border: 1px solid var(--border-soft); color: var(--text-light); padding: 8px 16px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.3s; }
         .lang-button:hover { border-color: var(--accent-orange); color: var(--accent-orange); transform: translateY(-2px); }
         .screens-container { flex: 1; max-width: 1400px; width: 100%; margin: 30px auto; padding: 0 24px; position: relative; }
         .screen-view { display: none; animation: fadeIn 0.5s ease-out forwards; }
@@ -85,33 +86,33 @@
         .timer-mode-selector { display: flex; gap: 8px; background: rgba(0, 0, 0, 0.3); padding: 6px; border-radius: 30px; border: 1px solid var(--border-soft); }
         .mode-button { background: transparent; border: none; color: var(--text-gray); padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s; position: relative; }
         .mode-button:hover { color: var(--text-light); }
-        .mode-button.active { background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); color: var(--text-light); box-shadow: 0 4px 15px rgba(130, 0, 255, 0.3); }
+        .mode-button.active { background: var(--accent-orange); color: #000; box-shadow: 0 4px 15px rgba(62, 92, 138, 0.3); }
         .timer-circle-widget { position: relative; width: 380px; height: 380px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.3s; }
         .timer-circle-widget:hover { transform: scale(1.02); }
         .timer-circle-widget:active { transform: scale(0.98); }
         .timer-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
         .timer-svg circle { fill: none; stroke-width: 8; }
         .timer-svg .rail { stroke: rgba(255, 255, 255, 0.03); }
-        .timer-svg .fill-progress { stroke: var(--accent-orange); stroke-linecap: round; stroke-dasharray: 1093; stroke-dashoffset: 1093; transition: stroke-dashoffset 1s linear; filter: drop-shadow(0 0 8px rgba(255, 115, 0, 0.5)); animation: ringPulse 2s ease-in-out infinite; }
-        .timer-digits { font-size: 80px; font-weight: 400; font-family: 'Digital-7 Mono', 'Courier New', Courier, monospace; letter-spacing: 4px; z-index: 10; text-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 0 40px rgba(255, 115, 0, 0.1); transition: all 0.3s; }
-        .timer-digits.running { color: var(--accent-orange); text-shadow: 0 0 30px rgba(255, 115, 0, 0.4); }
+        .timer-svg .fill-progress { stroke: var(--accent-orange); stroke-linecap: round; stroke-dasharray: 1093; stroke-dashoffset: 1093; transition: stroke-dashoffset 1s linear; filter: drop-shadow(0 0 8px rgba(217, 165, 74, 0.5)); animation: ringPulse 2s ease-in-out infinite; }
+        .timer-digits { font-size: 80px; font-weight: 400; font-family: 'Digital-7 Mono', 'Courier New', Courier, monospace; letter-spacing: 4px; z-index: 10; text-shadow: 0 0 20px rgba(255, 255, 255, 0.15), 0 0 40px rgba(217, 165, 74, 0.1); transition: all 0.3s; }
+        .timer-digits.running { color: var(--accent-orange); text-shadow: 0 0 30px rgba(217, 165, 74, 0.4); }
         .timer-digits.paused { color: var(--warning); }
         .session-info-badge { display: flex; gap: 20px; align-items: center; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-soft); border-radius: 16px; padding: 12px 24px; font-size: 13px; color: var(--text-gray); animation: fadeIn 0.4s ease-out; }
         .session-info-badge .badge-item { display: flex; align-items: center; gap: 6px; }
         .session-info-badge .badge-item strong { color: var(--text-light); }
         .controls-button-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-        .word-control-btn { background: transparent; border: 1.5px solid rgba(255, 255, 255, 0.2); color: #d1d5db; padding: 12px 28px; border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s; position: relative; overflow: hidden; }
+        .word-control-btn { background: transparent; border: 1.5px solid rgba(255, 255, 255, 0.2); color: #d1d5db; padding: 12px 28px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s; position: relative; overflow: hidden; }
         .word-control-btn:hover { transform: translateY(-3px); }
         .word-control-btn:active { transform: translateY(-1px); }
         .word-control-btn.btn-start { border-color: var(--accent-orange); }
-        .word-control-btn.btn-start:hover { color: var(--accent-orange); background: rgba(255, 115, 0, 0.15); box-shadow: 0 4px 20px rgba(255, 115, 0, 0.3); }
+        .word-control-btn.btn-start:hover { color: var(--accent-orange); background: rgba(217, 165, 74, 0.15); box-shadow: 0 4px 20px rgba(217, 165, 74, 0.3); }
         .word-control-btn.btn-start.active { background: var(--accent-orange); color: #000; }
         .word-control-btn.btn-pause { border-color: var(--warning); }
         .word-control-btn.btn-pause:hover { color: var(--warning); background: rgba(243, 156, 18, 0.15); box-shadow: 0 4px 20px rgba(243, 156, 18, 0.3); }
         .word-control-btn.btn-stop { border-color: var(--danger); }
         .word-control-btn.btn-stop:hover { color: var(--danger); background: rgba(231, 76, 60, 0.15); box-shadow: 0 4px 20px rgba(231, 76, 60, 0.3); }
         .word-control-btn.btn-full { border-color: var(--accent-purple); }
-        .word-control-btn.btn-full:hover { color: var(--accent-purple); background: rgba(130, 0, 255, 0.15); box-shadow: 0 4px 20px rgba(130, 0, 255, 0.3); }
+        .word-control-btn.btn-full:hover { color: var(--accent-purple); background: rgba(62, 92, 138, 0.15); box-shadow: 0 4px 20px rgba(62, 92, 138, 0.3); }
         .quick-stats-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
         .quick-stat-chip { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-soft); border-radius: 12px; padding: 10px 18px; font-size: 12px; color: var(--text-gray); display: flex; align-items: center; gap: 8px; transition: all 0.3s; }
         .quick-stat-chip:hover { border-color: var(--accent-orange); transform: translateY(-2px); }
@@ -123,20 +124,20 @@
         .tags-list { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
         .mini-tag-chip { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-soft); padding: 8px 16px; border-radius: 16px; font-size: 13px; color: var(--text-gray); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease; position: relative; }
         .mini-tag-chip:hover { transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.15); }
-        .mini-tag-chip.selected { background: linear-gradient(135deg, rgba(255, 115, 0, 0.2), rgba(130, 0, 255, 0.15)); border-color: var(--accent-orange); color: var(--accent-orange); font-weight: 700; box-shadow: 0 4px 15px rgba(255, 115, 0, 0.2); }
+        .mini-tag-chip.selected { background: rgba(217, 165, 74, 0.16); border-color: var(--accent-orange); color: var(--accent-orange); font-weight: 700; box-shadow: 0 4px 15px rgba(217, 165, 74, 0.2); }
         .mini-tag-chip .tag-color-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
         .mini-tag-chip .remove-icon { font-weight: bold; color: var(--danger); cursor: pointer; opacity: 0; width: 0; overflow: hidden; display: inline-block; text-align: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .mini-tag-chip:hover .remove-icon { opacity: 1; width: 14px; margin-left: 6px; }
         html[dir="rtl"] .mini-tag-chip:hover .remove-icon { margin-left: 0; margin-right: 6px; }
         .mini-tag-add-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.03); border: 1.5px dashed var(--text-gray); color: var(--text-gray); display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 20px; font-weight: 400; transition: all 0.3s ease; }
-        .mini-tag-add-btn:hover { border-color: var(--accent-purple); color: var(--accent-purple); background: rgba(130, 0, 255, 0.1); transform: scale(1.1) rotate(90deg); }
+        .mini-tag-add-btn:hover { border-color: var(--accent-purple); color: var(--accent-purple); background: rgba(62, 92, 138, 0.1); transform: scale(1.1) rotate(90deg); }
         .analysis-screen-layout { animation: fadeIn 0.5s ease-out; }
         .dashboard-scaled-panel { display: flex; flex-direction: column; gap: 32px; padding: 20px 0; }
-        .dash-section-header { font-size: 20px; font-weight: 800; border-bottom: 2px solid var(--border-soft); padding-bottom: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .dash-section-header { font-family: 'Source Serif 4', Georgia, serif; font-size: 21px; font-weight: 700; border-bottom: 2px solid var(--border-soft); padding-bottom: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .metrics-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
         .metric-card-box { background: linear-gradient(160deg, rgba(15, 17, 26, 0.8), rgba(18, 20, 32, 0.6)); border: 1px solid var(--border-soft); padding: 24px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; position: relative; overflow: hidden; }
-        .metric-card-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-orange), var(--accent-purple)); opacity: 0; transition: opacity 0.3s; }
-        .metric-card-box:hover { transform: translateY(-4px); border-color: rgba(255, 115, 0, 0.2); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
+        .metric-card-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-orange); opacity: 0; transition: opacity 0.3s; }
+        .metric-card-box:hover { transform: translateY(-4px); border-color: rgba(217, 165, 74, 0.2); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
         .metric-card-box:hover::before { opacity: 1; }
         .metric-text-group { display: flex; flex-direction: column; gap: 4px; }
         .metric-text-group .label { font-size: 12px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -153,14 +154,14 @@
         .mini-ring-svg circle { fill: none; stroke-width: 6; }
         .mini-ring-bg { stroke: rgba(255, 255, 255, 0.05); }
         .mini-ring-fill { stroke-linecap: round; stroke-dasharray: 176; stroke-dashoffset: 176; transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1); }
-        .fill-orange { stroke: var(--accent-orange); filter: drop-shadow(0 0 4px rgba(255, 115, 0, 0.4)); }
-        .fill-purple { stroke: var(--accent-purple); filter: drop-shadow(0 0 4px rgba(130, 0, 255, 0.4)); }
+        .fill-orange { stroke: var(--accent-orange); filter: drop-shadow(0 0 4px rgba(217, 165, 74, 0.4)); }
+        .fill-purple { stroke: var(--accent-purple); filter: drop-shadow(0 0 4px rgba(62, 92, 138, 0.4)); }
         .fill-green { stroke: var(--success); filter: drop-shadow(0 0 4px rgba(0, 210, 106, 0.4)); }
         .mini-ring-text { font-size: 14px; font-weight: 800; color: var(--text-light); z-index: 2; }
         .charts-double-column { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
         @media (max-width: 950px) { .charts-double-column { grid-template-columns: 1fr; } }
         .charts-container-box { background: linear-gradient(160deg, rgba(18, 20, 32, 0.5), rgba(15, 17, 26, 0.7)); border: 1px solid var(--border-soft); border-radius: 20px; padding: 24px; transition: all 0.3s; }
-        .charts-container-box:hover { border-color: rgba(255, 115, 0, 0.15); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); }
+        .charts-container-box:hover { border-color: rgba(217, 165, 74, 0.15); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); }
         .charts-box-title { font-size: 14px; font-weight: 700; color: var(--text-light); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
         .weekly-breakdown-wrapper { display: flex; flex-direction: column; gap: 14px; }
         .weekly-day-row { display: flex; align-items: center; gap: 12px; }
@@ -172,7 +173,7 @@
         .chart-progress-item { display: flex; flex-direction: column; gap: 6px; }
         .chart-progress-labels { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; }
         .chart-progress-rail { background: rgba(255, 255, 255, 0.04); height: 8px; border-radius: 6px; overflow: hidden; }
-        .chart-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-orange), var(--accent-purple)); width: 0%; border-radius: 6px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+        .chart-progress-fill { height: 100%; background: var(--accent-orange); width: 0%; border-radius: 6px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
         .chart-progress-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
         .heatmap-container { display: grid; grid-template-columns: repeat(53, 1fr); gap: 3px; margin-top: 10px; }
         .heatmap-cell { aspect-ratio: 1; border-radius: 3px; background: rgba(255, 255, 255, 0.03); transition: all 0.3s; cursor: pointer; }
@@ -190,11 +191,11 @@
         .delete-row-btn:hover { opacity: 1; background: rgba(231, 76, 60, 0.1); }
         .pagination-navigation-row { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
         .pagination-page-node { background: transparent; border: 1px solid var(--border-soft); color: var(--text-gray); width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 13px; transition: all 0.2s; }
-        .pagination-page-node.active-node { background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); color: #000; border-color: transparent; box-shadow: 0 4px 15px rgba(255, 115, 0, 0.3); }
+        .pagination-page-node.active-node { background: var(--accent-orange); color: #000; border-color: transparent; box-shadow: 0 4px 15px rgba(217, 165, 74, 0.3); }
         .pagination-page-node:hover:not(.active-node) { border-color: var(--text-light); color: var(--text-light); }
         .search-filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
         .search-input { flex: 1; min-width: 200px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-soft); color: var(--text-light); padding: 10px 16px; border-radius: 12px; font-size: 13px; outline: none; transition: all 0.3s; }
-        .search-input:focus { border-color: var(--accent-orange); box-shadow: 0 0 15px rgba(255, 115, 0, 0.1); }
+        .search-input:focus { border-color: var(--accent-orange); box-shadow: 0 0 15px rgba(217, 165, 74, 0.1); }
         .search-input::placeholder { color: var(--text-gray); }
         .filter-select { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-soft); color: var(--text-light); padding: 10px 16px; border-radius: 12px; font-size: 13px; outline: none; cursor: pointer; min-width: 140px; }
         .filter-select:focus { border-color: var(--accent-orange); }
@@ -207,27 +208,27 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px); z-index: 100000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.3s ease-out; }
         .modal-overlay.modal-open { display: flex; }
         .modal-box { background: linear-gradient(160deg, #141622, #1a1c2e); border: 1px solid var(--border-soft); border-radius: 24px; padding: 32px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7); animation: slideInRight 0.4s ease-out; }
-        .modal-box h3 { font-size: 18px; margin-bottom: 20px; font-weight: 800; background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .modal-box h3 { font-size: 18px; margin-bottom: 20px; font-weight: 800; color: var(--accent-orange); }
         .modal-box input, .modal-box select { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-soft); color: #fff; padding: 12px; width: 100%; border-radius: 12px; font-size: 16px; text-align: center; margin-bottom: 16px; outline: none; transition: all 0.3s; }
-        .modal-box input:focus, .modal-box select:focus { border-color: var(--accent-orange); box-shadow: 0 0 15px rgba(255, 115, 0, 0.15); }
+        .modal-box input:focus, .modal-box select:focus { border-color: var(--accent-orange); box-shadow: 0 0 15px rgba(217, 165, 74, 0.15); }
         .modal-box .field-label { text-align: left; font-size: 11px; font-weight: 700; color: var(--text-gray); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         html[dir="rtl"] .modal-box .field-label { text-align: right; }
         .modal-box .input-row-split { display: flex; gap: 10px; }
         .modal-box .input-row-split input { margin-bottom: 14px; }
         .modal-buttons { display: flex; gap: 10px; }
         .modal-btn { flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: all 0.3s; }
-        .modal-btn.confirm { background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); color: #000; }
-        .modal-btn.confirm:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(255, 115, 0, 0.4); }
+        .modal-btn.confirm { background: var(--accent-orange); color: #000; }
+        .modal-btn.confirm:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(217, 165, 74, 0.4); }
         .modal-btn.cancel { background: rgba(255, 255, 255, 0.06); color: #fff; }
         .modal-btn.cancel:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-2px); }
         .section-header-with-action { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-        .add-item-pill-btn { background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); border: none; color: #fff; padding: 10px 22px; border-radius: 22px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 4px 18px rgba(130, 0, 255, 0.25); }
-        .add-item-pill-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(130, 0, 255, 0.4); }
+        .add-item-pill-btn { background: var(--accent-orange); border: none; color: #000; padding: 10px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 4px 18px rgba(62, 92, 138, 0.25); }
+        .add-item-pill-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(62, 92, 138, 0.4); }
         .empty-state-box { text-align: center; padding: 60px 20px; color: var(--text-gray); border: 1.5px dashed var(--border-soft); border-radius: 20px; font-size: 14px; font-weight: 600; animation: fadeIn 0.5s ease-out; }
         .goals-cards-grid, .habits-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .goal-card { background: linear-gradient(160deg, rgba(255, 115, 0, 0.07), rgba(130, 0, 255, 0.05) 70%); border: 1px solid var(--border-soft); border-radius: 22px; padding: 24px; display: flex; flex-direction: column; gap: 16px; transition: all 0.3s ease; position: relative; overflow: hidden; }
-        .goal-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-orange), var(--accent-purple)); opacity: 0; transition: opacity 0.3s; }
-        .goal-card:hover { transform: translateY(-6px); border-color: rgba(255, 115, 0, 0.3); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4); }
+        .goal-card { background: linear-gradient(160deg, rgba(217, 165, 74, 0.07), rgba(62, 92, 138, 0.05) 70%); border: 1px solid var(--border-soft); border-radius: 22px; padding: 24px; display: flex; flex-direction: column; gap: 16px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .goal-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-orange); opacity: 0; transition: opacity 0.3s; }
+        .goal-card:hover { transform: translateY(-6px); border-color: rgba(217, 165, 74, 0.3); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4); }
         .goal-card:hover::before { opacity: 1; }
         .goal-card.is-completed { border-color: rgba(0, 210, 106, 0.45); background: linear-gradient(160deg, rgba(0, 210, 106, 0.12), rgba(0, 210, 106, 0.02) 70%); }
         .goal-card.is-completed::before { background: var(--success); opacity: 1; }
@@ -244,11 +245,11 @@
         .goal-progress-summary strong { color: var(--text-light); font-size: 14px; }
         .stepper-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .stepper-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border-soft); background: rgba(255, 255, 255, 0.03); color: #fff; cursor: pointer; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .stepper-btn:hover { border-color: var(--accent-orange); color: var(--accent-orange); background: rgba(255, 115, 0, 0.1); transform: scale(1.1); }
+        .stepper-btn:hover { border-color: var(--accent-orange); color: var(--accent-orange); background: rgba(217, 165, 74, 0.1); transform: scale(1.1); }
         .stepper-value { min-width: 90px; text-align: center; font-weight: 700; font-size: 13px; color: var(--text-light); }
         .habit-card { background: linear-gradient(160deg, rgba(15, 17, 26, 0.8), rgba(18, 20, 32, 0.6)); border: 1px solid var(--border-soft); border-radius: 22px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; transition: all 0.3s ease; position: relative; overflow: hidden; }
-        .habit-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-purple), var(--accent-orange)); opacity: 0; transition: opacity 0.3s; }
-        .habit-card:hover { transform: translateY(-6px); border-color: rgba(130, 0, 255, 0.3); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4); }
+        .habit-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-orange); opacity: 0; transition: opacity 0.3s; }
+        .habit-card:hover { transform: translateY(-6px); border-color: rgba(62, 92, 138, 0.3); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4); }
         .habit-card:hover::before { opacity: 1; }
         .habit-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
         .habit-card-name { font-size: 16px; font-weight: 800; }
@@ -257,14 +258,14 @@
         .habit-day-dot-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
         .habit-day-letter { font-size: 10px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; }
         .habit-day-dot { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--border-soft); background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; }
-        .habit-day-dot.done { background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); border-color: transparent; box-shadow: 0 0 12px rgba(255, 115, 0, 0.4); animation: pulseGlow 2s ease-in-out infinite; }
+        .habit-day-dot.done { background: var(--accent-orange); border-color: transparent; box-shadow: 0 0 6px rgba(217, 165, 74, 0.35); }
         .habit-day-dot.is-today { border-color: var(--text-light); border-width: 2px; }
         .habit-bottom-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid var(--border-soft); }
         .habit-pct-txt { font-size: 12px; color: var(--text-gray); font-weight: 600; }
         .habit-pct-txt strong { color: var(--text-light); font-size: 14px; }
         .habit-toggle-btn { background: rgba(255, 255, 255, 0.06); border: 1.5px solid var(--border-soft); color: var(--text-light); padding: 9px 18px; border-radius: 18px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; }
         .habit-toggle-btn:hover { border-color: var(--accent-orange); color: var(--accent-orange); transform: translateY(-2px); }
-        .habit-toggle-btn.is-done { background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); border-color: transparent; color: #fff; box-shadow: 0 4px 15px rgba(255, 115, 0, 0.3); }
+        .habit-toggle-btn.is-done { background: var(--accent-orange); border-color: transparent; color: #000; box-shadow: 0 4px 15px rgba(217, 165, 74, 0.3); }
         .toast-container { position: fixed; top: 80px; right: 20px; z-index: 100001; display: flex; flex-direction: column; gap: 10px; }
         html[dir="rtl"] .toast-container { right: auto; left: 20px; }
         .toast { background: linear-gradient(135deg, rgba(18, 20, 32, 0.95), rgba(15, 17, 26, 0.98)); border: 1px solid var(--border-soft); border-radius: 14px; padding: 14px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); animation: toastSlide 0.4s ease-out; min-width: 280px; max-width: 400px; }
@@ -287,7 +288,7 @@
         .auth-overlay { position: fixed; inset: 0; background: var(--bg-deep); z-index: 5000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 24px; }
         .auth-overlay.hidden { display: none; }
         .auth-card { background: var(--panel-bg); border: 1px solid var(--border-glow); border-radius: 20px; padding: 48px 40px; width: min(400px, 88vw); text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5); backdrop-filter: blur(20px); }
-        .auth-logo { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 8px; }
+        .auth-logo { font-family: 'Source Serif 4', Georgia, serif; font-size: 30px; font-weight: 700; color: var(--accent-orange); margin-bottom: 8px; }
         .auth-subtitle { color: var(--text-gray); font-size: 13px; margin-bottom: 32px; }
         .google-signin-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 13px 20px; border-radius: 12px; border: 1px solid var(--border-soft); background: #fff; color: #1f1f1f; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
         .google-signin-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,255,255,0.15); }
@@ -307,10 +308,10 @@
             left: 0;
             width: 100%;
             background: linear-gradient(160deg, #141622, #1a1c2e);
-            border: 1px solid rgba(255, 115, 0, 0.25);
+            border: 1px solid rgba(217, 165, 74, 0.25);
             border-radius: 20px;
             padding: 10px 0;
-            box-shadow: 0 0 0 1px rgba(255, 115, 0, 0.1), 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(130, 0, 255, 0.15);
+            box-shadow: 0 0 0 1px rgba(217, 165, 74, 0.12), 0 16px 40px rgba(0,0,0,0.6);
             z-index: 10000;
             display: none;
             opacity: 0;
@@ -332,7 +333,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--accent-orange), var(--accent-purple));
+            background: var(--accent-orange);
             opacity: 0.6;
         }
         .account-menu-item {
@@ -348,7 +349,7 @@
             white-space: nowrap;
         }
         .account-menu-item:hover {
-            background: rgba(255, 115, 0, 0.08);
+            background: rgba(217, 165, 74, 0.08);
             color: var(--accent-orange);
         }
         .account-menu-item.danger:hover {
@@ -405,10 +406,407 @@
         .user-badge:hover .account-dropdown-hint {
             opacity: 1;
         }
-                @media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
+                
+        /* ===== تحليلات متقدمة ===== */
+        .advanced-analytics-section { margin-top: 20px; }
+        .analytics-sub-header {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin: 30px 0 16px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-soft);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .analytics-sub-header .icon { font-size: 22px; }
+
+        .advanced-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .advanced-metric-card {
+            background: linear-gradient(160deg, rgba(15, 17, 26, 0.8), rgba(18, 20, 32, 0.6));
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .advanced-metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-orange);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .advanced-metric-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(217, 165, 74, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        .advanced-metric-card:hover::before { opacity: 1; }
+
+        .advanced-metric-card .metric-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .advanced-metric-card .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(217, 165, 74, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .advanced-metric-card .metric-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .advanced-metric-card .metric-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+        .advanced-metric-card .metric-subtext {
+            font-size: 12px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+        .advanced-metric-card .metric-subtext strong {
+            color: var(--accent-orange);
+        }
+
+        /* منحنى التطور */
+        .trend-chart-container {
+            background: linear-gradient(160deg, rgba(18, 20, 32, 0.5), rgba(15, 17, 26, 0.7));
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s;
+        }
+        .trend-chart-container:hover {
+            border-color: rgba(217, 165, 74, 0.15);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        .trend-chart-wrapper {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        /* نسبة المراجعة */
+        .review-ratio-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding: 20px 0;
+        }
+        .review-ratio-donut {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .review-ratio-donut-inner {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #12131d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .review-ratio-donut-inner .pct {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--accent-orange);
+        }
+        .review-ratio-donut-inner .label {
+            font-size: 10px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+        .review-ratio-legend {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .review-ratio-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+        .review-ratio-legend-item .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+        }
+        .review-ratio-legend-item .label-text {
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+        .review-ratio-legend-item .value-text {
+            margin-left: auto;
+            color: var(--text-light);
+            font-weight: 700;
+        }
+
+        /* أفضل يوم */
+        .best-day-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 16px 0;
+        }
+        .best-day-emoji {
+            font-size: 48px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .best-day-info {
+            flex: 1;
+        }
+        .best-day-name {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent-orange);
+        }
+        .best-day-detail {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        /* أكثر ساعة إنتاجية */
+        .peak-hour-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 20px 0;
+        }
+        .peak-hour-clock {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-orange);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(217, 165, 74, 0.05);
+        }
+        .peak-hour-clock .hour-hand {
+            position: absolute;
+            width: 2px;
+            height: 30px;
+            background: var(--accent-orange);
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            border-radius: 2px;
+        }
+        .peak-hour-clock .minute-hand {
+            position: absolute;
+            width: 2px;
+            height: 40px;
+            background: var(--accent-purple);
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            border-radius: 2px;
+        }
+        .peak-hour-clock .center-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            z-index: 2;
+        }
+        .peak-hour-info {
+            text-align: center;
+        }
+        .peak-hour-time {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-light);
+        }
+        .peak-hour-detail {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        /* مؤشر الإنتاجية */
+        .productivity-index-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .productivity-gauge {
+            width: 200px;
+            height: 100px;
+            margin: 0 auto 16px;
+            position: relative;
+        }
+        .productivity-gauge-bg {
+            width: 200px;
+            height: 100px;
+            border-radius: 100px 100px 0 0;
+            background: conic-gradient(from 180deg, var(--danger) 0deg, var(--warning) 60deg, var(--accent-orange) 120deg, var(--success) 180deg);
+            opacity: 0.15;
+        }
+        .productivity-gauge-fill {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            height: 90px;
+            background: var(--accent-orange);
+            transform-origin: bottom center;
+            border-radius: 2px;
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px rgba(217, 165, 74, 0.5);
+        }
+        .productivity-gauge-center {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 60px;
+            background: #12131d;
+            border-radius: 120px 120px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 8px;
+        }
+        .productivity-gauge-center .score {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--accent-orange);
+            line-height: 1;
+        }
+        .productivity-gauge-center .label {
+            font-size: 10px;
+            color: var(--text-gray);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+        .productivity-breakdown {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .productivity-breakdown-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+        .productivity-breakdown-item .score {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-light);
+        }
+        .productivity-breakdown-item .label {
+            font-size: 10px;
+            color: var(--text-gray);
+            font-weight: 600;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* معدل الانقطاع */
+        .gap-rate-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px 0;
+        }
+        .gap-rate-bar {
+            height: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        .gap-rate-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .gap-rate-fill.good { background: var(--success); }
+        .gap-rate-fill.warning { background: var(--warning); }
+        .gap-rate-fill.danger { background: var(--danger); }
+        .gap-rate-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+        .gap-rate-stats .stat {
+            text-align: center;
+        }
+        .gap-rate-stats .stat .value {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-light);
+        }
+        .gap-rate-stats .stat .label {
+            font-size: 10px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .advanced-metrics-grid { grid-template-columns: 1fr; }
+            .review-ratio-container { flex-direction: column; gap: 20px; }
+            .productivity-breakdown { grid-template-columns: 1fr; }
+        }
+@media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
     </style>
-<base target="_blank">
-<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -578,6 +976,151 @@
                     <div id="study-heatmap" style="overflow-x:auto;padding:4px;"></div>
                 </div>
                 <div>
+
+                <!-- ===== تحليلات متقدمة ===== -->
+                <div class="advanced-analytics-section">
+                    <div class="analytics-sub-header">
+                        <span class="icon">📊</span>
+                        <span id="advanced-analytics-title">Advanced Analytics</span>
+                    </div>
+
+                    <!-- صف المقاييس المتقدمة -->
+                    <div class="advanced-metrics-grid">
+                        <!-- متوسط مدة الجلسة -->
+                        <div class="advanced-metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon">⏱</div>
+                                <div class="metric-title" id="avg-session-title">Avg Session Duration</div>
+                            </div>
+                            <div class="metric-value" id="avg-session-value">--</div>
+                            <div class="metric-subtext" id="avg-session-sub">Based on <strong id="avg-session-count">0</strong> sessions</div>
+                        </div>
+
+                        <!-- أفضل يوم -->
+                        <div class="advanced-metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon">🏆</div>
+                                <div class="metric-title" id="best-day-title">Best Day of Week</div>
+                            </div>
+                            <div class="best-day-container" id="best-day-content">
+                                <div class="best-day-emoji">📅</div>
+                                <div class="best-day-info">
+                                    <div class="best-day-name" id="best-day-name">--</div>
+                                    <div class="best-day-detail" id="best-day-detail">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- أكثر ساعة إنتاجية -->
+                        <div class="advanced-metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon">🕒</div>
+                                <div class="metric-title" id="peak-hour-title">Peak Productivity Hour</div>
+                            </div>
+                            <div class="peak-hour-container" id="peak-hour-content">
+                                <div class="peak-hour-clock">
+                                    <div class="hour-hand" id="peak-hour-hand-h"></div>
+                                    <div class="minute-hand" id="peak-hour-hand-m"></div>
+                                    <div class="center-dot"></div>
+                                </div>
+                                <div class="peak-hour-info">
+                                    <div class="peak-hour-time" id="peak-hour-time">--:--</div>
+                                    <div class="peak-hour-detail" id="peak-hour-detail">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- نسبة المراجعة -->
+                        <div class="advanced-metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon">🧠</div>
+                                <div class="metric-title" id="review-ratio-title">Review vs New Study</div>
+                            </div>
+                            <div class="review-ratio-container" id="review-ratio-content">
+                                <div class="review-ratio-donut" id="review-donut">
+                                    <div class="review-ratio-donut-inner">
+                                        <div class="pct" id="review-pct">--%</div>
+                                        <div class="label" id="review-pct-label">Review</div>
+                                    </div>
+                                </div>
+                                <div class="review-ratio-legend" id="review-legend">
+                                    <!-- يتم ملؤه ديناميكياً -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- معدل الانقطاع -->
+                        <div class="advanced-metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon">📉</div>
+                                <div class="metric-title" id="gap-rate-title">Gap Rate</div>
+                            </div>
+                            <div class="gap-rate-container" id="gap-rate-content">
+                                <div class="gap-rate-bar">
+                                    <div class="gap-rate-fill" id="gap-rate-fill">--</div>
+                                </div>
+                                <div class="gap-rate-stats">
+                                    <div class="stat">
+                                        <div class="value" id="gap-avg">--</div>
+                                        <div class="label" id="gap-avg-label">Avg Gap</div>
+                                    </div>
+                                    <div class="stat">
+                                        <div class="value" id="gap-longest">--</div>
+                                        <div class="label" id="gap-longest-label">Longest</div>
+                                    </div>
+                                    <div class="stat">
+                                        <div class="value" id="gap-consistency">--</div>
+                                        <div class="label" id="gap-consistency-label">Consistency</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- مؤشر الإنتاجية -->
+                        <div class="advanced-metric-card">
+                            <div class="metric-header">
+                                <div class="metric-icon">💯</div>
+                                <div class="metric-title" id="productivity-index-title">Productivity Index</div>
+                            </div>
+                            <div class="productivity-index-container" id="productivity-index-content">
+                                <div class="productivity-gauge">
+                                    <div class="productivity-gauge-bg"></div>
+                                    <div class="productivity-gauge-fill" id="productivity-needle"></div>
+                                    <div class="productivity-gauge-center">
+                                        <div class="score" id="productivity-score">--</div>
+                                        <div class="label" id="productivity-score-label">/ 100</div>
+                                    </div>
+                                </div>
+                                <div class="productivity-breakdown">
+                                    <div class="productivity-breakdown-item">
+                                        <div class="score" id="prod-time-score">--</div>
+                                        <div class="label" id="prod-time-label">Time</div>
+                                    </div>
+                                    <div class="productivity-breakdown-item">
+                                        <div class="score" id="prod-consistency-score">--</div>
+                                        <div class="label" id="prod-consistency-label">Consistency</div>
+                                    </div>
+                                    <div class="productivity-breakdown-item">
+                                        <div class="score" id="prod-goals-score">--</div>
+                                        <div class="label" id="prod-goals-label">Goals</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- منحنى تطور ساعات الدراسة -->
+                    <div class="trend-chart-container">
+                        <div class="charts-box-title" id="trend-chart-title">
+                            <span>📈</span>
+                            <span>Weekly Study Hours Trend</span>
+                        </div>
+                        <div class="trend-chart-wrapper">
+                            <canvas id="study-trend-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                     <div class="dash-section-header" id="hist-header-title" style="margin-top:25px;">Recent Sessions & Lectures Log</div>
                     <button class="add-item-pill-btn" onclick="openManualSessionModal()" id="add-manual-session-btn" style="margin-bottom: 15px;">+ <span id="add-manual-btn-txt">Add Past Session</span></button>
 
@@ -697,7 +1240,6 @@
             </div>
         </div>
     </div>
-        <!-- EDIT SESSION MODAL -->
     <div class="modal-overlay" id="edit-session-modal">
         <div class="modal-box">
             <h3 id="edit-session-heading">Edit Session</h3>
@@ -717,7 +1259,6 @@
             </div>
         </div>
     </div>
-    <!-- ADD MANUAL SESSION MODAL -->
     <div class="modal-overlay" id="manual-session-modal">
         <div class="modal-box">
             <h3 id="manual-session-heading">Add Study Session</h3>
@@ -843,7 +1384,70 @@
                 addSessionBtn: "إضافة الجلسة",
                 sessionUpdated: "تم تحديث الجلسة!",
                 sessionAdded: "تم إضافة الجلسة بنجاح!",
-                addManualBtn: "+ إضافة جلسة سابقة"
+                addManualBtn: "+ إضافة جلسة سابقة",
+                advancedAnalyticsTitle: "تحليلات متقدمة",
+                avgSessionTitle: "متوسط مدة الجلسة",
+                bestDayTitle: "أفضل يوم في الأسبوع",
+                peakHourTitle: "أكثر ساعة إنتاجية",
+                reviewRatioTitle: "نسبة المراجعة إلى الدراسة الجديدة",
+                gapRateTitle: "معدل الانقطاع بين الجلسات",
+                productivityIndexTitle: "مؤشر الإنتاجية",
+                trendChartTitle: "منحنى تطور ساعات الدراسة أسبوعيًا",
+                productivityScoreLabel: "من 100",
+                prodTimeLabel: "الوقت",
+                prodConsistencyLabel: "الانتظام",
+                prodGoalsLabel: "الأهداف",
+                reviewLabel: "مراجعة",
+                newStudyLabel: "دراسة جديدة",
+                avgGapLabel: "متوسط الانقطاع",
+                longestGapLabel: "أطول انقطاع",
+                consistencyLabel: "الانتظام",
+                sessionsLabel: "جلسة",
+                noDataLabel: "لا توجد بيانات",
+                weekTotalLabel: "إجمالي الأسبوع",
+                activeDaysLabel: "الأيام النشطة",
+                archiveLabel: "الأرشفة",
+                archivedLabel: "مؤرشف",
+                currentLabel: "الحالي",
+                previousWeekLabel: "الأسبوع السابق",
+                nextWeekLabel: "الأسبوع القادم",
+                currentWeekLabel: "الأسبوع الحالي",
+                noSessionsLabel: "لا توجد جلسات",
+                totalLabel: "الإجمالي",
+                weeklyTagDistLabel: "توزيع المواد هذا الأسبوع",
+                lessLabel: "أقل",
+                moreLabel: "أكثر",
+                studyHoursLabel: "ساعات الدراسة",
+                hoursLabel: "الساعات",
+                dayStudyLabel: "الدراسة اليومية",
+                weekProgressLabel: "تقدم الأسبوع الحالي",
+                monthStatsLabel: "إجمالي هذا الشهر",
+                hoursUnit: "ساعة",
+                dayUpTxt: "ارتفع بنسبة 12% عن أمس",
+                monthStreakTxt: "تم إنجاز 19 يوم دراسة متتالي",
+                goalExceededDaily: "تجاوزت الهدف اليومي بـ",
+                goalExceededWeekly: "تجاوزت الهدف الأسبوعي بـ",
+                goalExceededMonthly: "تجاوزت الهدف الشهري بـ",
+                leftToDailyGoal: "متبقي للهدف اليومي",
+                leftToWeeklyGoal: "متبقي للهدف الأسبوعي",
+                leftToMonthlyGoal: "متبقي للهدف الشهري",
+                betterThanYesterday: "أفضل من الأمس بـ",
+                weekArchived: "تم أرشفة الأسبوع!",
+                weekLabel: "الأسبوع",
+                noSignUpRequests: "لا توجد طلبات تسجيل حتى الآن",
+                pendingLabel: "قيد الانتظار",
+                approveLabel: "موافقة",
+                rejectLabel: "رفض",
+                kickBanLabel: "طرد / حظر",
+                restoreAccessLabel: "استعادة الوصول",
+                accessRevoked: "تم إلغاء الوصول",
+                waitingApproval: "في انتظار الموافقة",
+                signOutLabel: "تسجيل الخروج",
+                installPrompt: "تثبيت INDEX كتطبيق على جهازك؟",
+                installYes: "نعم",
+                installNo: "لا",
+                dataExported: "تم تصدير البيانات!",
+                dataExportMsg: "تم تحميل بيانات الدراسة الخاصة بك.",
             }
         };
 
@@ -993,7 +1597,6 @@
         const DB_STORE = 'appData';
         let localCacheDb = null;
 
-        // Accounts listed here skip the approval queue entirely and can see the Admin tab.
         const ADMIN_EMAILS = ['anasharara059@gmail.com'];
         const ACCESS_REF = rtdb.ref('indexStudyAssistant/access');
         let myAccessListenerRef = null;
@@ -1040,7 +1643,6 @@
             const myAccessRef = ACCESS_REF.child(user.uid);
 
             if (isAdmin) {
-                // Admins always have access; make sure their record reflects that.
                 await myAccessRef.set({
                     email: user.email || '', displayName: user.displayName || '', photoURL: user.photoURL || '',
                     status: 'approved', isAdmin: true, requestedAt: Date.now(), respondedAt: Date.now()
@@ -1051,8 +1653,6 @@
                 return;
             }
 
-            // Non-admin: listen live to this user's own access record so an approval
-            // or a revocation applies instantly, even mid-session, with no reload needed.
             if (myAccessListenerRef) myAccessListenerRef.off();
             myAccessListenerRef = myAccessRef;
             myAccessRef.on('value', async (snap) => {
@@ -1062,7 +1662,7 @@
                         email: user.email || '', displayName: user.displayName || '', photoURL: user.photoURL || '',
                         status: 'pending', isAdmin: false, requestedAt: Date.now()
                     });
-                    return; // the write above re-triggers this listener with the new record
+                    return;
                 }
                 if (record.status === 'approved') {
                     hideAllAuthOverlays();
@@ -1080,7 +1680,6 @@
         });
 
         function lockAppIfBooted() {
-            // If the app was already visible and access is revoked/pending mid-session, stop the timer and hide the UI underneath the overlay.
             if (isClockRunning) pauseClock();
         }
 
@@ -1092,20 +1691,21 @@
             const entries = Object.entries(data).filter(([uid, rec]) => !rec.isAdmin);
             entries.sort((a, b) => (b[1].requestedAt || 0) - (a[1].requestedAt || 0));
             const pendingCount = entries.filter(([, rec]) => rec.status === 'pending').length;
-            countEl.innerText = pendingCount > 0 ? pendingCount + ' pending' : '';
-            if (entries.length === 0) { listEl.innerHTML = ''; emptyEl.style.display = 'block'; return; }
+            countEl.innerText = pendingCount > 0 ? pendingCount + ' ' + (d7.pendingLabel || 'pending') : '';
+            const d7 = languageDictionary[currentSystemLanguage];
+            if (entries.length === 0) { listEl.innerHTML = ''; emptyEl.innerText = d7.noSignUpRequests || 'No sign-up requests yet.'; emptyEl.style.display = 'block'; return; }
             emptyEl.style.display = 'none';
             listEl.innerHTML = entries.map(([uid, rec]) => {
                 const statusColor = rec.status === 'approved' ? 'var(--success)' : rec.status === 'banned' ? 'var(--danger)' : 'var(--warning)';
                 const requestedDate = rec.requestedAt ? new Date(rec.requestedAt).toLocaleString() : '';
                 let actions = '';
                 if (rec.status === 'pending') {
-                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">Approve</button>
-                               <button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">Reject</button>`;
+                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">${d7.approveLabel || 'Approve'}</button>
+                               <button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">${d7.rejectLabel || 'Reject'}</button>`;
                 } else if (rec.status === 'approved') {
-                    actions = `<button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">Kick / Ban</button>`;
+                    actions = `<button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">${d7.kickBanLabel || 'Kick / Ban'}</button>`;
                 } else if (rec.status === 'banned') {
-                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">Restore access</button>`;
+                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">${d7.restoreAccessLabel || 'Restore access'}</button>`;
                 }
                 return `<div class="glass-card" style="padding:14px 18px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                     <div style="display:flex; align-items:center; gap:10px;">
@@ -1194,7 +1794,6 @@
                     currentSystemLanguage = savedLanguage;
                     document.documentElement.setAttribute('dir', currentSystemLanguage === 'ar' ? 'rtl' : 'ltr');
                     document.documentElement.setAttribute('lang', currentSystemLanguage);
-                    // Language toggle is now inside account dropdown menu
                 } else { await dbSet('language', currentSystemLanguage); }
                 await loadCustomTagColors();
             } catch (err) { console.error('DB init failed:', err); }
@@ -1232,7 +1831,6 @@
             return formatMinutesToHM(totalMinutes);
         }
 
-        // Toast notifications
         function showToast(title, message, type = 'info', duration = 3000) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -1266,7 +1864,6 @@
             const htmlNode = document.documentElement;
             htmlNode.setAttribute('dir', currentSystemLanguage === 'ar' ? 'rtl' : 'ltr');
             htmlNode.setAttribute('lang', currentSystemLanguage);
-            // Update language label in dropdown menu if it exists
             const menuLangLabel = document.getElementById('menu-lang-label');
             if (menuLangLabel) {
                 menuLangLabel.innerText = currentSystemLanguage === 'ar' ? 'Language' : 'اللغة';
@@ -1300,9 +1897,6 @@
             document.getElementById('m-day-unit').innerText = d.unitHrs;
             document.getElementById('m-week-unit').innerText = d.unitHrs;
             document.getElementById('m-month-unit').innerText = d.unitHrs;
-            // Subtexts now calculated dynamically in recalculateAndRenderDashboard
-            // document.getElementById('m-day-sub-txt').innerText = d.daySubTxt;
-            // document.getElementById('m-month-sub-txt').innerText = d.monthSubTxt;
             document.getElementById('hist-header-title').innerText = d.histTitle;
             document.getElementById('th-date').innerText = d.thDate;
             document.getElementById('th-title').innerText = d.thTitle;
@@ -1323,7 +1917,6 @@
             if (goalsSettingsBtn) goalsSettingsBtn.innerText = '🎯 ' + (d.menuGoalsLabel || 'Goals');
             const menuLang = document.getElementById('menu-lang-label');
             if (menuLang) menuLang.innerText = d.menuLangLabel;
-            // Update language icon/label direction
             const menuLangIcon = menuLang?.parentElement?.querySelector('.account-menu-icon');
             if (menuLangIcon) menuLangIcon.innerText = '🌐';
             const menuExport = document.getElementById('menu-export-label');
@@ -1363,6 +1956,61 @@
             renderGoalsScreen();
             renderHabitsScreen();
             updateEditAddModalLabels();
+            updateAdvancedAnalyticsLabels();
+        }
+
+        function updateAdvancedAnalyticsLabels() {
+            const d = languageDictionary[currentSystemLanguage];
+            const titleEl = document.getElementById('advanced-analytics-title');
+            if (titleEl) titleEl.innerText = d.advancedAnalyticsTitle || 'Advanced Analytics';
+
+            const avgTitle = document.getElementById('avg-session-title');
+            if (avgTitle) avgTitle.innerText = d.avgSessionTitle || 'Avg Session Duration';
+
+            const bestDayTitle = document.getElementById('best-day-title');
+            if (bestDayTitle) bestDayTitle.innerText = d.bestDayTitle || 'Best Day of Week';
+
+            const peakHourTitle = document.getElementById('peak-hour-title');
+            if (peakHourTitle) peakHourTitle.innerText = d.peakHourTitle || 'Peak Productivity Hour';
+
+            const reviewTitle = document.getElementById('review-ratio-title');
+            if (reviewTitle) reviewTitle.innerText = d.reviewRatioTitle || 'Review vs New Study';
+
+            const gapTitle = document.getElementById('gap-rate-title');
+            if (gapTitle) gapTitle.innerText = d.gapRateTitle || 'Gap Rate';
+
+            const prodTitle = document.getElementById('productivity-index-title');
+            if (prodTitle) prodTitle.innerText = d.productivityIndexTitle || 'Productivity Index';
+
+            const trendTitle = document.getElementById('trend-chart-title');
+            if (trendTitle) trendTitle.innerHTML = '<span>📈</span><span>' + (d.trendChartTitle || 'Weekly Study Hours Trend') + '</span>';
+
+            const scoreLabel = document.getElementById('productivity-score-label');
+            if (scoreLabel) scoreLabel.innerText = d.productivityScoreLabel || '/ 100';
+
+            const timeLabel = document.getElementById('prod-time-label');
+            if (timeLabel) timeLabel.innerText = d.prodTimeLabel || 'Time';
+
+            const consistencyLabel = document.getElementById('prod-consistency-label');
+            if (consistencyLabel) consistencyLabel.innerText = d.prodConsistencyLabel || 'Consistency';
+
+            const goalsLabel = document.getElementById('prod-goals-label');
+            if (goalsLabel) goalsLabel.innerText = d.prodGoalsLabel || 'Goals';
+
+            const reviewPctLabel = document.getElementById('review-pct-label');
+            if (reviewPctLabel) reviewPctLabel.innerText = d.reviewLabel || 'Review';
+
+            const avgGapLabel = document.getElementById('gap-avg-label');
+            if (avgGapLabel) avgGapLabel.innerText = d.avgGapLabel || 'Avg Gap';
+
+            const longestGapLabel = document.getElementById('gap-longest-label');
+            if (longestGapLabel) longestGapLabel.innerText = d.longestGapLabel || 'Longest';
+
+            const gapConsistencyLabel = document.getElementById('gap-consistency-label');
+            if (gapConsistencyLabel) gapConsistencyLabel.innerText = d.consistencyLabel || 'Consistency';
+
+            // إعادة رسم التحليلات المتقدمة باللغة الجديدة
+            renderAllAdvancedAnalytics();
         }
 
         function switchMode(mode) {
@@ -1531,7 +2179,6 @@
                 chip.title = currentSystemLanguage === 'ar' ? 'انقر لتختار · انقر بزر الماوس الأيمن لتغيير اللون' : 'Click to select · Right-click to change color';
                 chip.onclick = () => selectActiveTag(tag);
                 chip.oncontextmenu = (e) => { e.preventDefault(); openTagColorModal(tag); };
-                // Long press for mobile
                 let pressTimer;
                 chip.addEventListener('touchstart', (e) => {
                     pressTimer = setTimeout(() => { e.preventDefault(); openTagColorModal(tag); }, 600);
@@ -1690,11 +2337,11 @@
                 });
             }
             if (typeof renderWeeklySegmentedChart === "function") renderWeeklySegmentedChart();
+            if (typeof renderAllAdvancedAnalytics === "function") renderAllAdvancedAnalytics();
         }
 
         
 
-        // ===== WEEK NAVIGATION HELPERS =====
         function getWeekStartDate(offset) {
             const now = new Date();
             const dayOfWeek = now.getDay();
@@ -1770,7 +2417,10 @@
                 const lwk = getWeekKey(lws);
                 if (!archivedWeeks[lwk]) {
                     const a = archiveWeekByOffset(-1);
-                    if (a && a.totalMinutes > 0) showToast(currentSystemLanguage === 'ar' ? 'تم أرشفة الأسبوع!' : 'Week Archived!', (currentSystemLanguage === 'ar' ? 'الأسبوع ' : 'Week ') + a.weekNumber + ': ' + formatMinutesToHM(a.totalMinutes), 'success');
+                    if (a && a.totalMinutes > 0) {
+                        const d6 = languageDictionary[currentSystemLanguage];
+                        showToast(d6.weekArchived || 'Week Archived!', (d6.weekLabel || 'Week ') + a.weekNumber + ': ' + formatMinutesToHM(a.totalMinutes), 'success');
+                    }
                 }
             }
         }
@@ -1779,7 +2429,6 @@
             const holder = document.getElementById('weekly-chart-holder');
             holder.innerHTML = '';
 
-            // Saturday to Friday (Arabic week)
             const weekdaysArabic = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
             const weekdaysEnglish = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
 
@@ -1790,25 +2439,24 @@
             const isCurrentWeek = currentViewedWeekOffset === 0;
             const isPastWeek = currentViewedWeekOffset < 0;
 
-            // ===== WEEK NAVIGATION HEADER =====
             const navHeader = document.createElement('div');
-            navHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:14px 18px;background:linear-gradient(135deg, rgba(255,115,0,0.06), rgba(130,0,255,0.04));border-radius:14px;border:1px solid rgba(255,115,0,0.12);';
+            navHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:14px 18px;background:linear-gradient(135deg, rgba(217,165,74,0.06), rgba(62,92,138,0.04));border-radius:14px;border:1px solid rgba(217,165,74,0.12);';
 
             const prevBtn = document.createElement('button');
             prevBtn.innerHTML = currentSystemLanguage === 'ar' ? '▶' : '◀';
-            prevBtn.style.cssText = 'background:rgba(255,115,0,0.12);border:1px solid rgba(255,115,0,0.25);color:var(--accent-orange);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:12px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
-            prevBtn.onmouseover = function() { this.style.background='rgba(255,115,0,0.25)'; this.style.transform='scale(1.1)'; };
-            prevBtn.onmouseout = function() { this.style.background='rgba(255,115,0,0.12)'; this.style.transform='scale(1)'; };
+            prevBtn.style.cssText = 'background:rgba(217,165,74,0.12);border:1px solid rgba(217,165,74,0.25);color:var(--accent-orange);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:12px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
+            prevBtn.onmouseover = function() { this.style.background='rgba(217,165,74,0.25)'; this.style.transform='scale(1.1)'; };
+            prevBtn.onmouseout = function() { this.style.background='rgba(217,165,74,0.12)'; this.style.transform='scale(1)'; };
             prevBtn.onclick = function() { navigateWeek(-1); };
-            prevBtn.title = currentSystemLanguage === 'ar' ? 'الأسبوع السابق' : 'Previous Week';
+            prevBtn.title = (languageDictionary[currentSystemLanguage] && languageDictionary[currentSystemLanguage].previousWeekLabel) || (currentSystemLanguage === 'ar' ? 'الأسبوع السابق' : 'Previous Week');
 
             const nextBtn = document.createElement('button');
             nextBtn.innerHTML = currentSystemLanguage === 'ar' ? '◀' : '▶';
-            nextBtn.style.cssText = 'background:rgba(255,115,0,0.12);border:1px solid rgba(255,115,0,0.25);color:var(--accent-orange);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:12px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
-            nextBtn.onmouseover = function() { this.style.background='rgba(255,115,0,0.25)'; this.style.transform='scale(1.1)'; };
-            nextBtn.onmouseout = function() { this.style.background='rgba(255,115,0,0.12)'; this.style.transform='scale(1)'; };
+            nextBtn.style.cssText = 'background:rgba(217,165,74,0.12);border:1px solid rgba(217,165,74,0.25);color:var(--accent-orange);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:12px;font-weight:700;transition:all 0.2s;display:flex;align-items:center;justify-content:center;';
+            nextBtn.onmouseover = function() { this.style.background='rgba(217,165,74,0.25)'; this.style.transform='scale(1.1)'; };
+            nextBtn.onmouseout = function() { this.style.background='rgba(217,165,74,0.12)'; this.style.transform='scale(1)'; };
             nextBtn.onclick = function() { navigateWeek(1); };
-            nextBtn.title = currentSystemLanguage === 'ar' ? 'الأسبوع القادم' : 'Next Week';
+            nextBtn.title = (languageDictionary[currentSystemLanguage] && languageDictionary[currentSystemLanguage].nextWeekLabel) || (currentSystemLanguage === 'ar' ? 'الأسبوع القادم' : 'Next Week');
 
             const weekInfo = document.createElement('div');
             weekInfo.style.cssText = 'text-align:center;flex:1;';
@@ -1829,7 +2477,7 @@
             currentBtn.onmouseover = function() { this.style.background='rgba(0,210,106,0.2)'; this.style.transform='scale(1.1)'; };
             currentBtn.onmouseout = function() { this.style.background='rgba(0,210,106,0.08)'; this.style.transform='scale(1)'; };
             currentBtn.onclick = function() { goToCurrentWeek(); };
-            currentBtn.title = currentSystemLanguage === 'ar' ? 'الأسبوع الحالي' : 'Current Week';
+            currentBtn.title = (languageDictionary[currentSystemLanguage] && languageDictionary[currentSystemLanguage].currentWeekLabel) || (currentSystemLanguage === 'ar' ? 'الأسبوع الحالي' : 'Current Week');
 
             if (currentSystemLanguage === 'ar') {
                 navHeader.appendChild(nextBtn); navHeader.appendChild(weekInfo); navHeader.appendChild(currentBtn); navHeader.appendChild(prevBtn);
@@ -1869,18 +2517,18 @@
                 }
             });
 
-            // Find max daily minutes for scaling
             let maxDailyMinutes = 0;
             weeklyDataArray.forEach(d => { if (d.totalTime > maxDailyMinutes) maxDailyMinutes = d.totalTime; });
-            if (maxDailyMinutes === 0) maxDailyMinutes = 60; // Minimum scale
+            if (maxDailyMinutes === 0) maxDailyMinutes = 60;
 
             const totalWeekMinutes = weeklyDataArray.reduce((sum, d) => sum + d.totalTime, 0);
             const activeDays = weeklyDataArray.filter(d => d.totalTime > 0).length;
 
             const weekSummary = document.createElement('div');
             weekSummary.style.cssText = 'display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;';
-            let summaryHTML = '<div style="background:rgba(255,115,0,0.1);border:1px solid rgba(255,115,0,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (currentSystemLanguage === 'ar' ? 'إجمالي الأسبوع' : 'Week Total') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-orange);">' + formatMinutesToHM(totalWeekMinutes) + '</div></div>';
-            summaryHTML += '<div style="background:rgba(130,0,255,0.1);border:1px solid rgba(130,0,255,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (currentSystemLanguage === 'ar' ? 'الأيام النشطة' : 'Active Days') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-purple);">' + activeDays + '/7</div></div>';
+            const d2 = languageDictionary[currentSystemLanguage];
+            let summaryHTML = '<div style="background:rgba(217,165,74,0.1);border:1px solid rgba(217,165,74,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (d2.weekTotalLabel || 'Week Total') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-orange);">' + formatMinutesToHM(totalWeekMinutes) + '</div></div>';
+            summaryHTML += '<div style="background:rgba(62,92,138,0.1);border:1px solid rgba(62,92,138,0.2);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (d2.activeDaysLabel || 'Active Days') + '</div><div style="font-size:20px;font-weight:800;color:var(--accent-purple);">' + activeDays + '/7</div></div>';
             if (isPastWeek) {
                 const archData = getArchivedWeekData(currentViewedWeekOffset);
                 summaryHTML += '<div style="background:rgba(0,210,106,0.08);border:1px solid rgba(0,210,106,0.15);border-radius:12px;padding:10px 18px;"><div style="font-size:11px;color:var(--text-gray);font-weight:600;">' + (currentSystemLanguage === 'ar' ? 'الأرشفة' : 'Archive') + '</div><div style="font-size:14px;font-weight:700;color:' + (archData ? 'var(--success)' : 'var(--text-gray)') + ';">' + (archData ? '✓ ' + (currentSystemLanguage === 'ar' ? 'مؤرشف' : 'Saved') : (currentSystemLanguage === 'ar' ? '—' : '—')) + '</div></div>';
@@ -1888,13 +2536,11 @@
             weekSummary.innerHTML = summaryHTML;
             holder.appendChild(weekSummary);
 
-            // Render each day
             weeklyDataArray.forEach(day => {
                 const dayRow = document.createElement('div');
                 dayRow.className = 'weekly-day-row';
                 dayRow.style.cssText = 'display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.03);';
 
-                // Day label with date
                 const labelCol = document.createElement('div');
                 labelCol.style.cssText = 'width:70px;flex-shrink:0;';
                 const dayLabel = document.createElement('div');
@@ -1907,18 +2553,16 @@
                 labelCol.appendChild(dayLabel);
                 labelCol.appendChild(dateLabel);
 
-                // Content column
                 const contentCol = document.createElement('div');
                 contentCol.style.cssText = 'flex:1;min-width:0;';
 
+                const d4 = languageDictionary[currentSystemLanguage];
                 if (day.totalTime === 0) {
-                    // No study data for this day
                     const noData = document.createElement('div');
                     noData.style.cssText = 'color:var(--text-gray);font-size:12px;font-style:italic;padding:8px 0;';
-                    noData.innerText = currentSystemLanguage === 'ar' ? 'لا توجد جلسات' : 'No sessions';
+                    noData.innerText = d4.noSessionsLabel || (currentSystemLanguage === 'ar' ? 'لا توجد جلسات' : 'No sessions');
                     contentCol.appendChild(noData);
                 } else {
-                    // Stacked bar showing tags with percentages
                     const barTrack = document.createElement('div');
                     barTrack.className = 'weekly-stacked-track';
                     barTrack.style.cssText = 'height:28px;border-radius:14px;overflow:hidden;display:flex;width:100%;background:rgba(255,255,255,0.03);';
@@ -1929,7 +2573,6 @@
                         segBlock.style.cssText = `height:100%;transition:width 0.5s ease;position:relative;background-color:${getTagColor(segment.tag)};width:${segmentPercent}%;`;
                         segBlock.setAttribute('data-tooltip', `${segment.tag}: ${segment.time} Min (${Math.round(segmentPercent)}%)`);
 
-                        // Show percentage on the bar if it's wide enough
                         if (segmentPercent > 15) {
                             const pctLabel = document.createElement('span');
                             pctLabel.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.5);';
@@ -1942,7 +2585,6 @@
 
                     contentCol.appendChild(barTrack);
 
-                    // Tags legend below bar
                     const tagsLegend = document.createElement('div');
                     tagsLegend.style.cssText = 'display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;';
 
@@ -1959,10 +2601,9 @@
                         tagsLegend.appendChild(tagItem);
                     });
 
-                    // Total time for the day
                     const dayTotal = document.createElement('div');
                     dayTotal.style.cssText = 'font-size:11px;color:var(--text-gray);margin-top:6px;font-weight:600;';
-                    dayTotal.innerText = `${currentSystemLanguage === 'ar' ? 'الإجمالي' : 'Total'}: ${formatMinutesToHM(day.totalTime)}`;
+                    dayTotal.innerText = `${d4.totalLabel || 'Total'}: ${formatMinutesToHM(day.totalTime)}`;
 
                     contentCol.appendChild(tagsLegend);
                     contentCol.appendChild(dayTotal);
@@ -1973,14 +2614,12 @@
                 holder.appendChild(dayRow);
             });
 
-            // Add tag distribution summary for the week
             if (totalWeekMinutes > 0) {
                 const weekDistHeader = document.createElement('div');
                 weekDistHeader.style.cssText = 'font-size:13px;font-weight:700;color:var(--text-light);margin-top:24px;margin-bottom:12px;padding-top:16px;border-top:1px solid var(--border-soft);';
                 weekDistHeader.innerText = currentSystemLanguage === 'ar' ? 'توزيع المواد هذا الأسبوع' : 'Weekly Tag Distribution';
                 holder.appendChild(weekDistHeader);
 
-                // Aggregate all tags for the week
                 const weekTagMap = {};
                 weeklyDataArray.forEach(day => {
                     day.segments.forEach(seg => {
@@ -2020,7 +2659,6 @@
             const todayISO = getLocalISODate(today);
             const currentYear = today.getFullYear();
 
-            // Build minutes map
             let dayMinutesMap = {};
             archivedSessionsArray.forEach(s => {
                 let mins = parseInt(s.duration) || 0;
@@ -2029,33 +2667,27 @@
 
             let maxMinutes = Math.max(...Object.values(dayMinutesMap), 1);
 
-            // Full year: Jan 1 to Dec 31 of current year
-            const yearStart = new Date(currentYear, 0, 1); // Jan 1
+            const yearStart = new Date(currentYear, 0, 1);
             yearStart.setHours(0, 0, 0, 0);
-            const yearEnd = new Date(currentYear, 11, 31); // Dec 31
+            const yearEnd = new Date(currentYear, 11, 31);
             yearEnd.setHours(0, 0, 0, 0);
 
-            // Align start to Saturday before or on Jan 1
-            const jan1Day = yearStart.getDay(); // 0=Sun, 6=Sat
-            const daysBeforeJan1 = (jan1Day + 1) % 7; // Days back to Saturday
+            const jan1Day = yearStart.getDay();
+            const daysBeforeJan1 = (jan1Day + 1) % 7;
             const gridStart = new Date(yearStart);
             gridStart.setDate(gridStart.getDate() - daysBeforeJan1);
 
-            // Align end to Friday after or on Dec 31
             const dec31Day = yearEnd.getDay();
-            const daysAfterDec31 = (5 - dec31Day + 7) % 7; // Days forward to Friday
+            const daysAfterDec31 = (5 - dec31Day + 7) % 7;
             const gridEnd = new Date(yearEnd);
             gridEnd.setDate(gridEnd.getDate() + daysAfterDec31);
 
-            // Total weeks
             const totalDays = Math.ceil((gridEnd - gridStart) / 86400000) + 1;
             const totalWeeks = Math.ceil(totalDays / 7);
 
-            // Wrapper
             const wrapper = document.createElement('div');
             wrapper.style.cssText = 'display:flex;flex-direction:column;gap:6px;overflow-x:auto;padding-bottom:4px;';
 
-            // Month labels - show month name above first week of each month
             const monthRow = document.createElement('div');
             monthRow.style.cssText = 'display:flex;gap:3px;padding-left:34px;height:18px;';
 
@@ -2064,13 +2696,12 @@
                 const weekStart = new Date(gridStart);
                 weekStart.setDate(weekStart.getDate() + (w * 7));
 
-                const weekMonth = weekStart.getMonth(); // 0-11
+                const weekMonth = weekStart.getMonth();
                 const weekYear = weekStart.getFullYear();
 
                 const labelDiv = document.createElement('div');
                 labelDiv.style.cssText = 'font-size:10px;color:var(--text-gray);font-weight:600;width:11px;text-align:center;';
 
-                // Show month name for first week of each month (only for current year)
                 const monthKey = `${weekYear}-${weekMonth}`;
                 if (weekYear === currentYear && !shownMonths.has(monthKey) && weekStart.getDate() <= 7) {
                     const monthName = weekStart.toLocaleDateString(
@@ -2085,11 +2716,9 @@
             }
             wrapper.appendChild(monthRow);
 
-            // Main area: day labels + grid
             const mainArea = document.createElement('div');
             mainArea.style.cssText = 'display:flex;gap:4px;';
 
-            // Day labels (Sat to Fri - Arabic week)
             const dayLabelsCol = document.createElement('div');
             dayLabelsCol.style.cssText = 'display:flex;flex-direction:column;gap:3px;padding-top:2px;width:30px;flex-shrink:0;';
 
@@ -2106,7 +2735,6 @@
             });
             mainArea.appendChild(dayLabelsCol);
 
-            // Grid: flex columns, each column = one week (Sat to Fri)
             const grid = document.createElement('div');
             grid.style.cssText = 'display:flex;gap:3px;';
 
@@ -2127,16 +2755,15 @@
                     cell.style.cssText = 'width:11px;height:11px;border-radius:2px;transition:all 0.2s;cursor:pointer;box-sizing:border-box;';
 
                     if (!inYear) {
-                        // Days outside the year (padding) - very subtle
                         cell.style.background = 'rgba(255,255,255,0.02)';
                     } else if (mins === 0) {
                         cell.style.background = 'rgba(255,255,255,0.05)';
                     } else {
                         const intensity = Math.min(1, mins / Math.max(maxMinutes, 30));
                         const alpha = 0.2 + (intensity * 0.8);
-                        cell.style.background = `rgba(255, 115, 0, ${alpha})`;
+                        cell.style.background = `rgba(217, 165, 74, ${alpha})`;
                         if (intensity > 0.5) {
-                            cell.style.boxShadow = `0 0 3px rgba(255, 115, 0, ${alpha * 0.3})`;
+                            cell.style.boxShadow = `0 0 3px rgba(217, 165, 74, ${alpha * 0.3})`;
                         }
                     }
 
@@ -2147,7 +2774,6 @@
                         cell.style.position = 'relative';
                     }
 
-                    // Tooltip
                     cell.addEventListener('mouseenter', (e) => {
                         if (!inYear) return;
                         const existing = document.getElementById('heatmap-tooltip');
@@ -2158,7 +2784,7 @@
                         tooltip.style.cssText = `
                             position: fixed; z-index: 10000; background: rgba(8,9,13,0.98);
                             color: #fff; padding: 10px 16px; border-radius: 12px;
-                            font-size: 12px; border: 1px solid rgba(255,115,0,0.3);
+                            font-size: 12px; border: 1px solid rgba(217,165,74,0.3);
                             box-shadow: 0 8px 30px rgba(0,0,0,0.7); pointer-events: none;
                             white-space: nowrap; backdrop-filter: blur(10px);
                         `;
@@ -2197,15 +2823,15 @@
             mainArea.appendChild(grid);
             wrapper.appendChild(mainArea);
 
-            // Legend
             const legend = document.createElement('div');
             legend.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:12px;padding-left:34px;font-size:11px;color:var(--text-gray);';
+            const d5 = languageDictionary[currentSystemLanguage];
             legend.innerHTML = `
-                <span>Less</span>
+                <span>${d5.lessLabel || 'Less'}</span>
                 <div style="display:flex;gap:2px;">
-                    ${[0.15, 0.35, 0.55, 0.75, 0.95].map(a => `<div style="width:11px;height:11px;border-radius:2px;background:rgba(255,115,0,${a});"></div>`).join('')}
+                    ${[0.15, 0.35, 0.55, 0.75, 0.95].map(a => `<div style="width:11px;height:11px;border-radius:2px;background:rgba(217,165,74,${a});"></div>`).join('')}
                 </div>
-                <span>More</span>
+                <span>${d5.moreLabel || 'More'}</span>
             `;
             wrapper.appendChild(legend);
 
@@ -2314,7 +2940,8 @@
             a.download = `index-study-data-${getLocalISODate(new Date())}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            showToast('Data Exported!', 'Your study data has been downloaded.', 'success');
+            const d8 = languageDictionary[currentSystemLanguage];
+            showToast(d8.dataExported || 'Data Exported!', d8.dataExportMsg || 'Your study data has been downloaded.', 'success');
         }
 
         function generateUniqueRecordId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
@@ -2508,7 +3135,6 @@
             });
         }
 
-        // Edit Session functionality
         let currentlyEditingIndex = -1;
 
         function openEditSessionModal(index) {
@@ -2521,7 +3147,6 @@
             document.getElementById('edit-session-duration').value = parseInt(session.duration) || 25;
             document.getElementById('edit-session-range').value = session.range || '';
 
-            // Populate tag dropdown
             const tagSelect = document.getElementById('edit-session-tag');
             tagSelect.innerHTML = '';
             currentTagsList.forEach(tag => {
@@ -2573,7 +3198,6 @@
             showToast(d.sessionUpdated, title, 'success');
         }
 
-        // Add Manual Session functionality
         function openManualSessionModal() {
             const today = getLocalISODate(new Date());
             document.getElementById('manual-session-date').value = today;
@@ -2581,7 +3205,6 @@
             document.getElementById('manual-session-duration').value = 25;
             document.getElementById('manual-session-range').value = '';
 
-            // Populate tag dropdown
             const tagSelect = document.getElementById('manual-session-tag');
             tagSelect.innerHTML = '';
             currentTagsList.forEach(tag => {
@@ -2633,7 +3256,6 @@
             showToast(d.sessionAdded, title, 'success');
         }
 
-        // Update language strings for edit/add modals
         function updateEditAddModalLabels() {
             const d = languageDictionary[currentSystemLanguage];
             document.getElementById('edit-session-heading').innerText = d.editSessionTitle;
@@ -2659,9 +3281,6 @@
         }
 
 
-        // ============================================
-        // TAG COLOR CUSTOMIZATION
-        // ============================================
         function openTagColorModal(tagName) {
             const modal = document.createElement('div');
             modal.className = 'modal-overlay modal-open';
@@ -2670,7 +3289,7 @@
                 <div class="modal-box">
                     <h3>${currentSystemLanguage === 'ar' ? 'لون التاج' : 'Tag Color'}: ${tagName}</h3>
                     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:16px 0;">
-                        ${['#3498db','#e67e22','#1abc9c','#e84393','#2ecc71','#9b59b6','#e74c3c','#f1c40f','#16a085','#d35400','#8e44ad','#2c3e50','#ff7300','#8200ff','#00d26a','#3498db','#e74c3c','#f39c12'].map(c => `
+                        ${['#3498db','#e67e22','#1abc9c','#e84393','#2ecc71','#9b59b6','#e74c3c','#f1c40f','#16a085','#d35400','#8e44ad','#2c3e50','#d9a54a','#3e5c8a','#00d26a','#3498db','#e74c3c','#f39c12'].map(c => `
                             <div onclick="setTagColor('${tagName}', '${c}'); document.getElementById('tag-color-modal-dynamic').remove();" 
                                  style="width:40px;height:40px;border-radius:10px;background:${c};cursor:pointer;border:2px solid transparent;transition:all 0.2s;"
                                  onmouseover="this.style.borderColor='#fff';this.style.transform='scale(1.15)';"
@@ -2715,7 +3334,6 @@
             }
         }
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             if (e.code === 'Space') { e.preventDefault(); if (isClockRunning) pauseClock(); else startClock(); }
@@ -2728,9 +3346,7 @@
         });
 
         
-// Account dropdown menu
 function toggleAccountMenu(event) {
-    // Don't toggle if clicking on a menu item (handled by the item's own onclick)
     if (event.target.closest('.account-menu-item')) return;
     event.stopPropagation();
     const menu = document.getElementById('account-dropdown-menu');
@@ -2756,7 +3372,6 @@ function hideAccountMenu() {
     }
 }
 
-// Close account menu when clicking outside
 document.addEventListener('click', function(e) {
     const menu = document.getElementById('account-dropdown-menu');
     const badge = document.getElementById('user-badge');
@@ -2765,12 +3380,438 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Close account menu on Escape key
 document.addEventListener('keydown', function(e) {
     if (e.code === 'Escape') {
         hideAccountMenu();
     }
 });
+
+
+        // ===== تحليلات متقدمة =====
+
+        function calculateAvgSessionDuration() {
+            if (archivedSessionsArray.length === 0) return { avg: 0, count: 0 };
+            const totalMinutes = archivedSessionsArray.reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
+            return { avg: Math.round(totalMinutes / archivedSessionsArray.length), count: archivedSessionsArray.length };
+        }
+
+        function renderAvgSessionDuration() {
+            const data = calculateAvgSessionDuration();
+            const valueEl = document.getElementById('avg-session-value');
+            const subEl = document.getElementById('avg-session-sub');
+            const countEl = document.getElementById('avg-session-count');
+
+            if (valueEl) valueEl.innerText = data.avg > 0 ? formatMinutesToHM(data.avg) : '--';
+            if (countEl) countEl.innerText = data.count;
+            if (subEl) {
+                if (currentSystemLanguage === 'ar') {
+                    subEl.innerHTML = 'بناءً على <strong>' + data.count + '</strong> جلسة';
+                } else {
+                    subEl.innerHTML = 'Based on <strong>' + data.count + '</strong> sessions';
+                }
+            }
+        }
+
+        function calculateBestDayOfWeek() {
+            if (archivedSessionsArray.length === 0) return null;
+            const dayNamesEN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const dayNamesAR = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+            const dayMinutes = [0, 0, 0, 0, 0, 0, 0];
+            const dayCounts = [0, 0, 0, 0, 0, 0, 0];
+
+            archivedSessionsArray.forEach(s => {
+                const d = new Date(s.date + 'T00:00:00');
+                const day = d.getDay();
+                dayMinutes[day] += parseInt(s.duration) || 0;
+                dayCounts[day]++;
+            });
+
+            let bestDay = 0;
+            let maxMinutes = 0;
+            dayMinutes.forEach((mins, idx) => {
+                if (mins > maxMinutes) { maxMinutes = mins; bestDay = idx; }
+            });
+
+            const dayName = currentSystemLanguage === 'ar' ? dayNamesAR[bestDay] : dayNamesEN[bestDay];
+            const avgMins = dayCounts[bestDay] > 0 ? Math.round(maxMinutes / dayCounts[bestDay]) : 0;
+
+            return {
+                day: bestDay,
+                dayName: dayName,
+                totalMinutes: maxMinutes,
+                sessionCount: dayCounts[bestDay],
+                avgMinutes: avgMins
+            };
+        }
+
+        function renderBestDay() {
+            const data = calculateBestDayOfWeek();
+            const nameEl = document.getElementById('best-day-name');
+            const detailEl = document.getElementById('best-day-detail');
+
+            if (!data) {
+                if (nameEl) nameEl.innerText = '--';
+                if (detailEl) detailEl.innerText = '--';
+                return;
+            }
+
+            if (nameEl) nameEl.innerText = data.dayName;
+            if (detailEl) {
+                if (currentSystemLanguage === 'ar') {
+                    detailEl.innerText = formatMinutesToHM(data.totalMinutes) + ' · ' + data.sessionCount + ' جلسة · متوسط ' + formatMinutesToHM(data.avgMinutes);
+                } else {
+                    detailEl.innerText = formatMinutesToHM(data.totalMinutes) + ' · ' + data.sessionCount + ' sessions · avg ' + formatMinutesToHM(data.avgMinutes);
+                }
+            }
+        }
+
+        function calculatePeakHour() {
+            if (archivedSessionsArray.length === 0) return null;
+            const hourMinutes = new Array(24).fill(0);
+            const hourCounts = new Array(24).fill(0);
+
+            archivedSessionsArray.forEach(s => {
+                if (!s.range || s.range === '--:--') return;
+                const rangeParts = s.range.split(' - ');
+                if (rangeParts.length < 1) return;
+                const startTime = rangeParts[0].trim();
+                const hourMatch = startTime.match(/^(\d{1,2}):/);
+                if (hourMatch) {
+                    const hour = parseInt(hourMatch[1]);
+                    if (hour >= 0 && hour < 24) {
+                        hourMinutes[hour] += parseInt(s.duration) || 0;
+                        hourCounts[hour]++;
+                    }
+                }
+            });
+
+            let peakHour = 0;
+            let maxMins = 0;
+            hourMinutes.forEach((mins, h) => {
+                if (mins > maxMins) { maxMins = mins; peakHour = h; }
+            });
+
+            if (maxMins === 0) {
+                // fallback: استخدام الوقت الحالي كتقريب
+                return null;
+            }
+
+            const nextHour = (peakHour + 1) % 24;
+            const timeRange = peakHour.toString().padStart(2, '0') + ':00 - ' + nextHour.toString().padStart(2, '0') + ':00';
+
+            return {
+                hour: peakHour,
+                timeRange: timeRange,
+                totalMinutes: maxMins,
+                sessionCount: hourCounts[peakHour]
+            };
+        }
+
+        function renderPeakHour() {
+            const data = calculatePeakHour();
+            const timeEl = document.getElementById('peak-hour-time');
+            const detailEl = document.getElementById('peak-hour-detail');
+            const handH = document.getElementById('peak-hour-hand-h');
+            const handM = document.getElementById('peak-hour-hand-m');
+
+            if (!data) {
+                if (timeEl) timeEl.innerText = '--:--';
+                if (detailEl) detailEl.innerText = '--';
+                if (handH) handH.style.transform = 'rotate(0deg)';
+                if (handM) handM.style.transform = 'rotate(0deg)';
+                return;
+            }
+
+            if (timeEl) timeEl.innerText = data.timeRange;
+            if (detailEl) {
+                if (currentSystemLanguage === 'ar') {
+                    detailEl.innerText = formatMinutesToHM(data.totalMinutes) + ' · ' + data.sessionCount + ' جلسة';
+                } else {
+                    detailEl.innerText = formatMinutesToHM(data.totalMinutes) + ' · ' + data.sessionCount + ' sessions';
+                }
+            }
+
+            // تحريك عقارب الساعة
+            const hourAngle = (data.hour % 12) * 30;
+            if (handH) handH.style.transform = 'translateX(-50%) rotate(' + hourAngle + 'deg)';
+            if (handM) handM.style.transform = 'translateX(-50%) rotate(0deg)';
+        }
+
+        function calculateReviewRatio() {
+            // نفترض أن الجلسات التي تحتوي على كلمات "review" أو "مراجعة" أو "revision" هي مراجعة
+            const reviewKeywords = ['review', 'revision', 'مراجعة', 'مراجعه', 'recap', 'summary', 'تلخيص'];
+            let reviewMinutes = 0;
+            let newStudyMinutes = 0;
+
+            archivedSessionsArray.forEach(s => {
+                const title = (s.title || '').toLowerCase();
+                const isReview = reviewKeywords.some(kw => title.includes(kw.toLowerCase()));
+                const mins = parseInt(s.duration) || 0;
+                if (isReview) reviewMinutes += mins;
+                else newStudyMinutes += mins;
+            });
+
+            const total = reviewMinutes + newStudyMinutes;
+            if (total === 0) return { review: 0, newStudy: 0, reviewPct: 0, newStudyPct: 0 };
+
+            return {
+                review: reviewMinutes,
+                newStudy: newStudyMinutes,
+                reviewPct: Math.round((reviewMinutes / total) * 100),
+                newStudyPct: Math.round((newStudyMinutes / total) * 100)
+            };
+        }
+
+        function renderReviewRatio() {
+            const data = calculateReviewRatio();
+            const pctEl = document.getElementById('review-pct');
+            const legendEl = document.getElementById('review-legend');
+            const donut = document.getElementById('review-donut');
+
+            if (data.total === 0) {
+                if (pctEl) pctEl.innerText = '--%';
+                if (legendEl) legendEl.innerHTML = '';
+                return;
+            }
+
+            if (pctEl) pctEl.innerText = data.reviewPct + '%';
+
+            // تحديث Donut
+            if (donut) {
+                donut.style.background = `conic-gradient(var(--accent-orange) ${data.reviewPct * 3.6}deg, var(--accent-purple) 0deg)`;
+            }
+
+            if (legendEl) {
+                const reviewLabel = currentSystemLanguage === 'ar' ? 'مراجعة' : 'Review';
+                const newLabel = currentSystemLanguage === 'ar' ? 'دراسة جديدة' : 'New Study';
+                legendEl.innerHTML = `
+                    <div class="review-ratio-legend-item">
+                        <div class="dot" style="background: var(--accent-orange);"></div>
+                        <span class="label-text">${reviewLabel}</span>
+                        <span class="value-text">${formatMinutesToHM(data.review)} (${data.reviewPct}%)</span>
+                    </div>
+                    <div class="review-ratio-legend-item">
+                        <div class="dot" style="background: var(--accent-purple);"></div>
+                        <span class="label-text">${newLabel}</span>
+                        <span class="value-text">${formatMinutesToHM(data.newStudy)} (${data.newStudyPct}%)</span>
+                    </div>
+                `;
+            }
+        }
+
+        function calculateGapRate() {
+            if (archivedSessionsArray.length < 2) return { avgGap: 0, longestGap: 0, consistencyScore: 0 };
+
+            const sorted = [...archivedSessionsArray].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const gaps = [];
+
+            for (let i = 1; i < sorted.length; i++) {
+                const prevDate = new Date(sorted[i-1].date + 'T00:00:00');
+                const currDate = new Date(sorted[i].date + 'T00:00:00');
+                const diffDays = Math.round((currDate - prevDate) / (1000 * 60 * 60 * 24));
+                if (diffDays > 0) gaps.push(diffDays);
+            }
+
+            if (gaps.length === 0) return { avgGap: 0, longestGap: 0, consistencyScore: 100 };
+
+            const avgGap = Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length);
+            const longestGap = Math.max(...gaps);
+
+            // درجة الانتظام: كلما كان المتوسط أقل كانت الدرجة أعلى
+            let consistencyScore = Math.max(0, Math.round(100 - (avgGap - 1) * 10));
+            if (avgGap <= 1) consistencyScore = 100;
+            if (avgGap > 10) consistencyScore = Math.max(0, 100 - (avgGap * 5));
+
+            return { avgGap, longestGap, consistencyScore };
+        }
+
+        function renderGapRate() {
+            const data = calculateGapRate();
+            const fillEl = document.getElementById('gap-rate-fill');
+            const avgEl = document.getElementById('gap-avg');
+            const longestEl = document.getElementById('gap-longest');
+            const consistencyEl = document.getElementById('gap-consistency');
+
+            if (archivedSessionsArray.length < 2) {
+                if (fillEl) { fillEl.style.width = '100%'; fillEl.innerText = 'N/A'; fillEl.className = 'gap-rate-fill good'; }
+                if (avgEl) avgEl.innerText = '--';
+                if (longestEl) longestEl.innerText = '--';
+                if (consistencyEl) consistencyEl.innerText = '--';
+                return;
+            }
+
+            const gapLabel = currentSystemLanguage === 'ar' ? 'يوم' : 'days';
+
+            if (avgEl) avgEl.innerText = data.avgGap + ' ' + gapLabel;
+            if (longestEl) longestEl.innerText = data.longestGap + ' ' + gapLabel;
+            if (consistencyEl) consistencyEl.innerText = data.consistencyScore + '%';
+
+            if (fillEl) {
+                fillEl.style.width = data.consistencyScore + '%';
+                fillEl.innerText = data.consistencyScore + '%';
+                fillEl.className = 'gap-rate-fill ' + (data.consistencyScore >= 70 ? 'good' : data.consistencyScore >= 40 ? 'warning' : 'danger');
+            }
+        }
+
+        function calculateProductivityIndex() {
+            if (archivedSessionsArray.length === 0) return { total: 0, timeScore: 0, consistencyScore: 0, goalsScore: 0 };
+
+            // درجة الوقت: مقارنة بالهدف اليومي
+            const todayISO = getLocalISODate(new Date());
+            const todayMinutes = archivedSessionsArray
+                .filter(s => s.date === todayISO)
+                .reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
+            const dailyGoalMinutes = (studyGoals.daily || 4) * 60;
+            const timeScore = Math.min(100, Math.round((todayMinutes / dailyGoalMinutes) * 100));
+
+            // درجة الانتظام
+            const gapData = calculateGapRate();
+            const consistencyScore = gapData.consistencyScore;
+
+            // درجة الأهداف
+            let goalsScore = 0;
+            if (goalsArray.length > 0) {
+                const completedGoals = goalsArray.filter(g => g.target > 0 && (g.current / g.target) >= 1).length;
+                const totalGoals = goalsArray.length;
+                const progressSum = goalsArray.reduce((sum, g) => sum + (g.target > 0 ? Math.min(1, g.current / g.target) : 0), 0);
+                goalsScore = Math.round((progressSum / totalGoals) * 100);
+            } else {
+                goalsScore = 50; // محايد إذا لم تكن هناك أهداف
+            }
+
+            // المجموع المرجح
+            const total = Math.round((timeScore * 0.4) + (consistencyScore * 0.35) + (goalsScore * 0.25));
+
+            return { total, timeScore, consistencyScore, goalsScore };
+        }
+
+        function renderProductivityIndex() {
+            const data = calculateProductivityIndex();
+            const scoreEl = document.getElementById('productivity-score');
+            const needleEl = document.getElementById('productivity-needle');
+            const timeEl = document.getElementById('prod-time-score');
+            const consistencyEl = document.getElementById('prod-consistency-score');
+            const goalsEl = document.getElementById('prod-goals-score');
+
+            if (scoreEl) scoreEl.innerText = data.total;
+            if (timeEl) timeEl.innerText = data.timeScore;
+            if (consistencyEl) consistencyEl.innerText = data.consistencyScore;
+            if (goalsEl) goalsEl.innerText = data.goalsScore;
+
+            // تحريك الإبرة
+            if (needleEl) {
+                const angle = (data.total / 100) * 180 - 90;
+                needleEl.style.transform = 'translateX(-50%) rotate(' + angle + 'deg)';
+            }
+        }
+
+        let trendChartInstance = null;
+
+        function renderStudyTrendChart() {
+            const canvas = document.getElementById('study-trend-chart');
+            if (!canvas) return;
+
+            // حساب ساعات الدراسة لآخر 12 أسبوع
+            const weeksData = [];
+            const weekLabels = [];
+            const now = new Date();
+
+            for (let i = 11; i >= 0; i--) {
+                const weekStart = new Date(now);
+                weekStart.setDate(weekStart.getDate() - weekStart.getDay() - (i * 7));
+                weekStart.setHours(0, 0, 0, 0);
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                weekEnd.setHours(23, 59, 59, 999);
+
+                const weekMinutes = archivedSessionsArray
+                    .filter(s => {
+                        const sDate = new Date(s.date + 'T00:00:00');
+                        return sDate >= weekStart && sDate <= weekEnd;
+                    })
+                    .reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
+
+                weeksData.push((weekMinutes / 60).toFixed(1));
+
+                const label = weekStart.toLocaleDateString(
+                    currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
+                    { month: 'short', day: 'numeric' }
+                );
+                weekLabels.push(label);
+            }
+
+            if (trendChartInstance) {
+                trendChartInstance.destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+            trendChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: weekLabels,
+                    datasets: [{
+                        label: currentSystemLanguage === 'ar' ? 'ساعات الدراسة' : 'Study Hours',
+                        data: weeksData,
+                        borderColor: '#d9a54a',
+                        backgroundColor: 'rgba(217, 165, 74, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#d9a54a',
+                        pointBorderColor: '#08090d',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(8, 9, 13, 0.95)',
+                            titleColor: '#d9a54a',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(217, 165, 74, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return (currentSystemLanguage === 'ar' ? 'الساعات: ' : 'Hours: ') + context.parsed.y + 'h';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                            ticks: { color: '#7a7f91', font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                            ticks: { color: '#7a7f91', font: { size: 10 } },
+                            beginAtZero: true
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        function renderAllAdvancedAnalytics() {
+            renderAvgSessionDuration();
+            renderBestDay();
+            renderPeakHour();
+            renderReviewRatio();
+            renderGapRate();
+            renderProductivityIndex();
+            renderStudyTrendChart();
+        }
 
 let appHasBooted = false;
         async function bootApp() {
@@ -2789,17 +3830,16 @@ let appHasBooted = false;
             updateQuickStats();
             renderHeatmap();
             renderWeeklySegmentedChart();
+            renderAllAdvancedAnalytics();
         }
     </script>
 <script>
-        // PWA Service Worker
         if ("serviceWorker" in navigator) {
             const swCode = `self.addEventListener("install",e=>{e.waitUntil(caches.open("index-v1").then(c=>c.addAll(["/"])));self.skipWaiting()});self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))});`;
             const swBlob = new Blob([swCode], {type: "application/javascript"});
             const swUrl = URL.createObjectURL(swBlob);
             navigator.serviceWorker.register(swUrl).catch(()=>{});
         }
-        // PWA Install Prompt
         let deferredPrompt;
         window.addEventListener("beforeinstallprompt", e => {
             e.preventDefault();
