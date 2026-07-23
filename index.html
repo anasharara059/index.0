@@ -3299,40 +3299,49 @@ document.addEventListener('keydown', function(e) {
         function calculateBreakAnalysis() {
             if (archivedSessionsArray.length < 2) return null;
 
-            // Sort sessions by date+time
-            const sorted = [...archivedSessionsArray].sort((a, b) => {
-                const dateA = new Date(a.date + 'T' + (a.range?.split(' - ')[0] || '00:00'));
-                const dateB = new Date(b.date + 'T' + (b.range?.split(' - ')[0] || '00:00'));
-                return dateA - dateB;
+            // Build session timeline: each session has a start and end timestamp
+            const sessionsWithTimes = archivedSessionsArray.map(s => {
+                const dateStr = s.date || getLocalISODate(new Date());
+                const durationMin = parseInt(s.duration) || 0;
+
+                // Try to parse start time from range
+                let startTime = null;
+                if (s.range && s.range.includes(' - ')) {
+                    const startMatch = s.range.match(/(\d{1,2}):(\d{2})/);
+                    if (startMatch) {
+                        startTime = new Date(dateStr + 'T' + startMatch[1].padStart(2, '0') + ':' + startMatch[2] + ':00');
+                    }
+                }
+
+                // Fallback: if no start time, assume 09:00 as default
+                if (!startTime || isNaN(startTime.getTime())) {
+                    startTime = new Date(dateStr + 'T09:00:00');
+                }
+
+                const endTime = new Date(startTime.getTime() + durationMin * 60000);
+
+                return {
+                    ...s,
+                    startTime,
+                    endTime,
+                    durationMin
+                };
             });
+
+            // Sort by end time
+            const sorted = sessionsWithTimes.sort((a, b) => a.endTime - b.endTime);
 
             const breaks = [];
             for (let i = 1; i < sorted.length; i++) {
                 const prev = sorted[i - 1];
                 const curr = sorted[i];
 
-                // Parse end time of previous session
-                const prevEndMatch = prev.range?.match(/-(\d{1,2}):(\d{2})/);
-                const currStartMatch = curr.range?.match(/(\d{1,2}):(\d{2})/);
+                const diffMinutes = Math.round((curr.startTime - prev.endTime) / (1000 * 60));
 
-                if (prevEndMatch && currStartMatch) {
-                    const prevEndH = parseInt(prevEndMatch[1]);
-                    const prevEndM = parseInt(prevEndMatch[2]);
-                    const currStartH = parseInt(currStartMatch[1]);
-                    const currStartM = parseInt(currStartMatch[2]);
-
-                    let prevDate = new Date(prev.date + 'T00:00:00');
-                    let currDate = new Date(curr.date + 'T00:00:00');
-
-                    prevDate.setHours(prevEndH, prevEndM, 0, 0);
-                    currDate.setHours(currStartH, currStartM, 0, 0);
-
-                    const diffMinutes = Math.round((currDate - prevDate) / (1000 * 60));
-
-                    // Only count as a break if it's between 5 min and 24 hours
-                    if (diffMinutes >= 5 && diffMinutes <= 1440) {
-                        breaks.push(diffMinutes);
-                    }
+                // Only count as a break if it's between 5 min and 48 hours
+                // (negative = overlap, skip it)
+                if (diffMinutes >= 5 && diffMinutes <= 2880) {
+                    breaks.push(diffMinutes);
                 }
             }
 
@@ -3351,7 +3360,8 @@ document.addEventListener('keydown', function(e) {
                 { label: '1-2h', min: 60, max: 120, count: 0 },
                 { label: '2-4h', min: 120, max: 240, count: 0 },
                 { label: '4-8h', min: 240, max: 480, count: 0 },
-                { label: '> 8h', min: 480, max: Infinity, count: 0 }
+                { label: '8-24h', min: 480, max: 1440, count: 0 },
+                { label: '> 24h', min: 1440, max: Infinity, count: 0 }
             ];
 
             breaks.forEach(b => {
@@ -3370,7 +3380,13 @@ document.addEventListener('keydown', function(e) {
             const data = calculateBreakAnalysis();
 
             if (!data) {
-                container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-gray); font-size:13px; grid-column: 1 / -1;">${currentSystemLanguage === 'ar' ? 'لا توجد بيانات كافية لتحليل فترات الراحة' : 'Not enough data for break analysis'}</div>`;
+                container.innerHTML = `
+                    <div style="text-align:center; padding:30px; color:var(--text-gray); font-size:13px; grid-column: 1 / -1;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
+                        <div style="font-weight: 600; margin-bottom: 6px;">${currentSystemLanguage === 'ar' ? 'لا توجد بيانات كافية' : 'Not enough data'}</div>
+                        <div style="font-size: 11px; opacity: 0.7;">${currentSystemLanguage === 'ar' ? 'يلزم جلستان على الأقل بتواريخ مختلفة لحساب فترات الراحة' : 'Need at least 2 sessions on different dates to calculate breaks'}</div>
+                    </div>
+                `;
                 if (breakHistogramChartInstance) {
                     breakHistogramChartInstance.destroy();
                     breakHistogramChartInstance = null;
