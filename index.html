@@ -3140,22 +3140,29 @@ document.addEventListener('keydown', function(e) {
             archivedSessionsArray.forEach(session => {
                 const segments = splitRangeSegments(session.range || '');
                 if (segments.length === 0) return;
+                const totalSessionMinutes = parseInt(session.duration) || 0;
 
                 segments.forEach(seg => {
                     const { start, end } = splitSegmentStartEnd(seg);
-                    const startMins = parseTimeToMinutesOfDay(start);
-                    if (startMins === null) return;
+                    let startMins = parseTimeToMinutesOfDay(start);
+                    const endMins = parseTimeToMinutesOfDay(end);
+                    if (startMins === null) startMins = endMins; // start unparsable, fall back to end's hour
+                    if (startMins === null) return; // truly unparsable, skip this block entirely
                     const hour = Math.floor(startMins / 60);
 
-                    // Prefer this segment's own span (accurate even across a pause/resume);
-                    // fall back to splitting the session's total duration evenly across its segments.
-                    const endMins = parseTimeToMinutesOfDay(end);
-                    let segMinutes;
-                    if (endMins !== null) {
+                    // Prefer this block's own span (accurate even across a pause/resume);
+                    // fall back to splitting the session's total duration evenly across its blocks.
+                    let segMinutes = null;
+                    if (endMins !== null && start !== end) {
                         segMinutes = endMins - startMins;
-                        if (segMinutes < 0) segMinutes += 24 * 60; // segment crossed midnight
-                    } else {
-                        segMinutes = (parseInt(session.duration) || 0) / segments.length;
+                        if (segMinutes < 0) segMinutes += 24 * 60; // block genuinely crossed midnight
+                    }
+                    // Safety net: a single time block can never legitimately hold more minutes
+                    // than the session itself actually tracked. If clock parsing produced
+                    // something implausible (or there was no real end time), fall back instead
+                    // of letting a bad value distort the whole chart.
+                    if (segMinutes === null || segMinutes <= 0 || segMinutes > totalSessionMinutes + 1) {
+                        segMinutes = totalSessionMinutes / segments.length;
                     }
 
                     hourMinutes[hour] += segMinutes;
@@ -3422,8 +3429,11 @@ document.addEventListener('keydown', function(e) {
                 if (!startTime || isNaN(startTime.getTime())) {
                     startTime = new Date(dateStr + 'T09:00:00');
                 }
-                // Fallback: if no valid end time (or it's before the start), derive it from duration
-                if (!endTime || isNaN(endTime.getTime()) || endTime <= startTime) {
+                // Fallback: if no valid end time, or it's before the start, or the gap between
+                // start/end is wildly larger than the session's own tracked duration (a sign the
+                // clock string was malformed), derive the end time from duration instead.
+                const spanMinutes = endTime ? (endTime - startTime) / 60000 : -1;
+                if (!endTime || isNaN(endTime.getTime()) || spanMinutes <= 0 || spanMinutes > Math.max(durationMin * 4, 180)) {
                     endTime = new Date(startTime.getTime() + durationMin * 60000);
                 }
 
