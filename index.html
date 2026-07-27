@@ -3045,6 +3045,36 @@ document.addEventListener('keydown', function(e) {
         }
 
         // ========== 🕒 PRODUCTIVITY HOURS (24h HEAT TIMELINE) ==========
+        // Parses a start-of-range time string in EITHER 24H ("14:00") or 12H
+        // ("2:00 PM" / "2:00 م") format and returns the 24H hour (0-23), or null.
+        function parseHourFromTimeStr(str) {
+            if (!str) return null;
+            const m = String(str).trim().match(/(\d{1,2}):(\d{2})\s*([AaPp][Mm]|ص|م)?/);
+            if (!m) return null;
+            let hour = parseInt(m[1], 10);
+            const meridiem = m[3];
+            if (meridiem) {
+                const isPM = /[Pp][Mm]|م/.test(meridiem);
+                const isAM = /[Aa][Mm]|ص/.test(meridiem);
+                if (isPM && hour < 12) hour += 12;
+                if (isAM && hour === 12) hour = 0;
+            }
+            if (isNaN(hour) || hour < 0 || hour > 23) return null;
+            return hour;
+        }
+
+        // Compact 12H hour label for the timeline axis, e.g. 0 -> "12", 13 -> "1"
+        function formatHour12Short(hour) {
+            return (hour % 12 === 0 ? 12 : hour % 12).toString();
+        }
+
+        // Full 12H label with AM/PM (or ص/م in Arabic), e.g. 14 -> "2:00 PM"
+        function formatHour12(hour, lang) {
+            const h12 = hour % 12 === 0 ? 12 : hour % 12;
+            const suffix = lang === 'ar' ? (hour < 12 ? 'ص' : 'م') : (hour < 12 ? 'AM' : 'PM');
+            return `${h12}:00 ${suffix}`;
+        }
+
         function renderProductivityHeatTimeline() {
             const container = document.getElementById('productivity-heatmap-container');
             if (!container) return;
@@ -3056,14 +3086,12 @@ document.addEventListener('keydown', function(e) {
 
             archivedSessionsArray.forEach(session => {
                 const range = session.range || '';
-                // Try to extract start hour from range like "14:00 - 15:30"
-                const match = range.match(/(\d{1,2}):\d{2}/);
-                if (match) {
-                    const hour = parseInt(match[1]);
-                    if (hour >= 0 && hour < 24) {
-                        hourMinutes[hour] += parseInt(session.duration) || 0;
-                        hourSessionCounts[hour]++;
-                    }
+                // Use the start of the range, e.g. "14:00 - 15:30" or "2:00 PM - 3:30 PM"
+                const startPart = range.split('-')[0];
+                const hour = parseHourFromTimeStr(startPart);
+                if (hour !== null) {
+                    hourMinutes[hour] += parseInt(session.duration) || 0;
+                    hourSessionCounts[hour]++;
                 }
             });
 
@@ -3081,7 +3109,7 @@ document.addEventListener('keydown', function(e) {
             for (let h = 0; h < 24; h++) {
                 const label = document.createElement('div');
                 label.style.cssText = 'flex: 1; text-align: center; font-size: 9px; color: var(--text-gray); font-weight: 600; min-width: 22px;';
-                label.innerText = h.toString().padStart(2, '0');
+                label.innerText = formatHour12Short(h);
                 labelsRow.appendChild(label);
             }
             wrapper.appendChild(labelsRow);
@@ -3187,7 +3215,7 @@ document.addEventListener('keydown', function(e) {
                         backdrop-filter: blur(10px);
                     `;
 
-                    const timeLabel = `${h.toString().padStart(2, '0')}:00 - ${((h + 1) % 24).toString().padStart(2, '0')}:00`;
+                    const timeLabel = `${formatHour12(h, currentSystemLanguage)} - ${formatHour12((h + 1) % 24, currentSystemLanguage)}`;
                     const pct = totalMinutes > 0 ? Math.round((mins / totalMinutes) * 100) : 0;
                     tooltip.innerHTML = `
                         <div style="font-weight: 800; color: var(--accent-orange); margin-bottom: 4px;">${timeLabel}</div>
@@ -3254,7 +3282,7 @@ document.addEventListener('keydown', function(e) {
             const stats = [
                 { 
                     label: currentSystemLanguage === 'ar' ? 'أكثر ساعة نشاطاً' : 'Peak Hour', 
-                    value: peakMinutes > 0 ? `${peakHour.toString().padStart(2, '0')}:00` : '--:--',
+                    value: peakMinutes > 0 ? formatHour12(peakHour, currentSystemLanguage) : '--:--',
                     sub: peakMinutes > 0 ? formatMinutesToHM(peakMinutes) : '--'
                 },
                 { 
