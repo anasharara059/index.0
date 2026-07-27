@@ -1563,6 +1563,7 @@
         }
 
         function pauseClock() {
+            if (!isClockRunning) return; // منع استدعاء التوقيف وهو أصلاً واقف عشان ما يضيعش وقت البووز غلط
             isClockRunning = false;
             workerLastPauseTime = Date.now();
             if (timerWorker) timerWorker.postMessage({ type: 'pause' });
