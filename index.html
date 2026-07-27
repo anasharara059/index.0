@@ -1009,6 +1009,8 @@
         let runningSeconds = 0;
         let totalElapsedSecondsTracked = 0;
         let currentSessionStartTimeStamp = null;
+        let currentSegmentStartTimeStamp = null; // start time of the currently-running (since last resume) segment
+        let sessionTimeSegments = []; // closed "start - end" segments for the in-progress session (one per run between pauses)
         let currentTagsList = ["Medicine", "Surgery", "Anatomy", "Obstetrics", "Pediatrics"];
         let currentlySelectedTag = "Medicine";
         let archivedSessionsArray = [];
@@ -1516,7 +1518,12 @@
                 if (!confirm(d.modeSwitchConfirm)) return;
                 if (isClockRunning) pauseClock();
                 saveCurrentSessionRecord();
-            } else if (isClockRunning) { pauseClock(); }
+            } else if (isClockRunning) {
+                pauseClock();
+                currentSessionStartTimeStamp = null;
+                currentSegmentStartTimeStamp = null;
+                sessionTimeSegments = [];
+            }
             currentMode = mode;
             document.getElementById('mb-timer').classList.remove('active');
             document.getElementById('mb-stopwatch').classList.remove('active');
@@ -1538,7 +1545,9 @@
             document.getElementById('timer-numbers').classList.add('running');
             document.getElementById('timer-numbers').classList.remove('paused');
             document.getElementById('ctrl-start').classList.add('active');
-            if (!currentSessionStartTimeStamp) currentSessionStartTimeStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const clockStartStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            if (!currentSessionStartTimeStamp) currentSessionStartTimeStamp = clockStartStamp;
+            currentSegmentStartTimeStamp = clockStartStamp; // marks the start of this run (until the next pause/stop)
             updateSessionBadge();
 
             if (!timerWorker) initTimerWorker();
@@ -1560,19 +1569,37 @@
             document.getElementById('timer-numbers').classList.remove('running');
             document.getElementById('timer-numbers').classList.add('paused');
             document.getElementById('ctrl-start').classList.remove('active');
+
+            // Close the segment that was running up to this pause, e.g. "2:00 PM - 2:30 PM"
+            if (currentSegmentStartTimeStamp) {
+                const segmentEndStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                sessionTimeSegments.push(`${currentSegmentStartTimeStamp} - ${segmentEndStamp}`);
+                currentSegmentStartTimeStamp = null;
+            }
         }
 
         function saveCurrentSessionRecord() {
-            let finalEndTimeStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            // If a segment is still open (e.g. Stop was pressed while running, without a prior Pause), close it now
+            if (currentSegmentStartTimeStamp) {
+                const segmentEndStamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                sessionTimeSegments.push(`${currentSegmentStartTimeStamp} - ${segmentEndStamp}`);
+                currentSegmentStartTimeStamp = null;
+            }
+
             let minutesFormattedString = Math.round(totalElapsedSecondsTracked / 60) + " Min";
             let fullISODate = getLocalISODate(new Date());
             let rawSessionTitle = document.getElementById('session-current-title').value;
             if (!rawSessionTitle.trim()) rawSessionTitle = currentSystemLanguage === 'ar' ? "جلسة دراسة غير معنونة" : "Untitled Session";
             if (totalElapsedSecondsTracked > 1) {
+                // Time Frame = every start/pause/resume/stop segment, e.g.
+                // "2:00 PM - 2:30 PM, 2:45 PM - 3:15 PM" if the session was paused and resumed
+                const combinedRange = sessionTimeSegments.length > 0
+                    ? sessionTimeSegments.join(', ')
+                    : (currentSessionStartTimeStamp || '--:--');
                 archivedSessionsArray.unshift({
                     date: fullISODate, title: rawSessionTitle, tag: currentlySelectedTag,
                     duration: minutesFormattedString,
-                    range: currentSessionStartTimeStamp ? `${currentSessionStartTimeStamp} - ${finalEndTimeStamp}` : finalEndTimeStamp
+                    range: combinedRange
                 });
                 dbSet('sessions', archivedSessionsArray);
                 const d = languageDictionary[currentSystemLanguage];
@@ -1584,6 +1611,8 @@
             }
             totalElapsedSecondsTracked = 0;
             currentSessionStartTimeStamp = null;
+            currentSegmentStartTimeStamp = null;
+            sessionTimeSegments = [];
             workerStartTime = null;
             workerPausedAccumulator = 0;
             workerLastPauseTime = null;
@@ -3045,13 +3074,31 @@ document.addEventListener('keydown', function(e) {
         }
 
         // ========== 🕒 PRODUCTIVITY HOURS (24h HEAT TIMELINE) ==========
-        // Parses a start-of-range time string in EITHER 24H ("14:00") or 12H
-        // ("2:00 PM" / "2:00 م") format and returns the 24H hour (0-23), or null.
-        function parseHourFromTimeStr(str) {
+        // A session's Time Frame can now hold MULTIPLE segments, e.g.
+        // "2:00 PM - 2:30 PM, 2:45 PM - 3:15 PM" (one segment per start/pause/resume/stop cycle).
+        // These helpers understand both 12H and 24H clock strings, and multi-segment ranges.
+
+        // Splits a Time Frame string into its individual "start - end" segments.
+        function splitRangeSegments(rangeStr) {
+            if (!rangeStr) return [];
+            return String(rangeStr).split(',').map(seg => seg.trim()).filter(Boolean);
+        }
+
+        // Splits a single "start - end" segment into its start and end pieces.
+        function splitSegmentStartEnd(segment) {
+            const parts = String(segment).split('-');
+            if (parts.length < 2) return { start: segment.trim(), end: segment.trim() };
+            return { start: parts[0].trim(), end: parts.slice(1).join('-').trim() };
+        }
+
+        // Parses a clock time string in EITHER 24H ("14:00") or 12H
+        // ("2:00 PM" / "2:00 م") format and returns minutes-since-midnight (0-1439), or null.
+        function parseTimeToMinutesOfDay(str) {
             if (!str) return null;
             const m = String(str).trim().match(/(\d{1,2}):(\d{2})\s*([AaPp][Mm]|ص|م)?/);
             if (!m) return null;
             let hour = parseInt(m[1], 10);
+            const minute = parseInt(m[2], 10);
             const meridiem = m[3];
             if (meridiem) {
                 const isPM = /[Pp][Mm]|م/.test(meridiem);
@@ -3059,8 +3106,14 @@ document.addEventListener('keydown', function(e) {
                 if (isPM && hour < 12) hour += 12;
                 if (isAM && hour === 12) hour = 0;
             }
-            if (isNaN(hour) || hour < 0 || hour > 23) return null;
-            return hour;
+            if (isNaN(hour) || hour < 0 || hour > 23 || isNaN(minute)) return null;
+            return hour * 60 + minute;
+        }
+
+        // Same as above but returns just the hour (0-23), for the heatmap buckets.
+        function parseHourFromTimeStr(str) {
+            const mins = parseTimeToMinutesOfDay(str);
+            return mins === null ? null : Math.floor(mins / 60);
         }
 
         // Compact 12H hour label for the timeline axis, e.g. 0 -> "12", 13 -> "1"
@@ -3085,14 +3138,29 @@ document.addEventListener('keydown', function(e) {
             const hourSessionCounts = new Array(24).fill(0);
 
             archivedSessionsArray.forEach(session => {
-                const range = session.range || '';
-                // Use the start of the range, e.g. "14:00 - 15:30" or "2:00 PM - 3:30 PM"
-                const startPart = range.split('-')[0];
-                const hour = parseHourFromTimeStr(startPart);
-                if (hour !== null) {
-                    hourMinutes[hour] += parseInt(session.duration) || 0;
+                const segments = splitRangeSegments(session.range || '');
+                if (segments.length === 0) return;
+
+                segments.forEach(seg => {
+                    const { start, end } = splitSegmentStartEnd(seg);
+                    const startMins = parseTimeToMinutesOfDay(start);
+                    if (startMins === null) return;
+                    const hour = Math.floor(startMins / 60);
+
+                    // Prefer this segment's own span (accurate even across a pause/resume);
+                    // fall back to splitting the session's total duration evenly across its segments.
+                    const endMins = parseTimeToMinutesOfDay(end);
+                    let segMinutes;
+                    if (endMins !== null) {
+                        segMinutes = endMins - startMins;
+                        if (segMinutes < 0) segMinutes += 24 * 60; // segment crossed midnight
+                    } else {
+                        segMinutes = (parseInt(session.duration) || 0) / segments.length;
+                    }
+
+                    hourMinutes[hour] += segMinutes;
                     hourSessionCounts[hour]++;
-                }
+                });
             });
 
             const maxMinutes = Math.max(...hourMinutes, 1);
@@ -3332,12 +3400,21 @@ document.addEventListener('keydown', function(e) {
                 const dateStr = s.date || getLocalISODate(new Date());
                 const durationMin = parseInt(s.duration) || 0;
 
-                // Try to parse start time from range
+                // Use the first segment's start and the LAST segment's end (handles both
+                // 12H/24H clock strings and multi-segment ranges from pause/resume).
                 let startTime = null;
-                if (s.range && s.range.includes(' - ')) {
-                    const startMatch = s.range.match(/(\d{1,2}):(\d{2})/);
-                    if (startMatch) {
-                        startTime = new Date(dateStr + 'T' + startMatch[1].padStart(2, '0') + ':' + startMatch[2] + ':00');
+                let endTime = null;
+                const segments = splitRangeSegments(s.range || '');
+                if (segments.length > 0) {
+                    const first = splitSegmentStartEnd(segments[0]);
+                    const last = splitSegmentStartEnd(segments[segments.length - 1]);
+                    const startMins = parseTimeToMinutesOfDay(first.start);
+                    const endMins = parseTimeToMinutesOfDay(last.end);
+                    if (startMins !== null) {
+                        startTime = new Date(dateStr + 'T' + String(Math.floor(startMins / 60)).padStart(2, '0') + ':' + String(startMins % 60).padStart(2, '0') + ':00');
+                    }
+                    if (endMins !== null) {
+                        endTime = new Date(dateStr + 'T' + String(Math.floor(endMins / 60)).padStart(2, '0') + ':' + String(endMins % 60).padStart(2, '0') + ':00');
                     }
                 }
 
@@ -3345,8 +3422,10 @@ document.addEventListener('keydown', function(e) {
                 if (!startTime || isNaN(startTime.getTime())) {
                     startTime = new Date(dateStr + 'T09:00:00');
                 }
-
-                const endTime = new Date(startTime.getTime() + durationMin * 60000);
+                // Fallback: if no valid end time (or it's before the start), derive it from duration
+                if (!endTime || isNaN(endTime.getTime()) || endTime <= startTime) {
+                    endTime = new Date(startTime.getTime() + durationMin * 60000);
+                }
 
                 return {
                     ...s,
