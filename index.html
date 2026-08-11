@@ -790,7 +790,10 @@
         <div class="screen-view glass-card" id="screen-goals">
             <div class="dashboard-scaled-panel">
                 <div class="dash-section-header section-header-with-action">
-                    <span id="goals-header-title">Subjects</span>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <button class="add-item-pill-btn" onclick="goBackToSubjectsOverview()" id="goals-back-btn" style="display:none; background: rgba(255,255,255,0.08); color: var(--text-light, #eee); box-shadow:none;">← <span id="goals-back-btn-txt">Back</span></button>
+                        <span id="goals-header-title">Subjects</span>
+                    </div>
                     <button class="add-item-pill-btn" onclick="openGoalModal()" id="goals-add-btn">+ <span id="goals-add-btn-txt">New Subject</span></button>
                 </div>
                 <div class="goals-cards-grid" id="goals-grid-wrapper"></div>
@@ -1037,6 +1040,8 @@
                 tagModalTitle: "Add New Subject", tagModalPlace: "Subject Name...", tagModalCancel: "Cancel", tagModalSave: "Add",
                 clearConfirm: "Are you sure you want to delete all study data?", deleteConfirm: "Do you want to delete this session?", modeSwitchConfirm: "You have an active/unfinished session. Switching mode now will save it as a completed session first. Continue?",
                 goalsHeaderTitle: "Subjects", goalsAddBtnTxt: "New Subject", goalsEmptyState: "No subjects yet — add your first one!",
+                goalsBackBtnTxt: "Back", goalsAddBranchBtnTxt: "New Branch", goalsBranchEmptyState: "No branches yet — add your first one!",
+                subjectBranchSingular: "branch", subjectBranchPlural: "branches", goalsUnassignedGroup: "No Subject",
                 goalDeleteConfirm: "Do you want to delete this subject?", goalDeadlineDuePrefix: "Due", goalOverdueTxt: "Overdue", goalCompletedTxt: "Completed 🎉",
                 goalModalHeading: "Add New Subject", goalModalTitleLbl: "Subject Name", goalModalTitlePlace: "e.g. Surgery",
                 goalModalTargetLbl: "Target", goalModalUnitLbl: "Unit", goalModalUnitPlace: "pages, hrs...",
@@ -1118,6 +1123,8 @@
                 deleteConfirm: "هل تريد حذف هذه الجلسة الدراسية بعينها؟",
                 modeSwitchConfirm: "لديك جلسة شغالة أو لسا مخلصتش. تغيير الوضع الآن هيحفظها كجلسة منتهية أولاً. تريد المتابعة؟",
                 goalsHeaderTitle: "المواد الدراسية", goalsAddBtnTxt: "مادة جديدة", goalsEmptyState: "لسه معملتش أي مادة — ضيف أول مادة ليك دلوقتي!",
+                goalsBackBtnTxt: "رجوع", goalsAddBranchBtnTxt: "فرع جديد", goalsBranchEmptyState: "لسه مفيش فروع — ضيف أول فرع دلوقتي!",
+                subjectBranchSingular: "فرع", subjectBranchPlural: "فروع", goalsUnassignedGroup: "بدون مادة",
                 goalDeleteConfirm: "هل تريد حذف هذه المادة؟", goalDeadlineDuePrefix: "الموعد النهائي", goalOverdueTxt: "متأخر عن الموعد", goalCompletedTxt: "تم الإنجاز 🎉",
                 goalModalHeading: "إضافة مادة جديدة", goalModalTitleLbl: "اسم المادة", goalModalTitlePlace: "مثال: الجراحة",
                 goalModalTargetLbl: "الهدف الرقمي", goalModalUnitLbl: "الوحدة", goalModalUnitPlace: "صفحة، ساعة...",
@@ -2613,15 +2620,111 @@
             const today = new Date(); today.setHours(0, 0, 0, 0);
             return new Date(iso + 'T00:00:00') < today;
         }
+        let currentOpenSubjectGroupTag = null;
+        const UNASSIGNED_SUBJECT_KEY = '__unassigned__';
+        function openSubjectGroup(tagKey) {
+            currentOpenSubjectGroupTag = tagKey;
+            renderGoalsScreen();
+        }
+        function goBackToSubjectsOverview() {
+            currentOpenSubjectGroupTag = null;
+            renderGoalsScreen();
+        }
         function renderGoalsScreen() {
             const d = languageDictionary[currentSystemLanguage];
             const grid = document.getElementById('goals-grid-wrapper');
             const emptyState = document.getElementById('goals-empty-state');
             if (!grid) return;
             grid.innerHTML = '';
-            if (goalsArray.length === 0) { emptyState.style.display = 'block'; return; }
+
+            const headerTitleEl = document.getElementById('goals-header-title');
+            const addBtnTxtEl = document.getElementById('goals-add-btn-txt');
+            const addBtn = document.getElementById('goals-add-btn');
+            const backBtn = document.getElementById('goals-back-btn');
+            const backBtnTxtEl = document.getElementById('goals-back-btn-txt');
+            if (backBtnTxtEl) backBtnTxtEl.innerText = d.goalsBackBtnTxt || 'Back';
+
+            // Reset if the open subject tag no longer exists
+            if (currentOpenSubjectGroupTag && currentOpenSubjectGroupTag !== UNASSIGNED_SUBJECT_KEY && !currentTagsList.includes(currentOpenSubjectGroupTag)) {
+                currentOpenSubjectGroupTag = null;
+            }
+
+            if (!currentOpenSubjectGroupTag) {
+                // ---------- OVERVIEW MODE: one card per Subject (tag) ----------
+                if (backBtn) backBtn.style.display = 'none';
+                if (headerTitleEl) headerTitleEl.innerText = d.goalsHeaderTitle || 'Subjects';
+                if (addBtnTxtEl) addBtnTxtEl.innerText = d.goalsAddBtnTxt || 'New Subject';
+                if (addBtn) addBtn.onclick = () => openTagModal();
+
+                const groups = {};
+                currentTagsList.forEach(tag => { groups[tag] = []; });
+                goalsArray.forEach(g => {
+                    const key = (g.linkedTag && currentTagsList.includes(g.linkedTag)) ? g.linkedTag : UNASSIGNED_SUBJECT_KEY;
+                    if (!groups[key]) groups[key] = [];
+                    groups[key].push(g);
+                });
+
+                const tagKeysToRender = [...currentTagsList];
+                if (groups[UNASSIGNED_SUBJECT_KEY] && groups[UNASSIGNED_SUBJECT_KEY].length) tagKeysToRender.push(UNASSIGNED_SUBJECT_KEY);
+
+                if (tagKeysToRender.length === 0) { emptyState.innerText = d.goalsEmptyState; emptyState.style.display = 'block'; return; }
+                emptyState.style.display = 'none';
+
+                tagKeysToRender.forEach(tagKey => {
+                    const branchesForTag = groups[tagKey] || [];
+                    const totalLectures = branchesForTag.reduce((s, g) => s + (Array.isArray(g.tasks) ? g.tasks.length : 0), 0);
+                    const doneLectures = branchesForTag.reduce((s, g) => s + (Array.isArray(g.tasks) ? g.tasks.filter(t => t.done).length : 0), 0);
+                    const isUnassigned = tagKey === UNASSIGNED_SUBJECT_KEY;
+                    const displayName = isUnassigned ? (d.goalsUnassignedGroup || 'No Subject') : tagKey;
+                    const dotColor = isUnassigned ? 'var(--text-gray)' : getTagColor(tagKey);
+                    const branchWord = branchesForTag.length === 1 ? (d.subjectBranchSingular || 'branch') : (d.subjectBranchPlural || 'branches');
+
+                    const card = document.createElement('div');
+                    card.className = 'goal-card subject-group-card';
+                    card.style.cursor = 'pointer';
+                    card.innerHTML = `
+                        <div class="goal-card-top">
+                            <div>
+                                <div class="goal-card-title" style="display:flex;align-items:center;gap:8px;">
+                                    <span style="width:10px;height:10px;border-radius:50%;background:${dotColor};display:inline-block;flex-shrink:0;"></span>
+                                    ${escapeGoalHtml(displayName)}
+                                </div>
+                                <span class="goal-linked-tag-pill">📂 ${branchesForTag.length} ${branchWord}</span>
+                            </div>
+                            ${!isUnassigned ? `<button class="item-delete-btn" data-role="delete-subject-tag">✕</button>` : ''}
+                        </div>
+                        <div class="goal-tasks-toggle is-open">
+                            <span>📚 ${d.goalTasksHeader || 'Lectures'} ${totalLectures ? `(<span class="gt-count">${doneLectures}/${totalLectures}</span>)` : ''}</span>
+                        </div>`;
+                    card.addEventListener('click', () => openSubjectGroup(tagKey));
+                    const delBtn = card.querySelector('[data-role="delete-subject-tag"]');
+                    if (delBtn) {
+                        delBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            deleteTagFromSystem(tagKey);
+                        });
+                    }
+                    grid.appendChild(card);
+                });
+                refreshTimerSidebar();
+                return;
+            }
+
+            // ---------- DETAIL MODE: branches (goals) inside the open Subject ----------
+            if (backBtn) backBtn.style.display = 'inline-flex';
+            const isUnassignedGroup = currentOpenSubjectGroupTag === UNASSIGNED_SUBJECT_KEY;
+            if (headerTitleEl) headerTitleEl.innerText = isUnassignedGroup ? (d.goalsUnassignedGroup || 'No Subject') : currentOpenSubjectGroupTag;
+            if (addBtnTxtEl) addBtnTxtEl.innerText = d.goalsAddBranchBtnTxt || 'New Branch';
+            if (addBtn) addBtn.onclick = () => openGoalModal(isUnassignedGroup ? '' : currentOpenSubjectGroupTag);
+
+            const visibleGoals = goalsArray.filter(g => {
+                const key = (g.linkedTag && currentTagsList.includes(g.linkedTag)) ? g.linkedTag : UNASSIGNED_SUBJECT_KEY;
+                return key === currentOpenSubjectGroupTag;
+            });
+
+            if (visibleGoals.length === 0) { emptyState.innerText = d.goalsBranchEmptyState || 'No branches yet — add your first one!'; emptyState.style.display = 'block'; return; }
             emptyState.style.display = 'none';
-            goalsArray.forEach(goal => {
+            visibleGoals.forEach(goal => {
                 if (!Array.isArray(goal.tasks)) goal.tasks = [];
                 const doneTasksCount = goal.tasks.filter(t => t.done).length;
                 const isPanelOpen = expandedGoalTasksSet.has(goal.id);
