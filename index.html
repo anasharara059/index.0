@@ -707,30 +707,6 @@
                         <div class="analytics-tag-distribution" id="bars-dynamic-wrapper"></div>
                     </div>
                 </div>
-                <!-- 📉 Break Analysis -->
-                <div class="charts-container-box" style="margin-top:10px;">
-                    <div class="charts-box-title" id="break-analysis-title">📉 Break Analysis</div>
-                    <div class="break-metrics-row" id="break-metrics-wrapper" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
-                        <!-- Metrics injected by JS -->
-                    </div>
-                    <div style="position: relative; height: 220px;">
-                        <canvas id="break-histogram-chart"></canvas>
-                    </div>
-                </div>
-
-                <!-- 🔥 Study Consistency Score -->
-                <div class="charts-container-box" style="margin-top:10px;">
-                    <div class="charts-box-title" id="consistency-title">🔥 Study Consistency</div>
-                    <div id="consistency-wrapper" style="display: flex; flex-direction: column; gap: 20px;">
-                        <!-- Injected by JS -->
-                    </div>
-                </div>
-
-                <div class="charts-container-box" style="margin-top:10px;">
-                    <div class="charts-box-title">📅 Study Heatmap (Last 365 Days)</div>
-                    <div id="study-heatmap" style="overflow-x:auto;padding:4px;"></div>
-                </div>
-
                 <!-- 📈 Study Trend Line Chart -->
                 <div class="charts-container-box" style="margin-top:10px;">
                     <div class="charts-box-title" id="chart-trend-title">📈 Study Trend</div>
@@ -1035,98 +1011,6 @@
                 productivityPerActiveHr: "per active hr",
                 productivityHours: "hour",
                 productivityHrs: "hours",
-                breakTitle: "📉 Break Analysis",
-                breakAvg: "Average Break",
-                breakLongest: "Longest Break",
-                breakTotal: "Total Break Time",
-                breakFrequency: "Break Frequency",
-                breakBreaks: "break",
-                breakBreaksPlural: "breaks",
-                breakSingle: "single occurrence",
-                breakSinceStart: "since start",
-                breakBreaksTotal: "breaks total",
-                breakNoData: "Not enough data for break analysis",
-                breakCount: "Break Count",
-                breakPeriod: "break",
-                breakPeriods: "breaks",
-                consistencyTitle: "🔥 Study Consistency",
-                consistencyScore: "Consistency Score",
-                consistencyExcellent: "Excellent!",
-                consistencyGood: "Good",
-                consistencyFair: "Fair",
-                consistencyNeedsImprovement: "Needs Improvement",
-                consistencyActiveDays: "Active Days",
-                consistencyCurrentStreak: "Current Streak",
-                consistencyBestStreak: "Best Streak",
-                consistencyDailyAvg: "Daily Average",
-                consistencyWeeklyPattern: "Weekly Pattern",
-                consistencyBestDay: "Best day",
-                consistency30DayActivity: "30-Day Activity",
-                consistencyDay: "day",
-                consistencyDays: "days"
-            },
-            ar: {
-                logo: "إندكس", navTimer: "المؤقت", navAnalysis: "التحليلات والإحصائيات", navGoals: "الأهداف", navHabits: "العادات",
-                currentSessionPlaceholder: "تحضير الجلسة السريرية", btnStart: "ابدأ (Start)", btnPause: "مؤقت (Pause)", btnStop: "حفظ وإنهاء (Stop)", btnFull: "تركيز (Focus)", btnExitFull: "خروج من وضع التركيز",
-                tagsLbl: "المواد والتحضيرات الحالية (اضغط للاختيار):", dashTitle: "لوحة التحليلات ومعدلات التقدم",
-                chartWeeklyTitle: "توزيع الجهد الدراسي الأسبوعي", chartDistTitle: "توزيع المواد النسبي",
-                dayLbl: "الدراسة اليومية", weekLbl: "تقدم الأسبوع الحالي", monthLbl: "إجمالي هذا الشهر",
-                unitHrs: "ساعة", daySubTxt: "ارتفع بنسبة 12% عن أمس", monthSubTxt: "تم إنجاز 19 يوم دراسة متتالي",
-                histTitle: "سجل الجلسات والمحاضرات الأخيرة", thDate: "التاريخ", thTitle: "اسم الجلسة / المحاضرة", thTag: "التاج المخصص", thDur: "المدة المنقضية", thRange: "النطاق الزمني والوقت", thAction: "حذف الجلسة",
-                modalTitle: "تعديل مدة الجلسة (بالدقائق)", modalCancel: "إلغاء", modalSave: "تأكيد",
-                tagModalTitle: "إضافة مادة دراسية جديدة", tagModalPlace: "اسم المادة...", tagModalCancel: "إلغاء", tagModalSave: "إضافة",
-                clearConfirm: "هل أنت متأكد تماماً من حذف كافة البيانات المخزنة وتصفير السجل والتحليلات؟",
-                deleteConfirm: "هل تريد حذف هذه الجلسة الدراسية بعينها؟",
-                modeSwitchConfirm: "لديك جلسة شغالة أو لسا مخلصتش. تغيير الوضع الآن هيحفظها كجلسة منتهية أولاً. تريد المتابعة؟",
-                goalsHeaderTitle: "الأهداف", goalsAddBtnTxt: "هدف جديد", goalsEmptyState: "لسه معملتش أي هدف — ضيف أول هدف ليك دلوقتي!",
-                goalDeleteConfirm: "هل تريد حذف هذا الهدف؟", goalDeadlineDuePrefix: "الموعد النهائي", goalOverdueTxt: "متأخر عن الموعد", goalCompletedTxt: "تم الإنجاز 🎉",
-                goalModalHeading: "إضافة هدف جديد", goalModalTitleLbl: "عنوان الهدف", goalModalTitlePlace: "مثال: إنهاء أطلس التشريح",
-                goalModalTargetLbl: "الهدف الرقمي", goalModalUnitLbl: "الوحدة", goalModalUnitPlace: "صفحة، ساعة...",
-                goalModalDeadlineLbl: "الموعد النهائي (اختياري)", goalModalCancel: "إلغاء", goalModalSave: "إضافة",
-                goalModalTagLbl: "ربط بمادة دراسية (اختياري)", goalModalTypeLbl: "نوع الهدف",
-                goalTypeCountOpt: "بالعدد (يدوي)", goalTypeTimeOpt: "بالوقت (تتبع تلقائي من الجلسات)",
-                goalAutoTrackedTxt: "تتبع تلقائي", goalManualTxt: "يدوي",
-                goalTasksHeader: "المهام الدراسية", goalTaskPlaceholder: "مثال: مراجعة الفصل الثالث...",
-                goalTasksEmptyHint: "لسه مفيش مهام دراسية — ضيف واحدة تحت.",
-                timerNotesHeader: "ملاحظات سريعة", timerNotesPlaceholder: "دوّن أي حاجة عن الجلسة الدراسية دي...",
-                timerCurrentSubjectLbl: "المادة الحالية", timerTasksHeader: "المهام الدراسية",
-                timerTasksEmptyState: "لسه مفيش مهام دراسية. ضيف شوية من تبويب الأهداف.",
-                timerNotesClearConfirm: "هل تريد مسح كل الملاحظات؟",
-                timerTasksFilterPending: "الحالية", timerTasksFilterAll: "الكل", timerTasksFilterDone: "المنجزة",
-                timerTasksFilterEmptyState: "لا يوجد شيء هنا.",
-                timerTasksScopeSubject: "المادة دي", timerTasksScopeAll: "كل المواد",
-                timerTasksSubjectEmptyState: "لسه مفيش مهام للمادة دي. ضيف واحدة تحت، أو بدّل لـ«كل المواد».",
-                linkedGoalEmptyCta: "+ اربط هدف بالمادة دي",
-                examModeTodayTxt: "النهاردة!", examModeDaysLeftSuffix: "يوم متبقي",
-                habitsHeaderTitle: "العادات", habitsAddBtnTxt: "عادة جديدة", habitsEmptyState: "لسه معملتش أي عادة — ابدأ بتتبع واحدة!",
-                habitDeleteConfirm: "هل تريد حذف هذه العادة؟", habitStreakTxt: "يوم متتالي",
-                habitMarkDoneTxt: "تسجيل إنجاز اليوم", habitDoneTxt: "تم اليوم ✓",
-                habitModalHeading: "إضافة عادة جديدة", habitModalNameLbl: "اسم العادة", habitModalNamePlace: "مثال: قراءة 20 صفحة يومياً",
-                habitModalCancel: "إلغاء", habitModalSave: "إضافة",
-                toastSessionSaved: "تم حفظ الجلسة بنجاح!", toastDataCleared: "تم مسح كل البيانات!",
-                toastGoalAdded: "تم إضافة الهدف!", toastHabitAdded: "تم إضافة العادة!", toastTagAdded: "تم إضافة المادة!",
-                goalsSettingsTitle: "Study Goals Settings", goalsDailyLbl: "Daily Goal (hours)",
-                goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
-                goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
-                exportBtn: "تصدير", clearBtn: "حذف البيانات",
-                menuGoalsLabel: "الأهداف", menuLangLabel: "اللغة", menuExportLabel: "تصدير", menuClearLabel: "حذف البيانات", menuSignOutLabel: "تسجيل الخروج",
-                menuHint: "اضغط للخيارات",
-                editSessionTitle: "تعديل الجلسة",
-                addManualSessionTitle: "إضافة جلسة دراسية",
-                manualDateLbl: "التاريخ",
-                manualTitleLbl: "عنوان الجلسة",
-                manualTagLbl: "التاج المخصص",
-                manualDurationLbl: "المدة (بالدقائق)",
-                manualTimeRangeLbl: "النطاق الزمني (اختياري)",
-                manualTimeRangePlace: "مثال: 14:00 - 15:30",
-                saveChangesBtn: "حفظ التعديلات",
-                addSessionBtn: "إضافة الجلسة",
-                sessionUpdated: "تم تحديث الجلسة!",
-                sessionAdded: "تم إضافة الجلسة بنجاح!",
-                addManualBtn: "+ إضافة جلسة سابقة",
-                trendTitle: "📈 اتجاه الدراسة",
-                trendDaily: "الدراسة اليومية",
-                trendAvg: "المتوسط 7 أيام",
                 productivityTitle: "🕒 ساعات الإنتاجية",
                 productivitySubtitle: "متى تدرس أكثر خلال اليوم",
                 productivityNight: "ليلاً",
@@ -1602,11 +1486,8 @@
                 document.getElementById('nav-btn-analysis').classList.add('active');
                 recalculateAndRenderDashboard();
                 renderHistoryGridWithPagination();
-                renderHeatmap();
                 renderStudyTrendChart();
                 renderProductivityHeatTimeline();
-                renderBreakAnalysis();
-                renderStudyConsistency();
                 updateFilterOptions();
             }
             if (screenId === 'screen-goals') { document.getElementById('nav-btn-goals').classList.add('active'); renderGoalsScreen(); }
@@ -1627,7 +1508,6 @@
             syncLanguageInterfaceStrings();
             recalculateAndRenderDashboard();
             renderHistoryGridWithPagination();
-            renderHeatmap();
         }
 
         function syncLanguageInterfaceStrings() {
@@ -1853,8 +1733,6 @@
                 showToast(d.toastSessionSaved, `${rawSessionTitle} — ${minutesFormattedString}`, 'success');
                 renderStudyTrendChart();
                 renderProductivityHeatTimeline();
-                renderBreakAnalysis();
-                renderStudyConsistency();
             }
             totalElapsedSecondsTracked = 0;
             currentSessionStartTimeStamp = null;
@@ -2420,195 +2298,7 @@
             }
         }
 
-        function renderHeatmap() {
-            const container = document.getElementById('study-heatmap');
-            if (!container) return;
-            container.innerHTML = '';
-
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const todayISO = getLocalISODate(today);
-            const currentYear = today.getFullYear();
-
-            let dayMinutesMap = {};
-            archivedSessionsArray.forEach(s => {
-                let mins = parseInt(s.duration) || 0;
-                dayMinutesMap[s.date] = (dayMinutesMap[s.date] || 0) + mins;
-            });
-
-            let maxMinutes = Math.max(...Object.values(dayMinutesMap), 1);
-
-            const yearStart = new Date(currentYear, 0, 1);
-            yearStart.setHours(0, 0, 0, 0);
-            const yearEnd = new Date(currentYear, 11, 31);
-            yearEnd.setHours(0, 0, 0, 0);
-
-            const jan1Day = yearStart.getDay();
-            const daysBeforeJan1 = (jan1Day + 1) % 7;
-            const gridStart = new Date(yearStart);
-            gridStart.setDate(gridStart.getDate() - daysBeforeJan1);
-
-            const dec31Day = yearEnd.getDay();
-            const daysAfterDec31 = (5 - dec31Day + 7) % 7;
-            const gridEnd = new Date(yearEnd);
-            gridEnd.setDate(gridEnd.getDate() + daysAfterDec31);
-
-            const totalDays = Math.ceil((gridEnd - gridStart) / 86400000) + 1;
-            const totalWeeks = Math.ceil(totalDays / 7);
-
-            const wrapper = document.createElement('div');
-            wrapper.style.cssText = 'display:flex;flex-direction:column;gap:6px;overflow-x:auto;padding-bottom:4px;';
-
-            const monthRow = document.createElement('div');
-            monthRow.style.cssText = 'display:flex;gap:3px;padding-left:34px;height:18px;';
-
-            let shownMonths = new Set();
-            for (let w = 0; w < totalWeeks; w++) {
-                const weekStart = new Date(gridStart);
-                weekStart.setDate(weekStart.getDate() + (w * 7));
-
-                const weekMonth = weekStart.getMonth();
-                const weekYear = weekStart.getFullYear();
-
-                const labelDiv = document.createElement('div');
-                labelDiv.style.cssText = 'font-size:10px;color:var(--text-gray);font-weight:600;width:11px;text-align:center;';
-
-                const monthKey = `${weekYear}-${weekMonth}`;
-                if (weekYear === currentYear && !shownMonths.has(monthKey) && weekStart.getDate() <= 7) {
-                    const monthName = weekStart.toLocaleDateString(
-                        currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
-                        { month: 'short' }
-                    );
-                    labelDiv.innerText = monthName;
-                    shownMonths.add(monthKey);
-                }
-
-                monthRow.appendChild(labelDiv);
-            }
-            wrapper.appendChild(monthRow);
-
-            const mainArea = document.createElement('div');
-            mainArea.style.cssText = 'display:flex;gap:4px;';
-
-            const dayLabelsCol = document.createElement('div');
-            dayLabelsCol.style.cssText = 'display:flex;flex-direction:column;gap:3px;padding-top:2px;width:30px;flex-shrink:0;';
-
-            const dayNames = currentSystemLanguage === 'ar'
-                ? ['س', 'ح', 'ن', 'ث', 'ر', 'خ', 'ج']
-                : ['S', 'S', 'M', 'T', 'W', 'T', 'F'];
-
-            dayNames.forEach((dn, idx) => {
-                const dl = document.createElement('div');
-                const showLabel = idx === 0 || idx === 2 || idx === 4 || idx === 6;
-                dl.style.cssText = `font-size:9px;color:${showLabel ? 'var(--text-gray)' : 'transparent'};font-weight:600;height:11px;line-height:11px;text-align:right;padding-right:6px;`;
-                dl.innerText = dn;
-                dayLabelsCol.appendChild(dl);
-            });
-            mainArea.appendChild(dayLabelsCol);
-
-            const grid = document.createElement('div');
-            grid.style.cssText = 'display:flex;gap:3px;';
-
-            for (let week = 0; week < totalWeeks; week++) {
-                const weekCol = document.createElement('div');
-                weekCol.style.cssText = 'display:flex;flex-direction:column;gap:3px;';
-
-                for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-                    const cellDate = new Date(gridStart);
-                    cellDate.setDate(cellDate.getDate() + (week * 7) + dayOfWeek);
-
-                    const iso = getLocalISODate(cellDate);
-                    const mins = dayMinutesMap[iso] || 0;
-                    const isToday = iso === todayISO;
-                    const inYear = cellDate >= yearStart && cellDate <= yearEnd;
-
-                    const cell = document.createElement('div');
-                    cell.style.cssText = 'width:11px;height:11px;border-radius:2px;transition:all 0.2s;cursor:pointer;box-sizing:border-box;';
-
-                    if (!inYear) {
-                        cell.style.background = 'rgba(255,255,255,0.02)';
-                    } else if (mins === 0) {
-                        cell.style.background = 'rgba(255,255,255,0.05)';
-                    } else {
-                        const intensity = Math.min(1, mins / Math.max(maxMinutes, 30));
-                        const alpha = 0.2 + (intensity * 0.8);
-                        cell.style.background = `rgba(217, 165, 74, ${alpha})`;
-                        if (intensity > 0.5) {
-                            cell.style.boxShadow = `0 0 3px rgba(217, 165, 74, ${alpha * 0.3})`;
-                        }
-                    }
-
-                    if (isToday && inYear) {
-                        cell.style.border = '1.5px solid var(--accent-orange)';
-                        cell.style.transform = 'scale(1.3)';
-                        cell.style.zIndex = '10';
-                        cell.style.position = 'relative';
-                    }
-
-                    cell.addEventListener('mouseenter', (e) => {
-                        if (!inYear) return;
-                        const existing = document.getElementById('heatmap-tooltip');
-                        if (existing) existing.remove();
-
-                        const tooltip = document.createElement('div');
-                        tooltip.id = 'heatmap-tooltip';
-                        tooltip.style.cssText = `
-                            position: fixed; z-index: 10000; background: rgba(8,9,13,0.98);
-                            color: #fff; padding: 10px 16px; border-radius: 12px;
-                            font-size: 12px; border: 1px solid rgba(217,165,74,0.3);
-                            box-shadow: 0 8px 30px rgba(0,0,0,0.7); pointer-events: none;
-                            white-space: nowrap; backdrop-filter: blur(10px);
-                        `;
-                        const dayName = cellDate.toLocaleDateString(
-                            currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US',
-                            { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
-                        );
-                        if (mins > 0) {
-                            tooltip.innerHTML = `
-                                <div style="font-weight:800;color:var(--accent-orange);margin-bottom:4px;">${dayName}</div>
-                                <div style="color:var(--text-light);font-weight:600;">${formatMinutesToHM(mins)} of study</div>
-                            `;
-                        } else {
-                            tooltip.innerHTML = `
-                                <div style="font-weight:700;color:var(--text-gray);margin-bottom:4px;">${dayName}</div>
-                                <div style="color:var(--text-gray);">No study</div>
-                            `;
-                        }
-                        document.body.appendChild(tooltip);
-
-                        const rect = cell.getBoundingClientRect();
-                        tooltip.style.left = Math.max(10, rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
-                        tooltip.style.top = Math.max(10, rect.top - tooltip.offsetHeight - 10) + 'px';
-                    });
-
-                    cell.addEventListener('mouseleave', () => {
-                        const tt = document.getElementById('heatmap-tooltip');
-                        if (tt) tt.remove();
-                    });
-
-                    weekCol.appendChild(cell);
-                }
-                grid.appendChild(weekCol);
-            }
-
-            mainArea.appendChild(grid);
-            wrapper.appendChild(mainArea);
-
-            const legend = document.createElement('div');
-            legend.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:12px;padding-left:34px;font-size:11px;color:var(--text-gray);';
-            legend.innerHTML = `
-                <span>Less</span>
-                <div style="display:flex;gap:2px;">
-                    ${[0.15, 0.35, 0.55, 0.75, 0.95].map(a => `<div style="width:11px;height:11px;border-radius:2px;background:rgba(217,165,74,${a});"></div>`).join('')}
-                </div>
-                <span>More</span>
-            `;
-            wrapper.appendChild(legend);
-
-            container.appendChild(wrapper);
-        }
-
-        function updateFilterOptions() {
+                function updateFilterOptions() {
             const select = document.getElementById('tag-filter');
             if (!select) return;
             select.innerHTML = '<option value="">All Tags</option>';
@@ -2675,7 +2365,6 @@
                 dbSet('sessions', archivedSessionsArray);
                 recalculateAndRenderDashboard();
                 renderHistoryGridWithPagination();
-                renderHeatmap();
                 updateQuickStats();
             }
         }
@@ -2687,7 +2376,6 @@
                 dbSet('sessions', archivedSessionsArray);
                 recalculateAndRenderDashboard();
                 renderHistoryGridWithPagination();
-                renderHeatmap();
                 updateQuickStats();
                 showToast(d.toastDataCleared, '', 'warning');
             }
@@ -3281,11 +2969,8 @@
             dbSet('sessions', archivedSessionsArray);
             recalculateAndRenderDashboard();
             renderHistoryGridWithPagination();
-            renderHeatmap();
             renderStudyTrendChart();
             renderProductivityHeatTimeline();
-            renderBreakAnalysis();
-            renderStudyConsistency();
             updateQuickStats();
             closeEditSessionModal();
 
@@ -3343,11 +3028,8 @@
 
             recalculateAndRenderDashboard();
             renderHistoryGridWithPagination();
-            renderHeatmap();
             renderStudyTrendChart();
             renderProductivityHeatTimeline();
-            renderBreakAnalysis();
-            renderStudyConsistency();
             updateQuickStats();
             closeManualSessionModal();
 
@@ -3436,7 +3118,6 @@
             renderTagsChips();
             recalculateAndRenderDashboard();
             renderHistoryGridWithPagination();
-            renderHeatmap();
             renderWeeklySegmentedChart();
             showToast(currentSystemLanguage === 'ar' ? 'تم تحديث اللون!' : 'Color Updated!', tag, 'success');
         }
@@ -3968,417 +3649,8 @@ document.addEventListener('keydown', function(e) {
         // ========== 📉 BREAK ANALYSIS ==========
         let breakHistogramChartInstance = null;
 
-        function calculateBreakAnalysis() {
-            if (archivedSessionsArray.length < 2) return null;
-
-            // Build session timeline: each session has a start and end timestamp
-            const sessionsWithTimes = archivedSessionsArray.map(s => {
-                const dateStr = s.date || getLocalISODate(new Date());
-                const durationMin = parseInt(s.duration) || 0;
-
-                // Use the first segment's start and the LAST segment's end (handles both
-                // 12H/24H clock strings and multi-segment ranges from pause/resume).
-                let startTime = null;
-                let endTime = null;
-                const segments = splitRangeSegments(s.range || '');
-                if (segments.length > 0) {
-                    const first = splitSegmentStartEnd(segments[0]);
-                    const last = splitSegmentStartEnd(segments[segments.length - 1]);
-                    const startMins = parseTimeToMinutesOfDay(first.start);
-                    const endMins = parseTimeToMinutesOfDay(last.end);
-                    if (startMins !== null) {
-                        startTime = new Date(dateStr + 'T' + String(Math.floor(startMins / 60)).padStart(2, '0') + ':' + String(startMins % 60).padStart(2, '0') + ':00');
-                    }
-                    if (endMins !== null) {
-                        endTime = new Date(dateStr + 'T' + String(Math.floor(endMins / 60)).padStart(2, '0') + ':' + String(endMins % 60).padStart(2, '0') + ':00');
-                    }
-                }
-
-                // Fallback: if no start time, assume 09:00 as default
-                if (!startTime || isNaN(startTime.getTime())) {
-                    startTime = new Date(dateStr + 'T09:00:00');
-                }
-                // Fallback: if no valid end time, or it's before the start, or the gap between
-                // start/end is wildly larger than the session's own tracked duration (a sign the
-                // clock string was malformed), derive the end time from duration instead.
-                const spanMinutes = endTime ? (endTime - startTime) / 60000 : -1;
-                if (!endTime || isNaN(endTime.getTime()) || spanMinutes <= 0 || spanMinutes > Math.max(durationMin * 4, 180)) {
-                    endTime = new Date(startTime.getTime() + durationMin * 60000);
-                }
-
-                return {
-                    ...s,
-                    startTime,
-                    endTime,
-                    durationMin
-                };
-            });
-
-            // Sort by end time
-            const sorted = sessionsWithTimes.sort((a, b) => a.endTime - b.endTime);
-
-            const breaks = [];
-            for (let i = 1; i < sorted.length; i++) {
-                const prev = sorted[i - 1];
-                const curr = sorted[i];
-
-                const diffMinutes = Math.round((curr.startTime - prev.endTime) / (1000 * 60));
-
-                // Only count as a break if it's between 5 min and 48 hours
-                // (negative = overlap, skip it)
-                if (diffMinutes >= 5 && diffMinutes <= 2880) {
-                    breaks.push(diffMinutes);
-                }
-            }
-
-            if (breaks.length === 0) return null;
-
-            const totalBreak = breaks.reduce((a, b) => a + b, 0);
-            const avgBreak = Math.round(totalBreak / breaks.length);
-            const longestBreak = Math.max(...breaks);
-            const frequency = breaks.length;
-
-            // Histogram bins (in minutes)
-            const bins = [
-                { label: '< 15m', min: 0, max: 15, count: 0 },
-                { label: '15-30m', min: 15, max: 30, count: 0 },
-                { label: '30-60m', min: 30, max: 60, count: 0 },
-                { label: '1-2h', min: 60, max: 120, count: 0 },
-                { label: '2-4h', min: 120, max: 240, count: 0 },
-                { label: '4-8h', min: 240, max: 480, count: 0 },
-                { label: '8-24h', min: 480, max: 1440, count: 0 },
-                { label: '> 24h', min: 1440, max: Infinity, count: 0 }
-            ];
-
-            breaks.forEach(b => {
-                const bin = bins.find(bin => b >= bin.min && b < bin.max);
-                if (bin) bin.count++;
-            });
-
-            return { avgBreak, longestBreak, totalBreak, frequency, bins, breaks };
-        }
-
-        function renderBreakAnalysis() {
-            const container = document.getElementById('break-metrics-wrapper');
-            const canvas = document.getElementById('break-histogram-chart');
-            if (!container || !canvas) return;
-
-            const data = calculateBreakAnalysis();
-
-            if (!data) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:30px; color:var(--text-gray); font-size:13px; grid-column: 1 / -1;">
-                        <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
-                        <div style="font-weight: 600; margin-bottom: 6px;">${currentSystemLanguage === 'ar' ? 'لا توجد بيانات كافية' : 'Not enough data'}</div>
-                        <div style="font-size: 11px; opacity: 0.7;">${currentSystemLanguage === 'ar' ? 'يلزم جلستان على الأقل بتواريخ مختلفة لحساب فترات الراحة' : 'Need at least 2 sessions on different dates to calculate breaks'}</div>
-                    </div>
-                `;
-                if (breakHistogramChartInstance) {
-                    breakHistogramChartInstance.destroy();
-                    breakHistogramChartInstance = null;
-                }
-                return;
-            }
-
-            const d = languageDictionary[currentSystemLanguage];
-
-            // Render metrics cards
-            container.innerHTML = `
-                <div style="background: linear-gradient(160deg, rgba(15,17,26,0.8), rgba(18,20,32,0.6)); border: 1px solid var(--border-soft); padding: 18px; border-radius: 16px; text-align: center; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.borderColor='rgba(217,165,74,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--border-soft)';">
-                    <div style="font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">${currentSystemLanguage === 'ar' ? 'متوسط الراحة' : 'Average Break'}</div>
-                    <div style="font-size: 28px; font-weight: 800; color: var(--accent-orange);">${formatMinutesToHM(data.avgBreak)}</div>
-                    <div style="font-size: 10px; color: var(--text-gray); margin-top: 4px;">${data.frequency} ${currentSystemLanguage === 'ar' ? 'فترة راحة' : 'breaks'}</div>
-                </div>
-                <div style="background: linear-gradient(160deg, rgba(15,17,26,0.8), rgba(18,20,32,0.6)); border: 1px solid var(--border-soft); padding: 18px; border-radius: 16px; text-align: center; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.borderColor='rgba(231,76,60,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--border-soft)';">
-                    <div style="font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">${currentSystemLanguage === 'ar' ? 'أطول راحة' : 'Longest Break'}</div>
-                    <div style="font-size: 28px; font-weight: 800; color: var(--danger);">${formatMinutesToHM(data.longestBreak)}</div>
-                    <div style="font-size: 10px; color: var(--text-gray); margin-top: 4px;">${currentSystemLanguage === 'ar' ? 'مرة واحدة' : 'single occurrence'}</div>
-                </div>
-                <div style="background: linear-gradient(160deg, rgba(15,17,26,0.8), rgba(18,20,32,0.6)); border: 1px solid var(--border-soft); padding: 18px; border-radius: 16px; text-align: center; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.borderColor='rgba(0,210,106,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--border-soft)';">
-                    <div style="font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">${currentSystemLanguage === 'ar' ? 'إجمالي وقت الراحة' : 'Total Break Time'}</div>
-                    <div style="font-size: 28px; font-weight: 800; color: var(--success);">${formatMinutesToHM(data.totalBreak)}</div>
-                    <div style="font-size: 10px; color: var(--text-gray); margin-top: 4px;">${currentSystemLanguage === 'ar' ? 'منذ البداية' : 'since start'}</div>
-                </div>
-                <div style="background: linear-gradient(160deg, rgba(15,17,26,0.8), rgba(18,20,32,0.6)); border: 1px solid var(--border-soft); padding: 18px; border-radius: 16px; text-align: center; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.borderColor='rgba(62,92,138,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='var(--border-soft)';">
-                    <div style="font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">${currentSystemLanguage === 'ar' ? 'تكرار الراحة' : 'Break Frequency'}</div>
-                    <div style="font-size: 28px; font-weight: 800; color: var(--accent-purple);">${data.frequency}</div>
-                    <div style="font-size: 10px; color: var(--text-gray); margin-top: 4px;">${currentSystemLanguage === 'ar' ? 'فترة راحة' : 'breaks total'}</div>
-                </div>
-            `;
-
-            // Render histogram using Chart.js
-            const ctx = canvas.getContext('2d');
-            if (breakHistogramChartInstance) breakHistogramChartInstance.destroy();
-
-            const maxCount = Math.max(...data.bins.map(b => b.count), 1);
-
-            breakHistogramChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: data.bins.map(b => b.label),
-                    datasets: [{
-                        label: currentSystemLanguage === 'ar' ? 'عدد فترات الراحة' : 'Break Count',
-                        data: data.bins.map(b => b.count),
-                        backgroundColor: data.bins.map((_, i) => {
-                            const intensity = 0.2 + (data.bins[i].count / maxCount) * 0.75;
-                            return `rgba(217, 165, 74, ${intensity})`;
-                        }),
-                        borderColor: data.bins.map((_, i) => {
-                            const intensity = data.bins[i].count / maxCount;
-                            return intensity > 0.3 ? 'rgba(217, 165, 74, 0.6)' : 'transparent';
-                        }),
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        borderSkipped: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(8, 9, 13, 0.95)',
-                            titleColor: '#d9a54a',
-                            bodyColor: '#fff',
-                            borderColor: 'rgba(217, 165, 74, 0.3)',
-                            borderWidth: 1,
-                            cornerRadius: 10,
-                            padding: 12,
-                            callbacks: {
-                                label: function(context) {
-                                    const pct = Math.round((context.parsed.y / data.frequency) * 100);
-                                    return `${context.parsed.y} ${currentSystemLanguage === 'ar' ? 'فترة' : 'breaks'} (${pct}%)`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false, drawBorder: false },
-                            ticks: {
-                                color: 'rgba(122, 127, 145, 0.7)',
-                                font: { size: 10, weight: '600' }
-                            }
-                        },
-                        y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.03)', drawBorder: false },
-                            ticks: {
-                                color: 'rgba(122, 127, 145, 0.7)',
-                                font: { size: 10, weight: '600' },
-                                stepSize: 1,
-                                precision: 0
-                            },
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        // ========== 🔥 STUDY CONSISTENCY SCORE ==========
-        function calculateConsistencyScore() {
-            if (archivedSessionsArray.length === 0) return null;
-
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            // Get last 30 days
-            const daysData = [];
-            for (let i = 29; i >= 0; i--) {
-                const d = new Date(today);
-                d.setDate(d.getDate() - i);
-                const iso = getLocalISODate(d);
-                const mins = archivedSessionsArray
-                    .filter(s => s.date === iso)
-                    .reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
-                daysData.push({ date: iso, minutes: mins, studied: mins > 0 });
-            }
-
-            // Calculate metrics
-            const studiedDays = daysData.filter(d => d.studied).length;
-            const totalMinutes = daysData.reduce((sum, d) => sum + d.minutes, 0);
-            const avgMinutes = studiedDays > 0 ? Math.round(totalMinutes / studiedDays) : 0;
-
-            // Streak calculation (current + best)
-            let currentStreak = 0;
-            let bestStreak = 0;
-            let tempStreak = 0;
-
-            for (let i = daysData.length - 1; i >= 0; i--) {
-                if (daysData[i].studied) {
-                    tempStreak++;
-                    if (i === daysData.length - 1) currentStreak = tempStreak;
-                } else {
-                    if (tempStreak > bestStreak) bestStreak = tempStreak;
-                    tempStreak = 0;
-                }
-            }
-            if (tempStreak > bestStreak) bestStreak = tempStreak;
-
-            // Consistency score (0-100)
-            // Based on: studied days % (40%) + streak bonus (30%) + avg daily time (30%)
-            const daysScore = (studiedDays / 30) * 40;
-            const streakScore = Math.min((currentStreak / 7) * 30, 30);
-            const timeScore = Math.min((avgMinutes / 120) * 30, 30);
-            const score = Math.round(daysScore + streakScore + timeScore);
-
-            // Weekly pattern (which days of week are most consistent)
-            const dayOfWeekCounts = [0, 0, 0, 0, 0, 0, 0]; // Sun-Sat
-            const dayOfWeekTotals = [0, 0, 0, 0, 0, 0, 0];
-
-            daysData.forEach(d => {
-                const date = new Date(d.date + 'T00:00:00');
-                const dow = date.getDay();
-                if (d.studied) {
-                    dayOfWeekCounts[dow]++;
-                    dayOfWeekTotals[dow] += d.minutes;
-                }
-            });
-
-            const dayNames = currentSystemLanguage === 'ar' 
-                ? ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت']
-                : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-            const bestDayIndex = dayOfWeekTotals.indexOf(Math.max(...dayOfWeekTotals));
-
-            return {
-                score,
-                studiedDays,
-                totalDays: 30,
-                currentStreak,
-                bestStreak,
-                avgMinutes,
-                dayOfWeekCounts,
-                dayOfWeekTotals,
-                dayNames,
-                bestDay: dayNames[bestDayIndex],
-                daysData
-            };
-        }
-
-        function renderStudyConsistency() {
-            const container = document.getElementById('consistency-wrapper');
-            if (!container) return;
-
-            const data = calculateConsistencyScore();
-            if (!data) {
-                container.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-gray); font-size:13px;">${currentSystemLanguage === 'ar' ? 'لا توجد بيانات كافية' : 'Not enough data'}</div>`;
-                return;
-            }
-
-            const d = languageDictionary[currentSystemLanguage];
-
-            // Score color based on value
-            let scoreColor = 'var(--danger)';
-            let scoreLabel = currentSystemLanguage === 'ar' ? 'يحتاج تحسين' : 'Needs Improvement';
-            if (data.score >= 80) { scoreColor = 'var(--success)'; scoreLabel = currentSystemLanguage === 'ar' ? 'ممتاز!' : 'Excellent!'; }
-            else if (data.score >= 60) { scoreColor = 'var(--accent-orange)'; scoreLabel = currentSystemLanguage === 'ar' ? 'جيد' : 'Good'; }
-            else if (data.score >= 40) { scoreColor = '#f39c12'; scoreLabel = currentSystemLanguage === 'ar' ? 'متوسط' : 'Fair'; }
-
-            // Build day-of-week mini bars
-            const maxDow = Math.max(...data.dayOfWeekTotals, 1);
-            const dowBars = data.dayNames.map((name, i) => {
-                const pct = (data.dayOfWeekTotals[i] / maxDow) * 100;
-                const isBest = i === data.dayOfWeekTotals.indexOf(Math.max(...data.dayOfWeekTotals));
-                return `
-                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
-                        <div style="font-size: 10px; color: ${isBest ? 'var(--accent-orange)' : 'var(--text-gray)'}; font-weight: ${isBest ? '800' : '600'};">${name}</div>
-                        <div style="width: 100%; height: 60px; background: rgba(255,255,255,0.03); border-radius: 8px; position: relative; overflow: hidden;">
-                            <div style="position: absolute; bottom: 0; left: 2px; right: 2px; height: ${Math.max(4, pct)}%; background: ${isBest ? 'linear-gradient(to top, var(--accent-orange), rgba(217,165,74,0.3))' : 'linear-gradient(to top, rgba(62,92,138,0.6), rgba(62,92,138,0.1))'}; border-radius: 0 0 6px 6px; transition: height 0.5s ease;"></div>
-                        </div>
-                        <div style="font-size: 10px; color: var(--text-gray); font-weight: 600;">${data.dayOfWeekCounts[i]}/${Math.ceil(30/7)}</div>
-                    </div>
-                `;
-            }).join('');
-
-            // 30-day dots
-            const dotsHtml = data.daysData.map((day, i) => {
-                const intensity = day.minutes > 0 ? Math.min(1, day.minutes / 180) : 0;
-                const alpha = 0.1 + intensity * 0.85;
-                const bg = day.minutes > 0 ? `rgba(217, 165, 74, ${alpha})` : 'rgba(255,255,255,0.03)';
-                const border = intensity > 0.5 ? '1px solid rgba(217,165,74,0.4)' : '1px solid transparent';
-                const dateObj = new Date(day.date + 'T00:00:00');
-                const dayLabel = dateObj.getDate();
-                return `<div style="width: 22px; height: 22px; border-radius: 6px; background: ${bg}; border: ${border}; display: flex; align-items: center; justify-content: center; font-size: 8px; color: ${intensity > 0.5 ? '#fff' : 'var(--text-gray)'}; font-weight: 700; cursor: pointer; transition: all 0.2s;" title="${day.date}: ${formatMinutesToHM(day.minutes)}">${dayLabel}</div>`;
-            }).join('');
-
-            container.innerHTML = `
-                <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
-                    <!-- Big Score Ring -->
-                    <div style="position: relative; width: 140px; height: 140px; flex-shrink: 0; margin: 0 auto;">
-                        <svg viewBox="0 0 140 140" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg);">
-                            <circle fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10" cx="70" cy="70" r="60"/>
-                            <circle fill="none" stroke="${scoreColor}" stroke-width="10" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="${377 - (data.score / 100) * 377}" cx="70" cy="70" r="60" style="filter: drop-shadow(0 0 8px ${scoreColor.replace('var(--success)', 'rgba(0,210,106,0.4)').replace('var(--accent-orange)', 'rgba(217,165,74,0.4)').replace('var(--danger)', 'rgba(231,76,60,0.4)')}); transition: stroke-dashoffset 1s ease;"/>
-                        </svg>
-                        <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <div style="font-size: 36px; font-weight: 800; color: ${scoreColor};">${data.score}</div>
-                            <div style="font-size: 10px; color: var(--text-gray); font-weight: 600;">${scoreLabel}</div>
-                        </div>
-                    </div>
-
-                    <!-- Stats Grid -->
-                    <div style="flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; min-width: 200px;">
-                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; text-align: center;">
-                            <div style="font-size: 10px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">${currentSystemLanguage === 'ar' ? 'الأيام النشطة' : 'Active Days'}</div>
-                            <div style="font-size: 22px; font-weight: 800; color: var(--text-light);">${data.studiedDays}<span style="font-size: 12px; color: var(--text-gray);">/30</span></div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; text-align: center;">
-                            <div style="font-size: 10px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">${currentSystemLanguage === 'ar' ? 'السلسلة الحالية' : 'Current Streak'}</div>
-                            <div style="font-size: 22px; font-weight: 800; color: var(--accent-orange);">${data.currentStreak}<span style="font-size: 12px; color: var(--text-gray);"> ${currentSystemLanguage === 'ar' ? 'يوم' : 'days'}</span></div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; text-align: center;">
-                            <div style="font-size: 10px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">${currentSystemLanguage === 'ar' ? 'أفضل سلسلة' : 'Best Streak'}</div>
-                            <div style="font-size: 22px; font-weight: 800; color: var(--success);">${data.bestStreak}<span style="font-size: 12px; color: var(--text-gray);"> ${currentSystemLanguage === 'ar' ? 'يوم' : 'days'}</span></div>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-soft); border-radius: 12px; padding: 14px; text-align: center;">
-                            <div style="font-size: 10px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">${currentSystemLanguage === 'ar' ? 'المتوسط اليومي' : 'Daily Average'}</div>
-                            <div style="font-size: 22px; font-weight: 800; color: var(--accent-purple);">${formatMinutesToHM(data.avgMinutes)}</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Day of Week Pattern -->
-                <div>
-                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">${currentSystemLanguage === 'ar' ? 'نمط أيام الأسبوع' : 'Weekly Pattern'} · <span style="color: var(--accent-orange);">${currentSystemLanguage === 'ar' ? 'أفضل يوم' : 'Best day'}: ${data.bestDay}</span></div>
-                    <div style="display: flex; gap: 8px;">${dowBars}</div>
-                </div>
-
-                <!-- 30-Day Activity Dots -->
-                <div>
-                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">${currentSystemLanguage === 'ar' ? 'نشاط 30 يوم' : '30-Day Activity'}</div>
-                    <div style="display: flex; flex-wrap: wrap; gap: 4px;">${dotsHtml}</div>
-                </div>
-            `;
-        }
-
-let appHasBooted = false;
-        async function bootApp() {
-            if (appHasBooted) return;
-            appHasBooted = true;
-            await initDatabaseAndLoad();
-            await loadArchivedWeeks();
-            await checkAndArchivePreviousWeek();
-            renderTagsChips();
-            refreshTimerDisplay();
-            loadTimerNotesForCurrentTag();
-            applySubjectTint();
-            applyAppTheme(currentAppTheme);
-            recalculateAndRenderDashboard();
-            renderHistoryGridWithPagination();
-            renderGoalsScreen();
-            refreshTimerSidebar();
-            renderHabitsScreen();
-            syncLanguageInterfaceStrings();
-            updateQuickStats();
-            renderHeatmap();
-            renderWeeklySegmentedChart();
-            renderStudyTrendChart();
-            renderProductivityHeatTimeline();
-            renderBreakAnalysis();
-            renderStudyConsistency();
-        }
-    </script>
+                // ========== 🔥 STUDY CONSISTENCY SCORE ==========
+</script>
 <script>
         if ("serviceWorker" in navigator) {
             const swCode = `self.addEventListener("install",e=>{e.waitUntil(caches.open("index-v1").then(c=>c.addAll(["/"])));self.skipWaiting()});self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))});`;
