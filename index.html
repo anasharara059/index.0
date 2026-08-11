@@ -1216,6 +1216,17 @@
         const paginationMaxItemsPerPage = 10;
         let goalsArray = [];
         let timerSelectedBranchId = null;
+        // Remembers which branch/lecture was last picked, per subject, so
+        // reopening the app restores it instead of falling back to the
+        // first branch in the list.
+        let timerSelectedBranchByTagMap = {};
+        try { timerSelectedBranchByTagMap = JSON.parse(localStorage.getItem('index_lastBranchByTag') || '{}'); } catch (e) { timerSelectedBranchByTagMap = {}; }
+        function persistSelectedBranchForCurrentTag() {
+            try {
+                timerSelectedBranchByTagMap[currentlySelectedTag] = timerSelectedBranchId;
+                localStorage.setItem('index_lastBranchByTag', JSON.stringify(timerSelectedBranchByTagMap));
+            } catch (e) {}
+        }
         let habitsArray = [];
         let filteredSessions = [];
         let studyGoals = { daily: 4, weekly: 28, monthly: 120 };
@@ -2926,7 +2937,12 @@
             if (!chip) return;
             const branchesForTag = goalsArray.filter(g => g.linkedTag === currentlySelectedTag);
             if (!branchesForTag.some(g => g.id === timerSelectedBranchId)) {
-                timerSelectedBranchId = branchesForTag.length > 0 ? branchesForTag[0].id : null;
+                const savedBranchId = timerSelectedBranchByTagMap[currentlySelectedTag];
+                if (savedBranchId && branchesForTag.some(g => g.id === savedBranchId)) {
+                    timerSelectedBranchId = savedBranchId;
+                } else {
+                    timerSelectedBranchId = branchesForTag.length > 0 ? branchesForTag[0].id : null;
+                }
             }
             const linkedGoal = branchesForTag.find(g => g.id === timerSelectedBranchId);
             if (!linkedGoal) {
@@ -2970,6 +2986,7 @@
         function onTimerBranchSelectChange() {
             const goalSelect = document.getElementById('timer-quick-add-goal-select');
             timerSelectedBranchId = goalSelect ? goalSelect.value : null;
+            persistSelectedBranchForCurrentTag();
             refreshTimerSidebar();
         }
         function selectLectureIntoSessionTitle(text) {
@@ -3018,7 +3035,10 @@
                     goalSelect.disabled = false;
                     goalSelect.innerHTML = branchesForTag.map(g => `<option value="${g.id}">${escapeGoalHtml(g.title)}</option>`).join('');
                     if (!branchesForTag.some(g => g.id === timerSelectedBranchId)) {
-                        timerSelectedBranchId = branchesForTag[0].id;
+                        const savedBranchId = timerSelectedBranchByTagMap[currentlySelectedTag];
+                        timerSelectedBranchId = (savedBranchId && branchesForTag.some(g => g.id === savedBranchId))
+                            ? savedBranchId
+                            : branchesForTag[0].id;
                     }
                     goalSelect.value = timerSelectedBranchId;
                 }
