@@ -108,7 +108,9 @@
         .timer-task-item.is-matching { border-color: rgba(217, 165, 74, 0.35); background: rgba(217, 165, 74, 0.06); }
         .timer-task-item.is-done { opacity: 0.5; }
         .timer-task-item .goal-task-checkbox { margin-top: 1px; width: 22px; height: 22px; min-width: 22px; }
-        .timer-task-info { flex: 1; min-width: 0; }
+        .timer-task-info { flex: 1; min-width: 0; cursor: pointer; }
+        .timer-task-info:hover .timer-task-text { color: var(--accent-orange); }
+        .timer-quick-add-goal { width: 100%; }
         .timer-task-text { font-size: 14px; color: var(--text-light); word-break: break-word; }
         .timer-task-item.is-done .timer-task-text { color: var(--text-gray); }
         .timer-task-goal-src { font-size: 11.5px; color: var(--accent-purple); font-weight: 700; margin-top: 5px; }
@@ -661,11 +663,7 @@
                     </div>
                     <div class="timer-tasks-panel-list" id="timer-tasks-panel-list"></div>
                     <div class="timer-quick-add-row">
-                        <select class="timer-quick-add-goal" id="timer-quick-add-goal-select"></select>
-                        <div class="timer-quick-add-input-row">
-                            <input type="text" class="goal-task-input" id="timer-quick-add-task-input" placeholder="Add a task..." onkeypress="if(event.key==='Enter') addTaskFromTimerPanel()">
-                            <button class="goal-task-add-confirm" onclick="addTaskFromTimerPanel()">+</button>
-                        </div>
+                        <select class="timer-quick-add-goal" id="timer-quick-add-goal-select" onchange="onTimerBranchSelectChange()"></select>
                     </div>
                 </div>
             </div>
@@ -1060,7 +1058,7 @@
                 timerNotesClearConfirm: "Clear all notes?",
                 timerTasksFilterPending: "Pending", timerTasksFilterAll: "All", timerTasksFilterDone: "Done",
                 timerTasksFilterEmptyState: "Nothing here.",
-                timerTasksScopeSubject: "This Subject", timerTasksScopeAll: "All Subjects",
+                timerTasksScopeSubject: "This Branch", timerTasksScopeAll: "All Subjects",
                 timerTasksSubjectEmptyState: "No tasks for this subject yet. Add one below, or switch to All Subjects.",
                 linkedGoalEmptyCta: "+ Link a subject to this tag",
                 examModeTodayTxt: "Today!", examModeDaysLeftSuffix: "day(s) left",
@@ -1143,7 +1141,7 @@
                 timerNotesClearConfirm: "هل تريد مسح كل الملاحظات؟",
                 timerTasksFilterPending: "الحالية", timerTasksFilterAll: "الكل", timerTasksFilterDone: "المنجزة",
                 timerTasksFilterEmptyState: "لا يوجد شيء هنا.",
-                timerTasksScopeSubject: "المادة دي", timerTasksScopeAll: "كل المواد",
+                timerTasksScopeSubject: "هذا الفرع", timerTasksScopeAll: "كل المواد",
                 timerTasksSubjectEmptyState: "لسه مفيش مهام للمادة دي. ضيف واحدة تحت، أو بدّل لـ«كل المواد».",
                 linkedGoalEmptyCta: "+ اربط مادة بالتاج ده",
                 examModeTodayTxt: "النهاردة!", examModeDaysLeftSuffix: "يوم متبقي",
@@ -1211,6 +1209,7 @@
         let paginationCurrentPage = 1;
         const paginationMaxItemsPerPage = 10;
         let goalsArray = [];
+        let timerSelectedBranchId = null;
         let habitsArray = [];
         let filteredSessions = [];
         let studyGoals = { daily: 4, weekly: 28, monthly: 120 };
@@ -2861,7 +2860,11 @@
             const chip = document.getElementById('linked-goal-chip');
             const emptyCta = document.getElementById('linked-goal-empty-cta');
             if (!chip) return;
-            const linkedGoal = goalsArray.find(g => g.linkedTag === currentlySelectedTag);
+            const branchesForTag = goalsArray.filter(g => g.linkedTag === currentlySelectedTag);
+            if (!branchesForTag.some(g => g.id === timerSelectedBranchId)) {
+                timerSelectedBranchId = branchesForTag.length > 0 ? branchesForTag[0].id : null;
+            }
+            const linkedGoal = branchesForTag.find(g => g.id === timerSelectedBranchId);
             if (!linkedGoal) {
                 chip.classList.remove('is-visible');
                 if (emptyCta) {
@@ -2900,6 +2903,18 @@
         function deleteTaskFromTimerPanel(goalId, taskId) {
             deleteGoalTask(goalId, taskId);
         }
+        function onTimerBranchSelectChange() {
+            const goalSelect = document.getElementById('timer-quick-add-goal-select');
+            timerSelectedBranchId = goalSelect ? goalSelect.value : null;
+            refreshTimerSidebar();
+        }
+        function selectLectureIntoSessionTitle(text) {
+            const titleInput = document.getElementById('session-current-title');
+            if (titleInput) {
+                titleInput.value = text;
+                titleInput.focus();
+            }
+        }
         function renderTimerTasksPanel() {
             const listEl = document.getElementById('timer-tasks-panel-list');
             if (!listEl) return;
@@ -2928,25 +2943,29 @@
                 }
             }
 
+            const branchesForTag = goalsArray.filter(g => g.linkedTag === currentlySelectedTag);
             const goalSelect = document.getElementById('timer-quick-add-goal-select');
             if (goalSelect) {
-                const prevVal = goalSelect.value;
-                if (goalsArray.length === 0) {
-                    goalSelect.innerHTML = `<option value="">${currentSystemLanguage === 'ar' ? 'لا توجد مواد — أضف واحدة من تبويب المواد' : 'No subjects yet — add one in Subjects tab'}</option>`;
+                if (branchesForTag.length === 0) {
+                    goalSelect.innerHTML = `<option value="">${currentSystemLanguage === 'ar' ? 'لا توجد فروع لهذه المادة' : 'No branches for this subject'}</option>`;
                     goalSelect.disabled = true;
+                    timerSelectedBranchId = null;
                 } else {
                     goalSelect.disabled = false;
-                    goalSelect.innerHTML = goalsArray.map(g => `<option value="${g.id}">${escapeGoalHtml(g.title)}</option>`).join('');
-                    const preferredGoal = goalsArray.find(g => g.linkedTag === currentlySelectedTag);
-                    if (goalsArray.some(g => g.id === prevVal)) goalSelect.value = prevVal;
-                    else if (preferredGoal) goalSelect.value = preferredGoal.id;
+                    goalSelect.innerHTML = branchesForTag.map(g => `<option value="${g.id}">${escapeGoalHtml(g.title)}</option>`).join('');
+                    if (!branchesForTag.some(g => g.id === timerSelectedBranchId)) {
+                        timerSelectedBranchId = branchesForTag[0].id;
+                    }
+                    goalSelect.value = timerSelectedBranchId;
                 }
             }
 
             const filterRow = document.getElementById('timer-tasks-filter-row');
             if (filterRow) filterRow.style.display = allTasks.length > 0 ? 'flex' : 'none';
 
-            const scopedTasks = timerTasksScopeState === 'subject' ? allTasks.filter(t => t.matchesTag) : allTasks;
+            const scopedTasks = timerTasksScopeState === 'subject'
+                ? allTasks.filter(t => t.goalId === timerSelectedBranchId)
+                : allTasks;
 
             let visibleTasks = scopedTasks;
             if (timerTasksFilterState === 'pending') visibleTasks = scopedTasks.filter(t => !t.done);
@@ -2971,14 +2990,27 @@
             });
             listEl.innerHTML = visibleTasks.map(t => `
                 <div class="timer-task-item ${t.done ? 'is-done' : ''} ${t.matchesTag ? 'is-matching' : ''}">
-                    <div class="goal-task-checkbox ${t.done ? 'checked' : ''}" onclick="toggleGoalTaskDone('${t.goalId}','${t.taskId}')">${t.done ? '✓' : ''}</div>
-                    <div class="timer-task-info">
+                    <div class="goal-task-checkbox ${t.done ? 'checked' : ''}" data-role="toggle-done" data-goal-id="${t.goalId}" data-task-id="${t.taskId}">${t.done ? '✓' : ''}</div>
+                    <div class="timer-task-info" data-role="select-lecture" data-goal-id="${t.goalId}" data-task-id="${t.taskId}" title="${currentSystemLanguage === 'ar' ? 'اضغط لاستخدام هذه المحاضرة كعنوان الجلسة' : 'Click to use this lecture as the session title'}">
                         <div class="timer-task-text">${escapeGoalHtml(t.text)}</div>
                         <div class="timer-task-goal-src">📚 ${escapeGoalHtml(t.goalTitle)}</div>
                         ${t.reminders.length > 0 ? `<div class="timer-task-reminder-badge ${t.reminders.some(r => isReminderOverdue(r.date)) && !t.done ? 'is-overdue' : ''}">🔔 ${t.reminders.length}</div>` : ''}
                     </div>
-                    <button class="timer-task-delete" onclick="deleteTaskFromTimerPanel('${t.goalId}','${t.taskId}')">✕</button>
+                    <button class="timer-task-delete" data-role="delete-task" data-goal-id="${t.goalId}" data-task-id="${t.taskId}">✕</button>
                 </div>`).join('');
+            listEl.querySelectorAll('[data-role="toggle-done"]').forEach(el => {
+                el.addEventListener('click', (e) => { e.stopPropagation(); toggleGoalTaskDone(el.dataset.goalId, el.dataset.taskId); });
+            });
+            listEl.querySelectorAll('[data-role="delete-task"]').forEach(el => {
+                el.addEventListener('click', (e) => { e.stopPropagation(); deleteTaskFromTimerPanel(el.dataset.goalId, el.dataset.taskId); });
+            });
+            listEl.querySelectorAll('[data-role="select-lecture"]').forEach(el => {
+                el.addEventListener('click', () => {
+                    const goal = goalsArray.find(g => g.id === el.dataset.goalId);
+                    const task = goal && (goal.tasks || []).find(t2 => t2.id === el.dataset.taskId);
+                    if (task) selectLectureIntoSessionTitle(task.text);
+                });
+            });
         }
         function refreshTimerSidebar() {
             renderLinkedGoalChip();
@@ -3059,21 +3091,6 @@
             if (cc) cc.innerText = `${text.length} ${currentSystemLanguage === 'ar' ? 'حرف' : 'chars'}`;
             updateTimerNotesHeaderSubject();
         }
-        function addTaskFromTimerPanel() {
-            const goalId = document.getElementById('timer-quick-add-goal-select')?.value;
-            const input = document.getElementById('timer-quick-add-task-input');
-            const text = input ? input.value.trim() : '';
-            if (!goalId || !text) return;
-            const goal = goalsArray.find(g => g.id === goalId);
-            if (!goal) return;
-            if (!Array.isArray(goal.tasks)) goal.tasks = [];
-            goal.tasks.push({ id: generateUniqueRecordId(), text: text, done: false });
-            expandedGoalTasksSet.add(goalId);
-            dbSet('goals', goalsArray);
-            if (input) input.value = '';
-            renderGoalsScreen();
-        }
-
         function openHabitModal() {
             document.getElementById('modal-habit-name').value = '';
             document.getElementById('habit-modal').classList.add('modal-open');
