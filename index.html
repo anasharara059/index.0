@@ -110,7 +110,7 @@
         .timer-task-item .goal-task-checkbox { margin-top: 1px; width: 22px; height: 22px; min-width: 22px; }
         .timer-task-info { flex: 1; min-width: 0; }
         .timer-task-text { font-size: 14px; color: var(--text-light); word-break: break-word; }
-        .timer-task-item.is-done .timer-task-text { text-decoration: line-through; color: var(--text-gray); }
+        .timer-task-item.is-done .timer-task-text { color: var(--text-gray); }
         .timer-task-goal-src { font-size: 11.5px; color: var(--accent-purple); font-weight: 700; margin-top: 5px; }
         .timer-tasks-empty { font-size: 13px; color: var(--text-gray); text-align: center; padding: 40px 12px; border: 1.5px dashed var(--border-soft); border-radius: 14px; }
         .timer-notes-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--text-gray); }
@@ -319,7 +319,21 @@
         .goal-task-checkbox.checked { background: var(--success, #00d26a); border-color: transparent; box-shadow: 0 0 8px rgba(0, 210, 106, 0.4); }
         .goal-task-text { flex: 1; font-size: 12.5px; color: var(--text-light); text-align: left; word-break: break-word; }
         html[dir="rtl"] .goal-task-text { text-align: right; }
-        .goal-task-item.is-done .goal-task-text { text-decoration: line-through; color: var(--text-gray); }
+        .goal-task-item.is-done .goal-task-text { color: var(--text-gray); }
+        .goal-task-text { cursor: pointer; }
+        .lecture-reminders-panel { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; padding-left: 29px; }
+        .lecture-reminders-panel.is-open { max-height: 400px; margin-top: 4px; }
+        .lecture-reminder-chip { display: flex; align-items: center; gap: 8px; background: rgba(217, 165, 74, 0.08); border: 1px solid rgba(217, 165, 74, 0.2); border-radius: 8px; padding: 6px 10px; font-size: 11px; color: var(--text-light); margin-bottom: 6px; }
+        .lecture-reminder-chip.is-overdue { background: rgba(231, 76, 60, 0.1); border-color: rgba(231, 76, 60, 0.3); color: #ff8a7a; }
+        .lecture-reminder-chip .lr-icon { font-size: 12px; }
+        .lecture-reminder-chip .lr-date { font-weight: 700; flex: 1; }
+        .lecture-reminder-del { background: transparent; border: none; color: var(--text-gray); cursor: pointer; font-size: 11px; opacity: 0.6; padding: 2px; }
+        .lecture-reminder-del:hover { opacity: 1; color: var(--danger); }
+        .lecture-reminder-add-row { display: flex; gap: 6px; margin-top: 4px; margin-bottom: 8px; align-items: center; }
+        .lecture-reminder-date-input { background: rgba(0,0,0,0.3); border: 1px solid var(--border-soft); color: #fff; padding: 6px 8px; border-radius: 8px; font-size: 11px; outline: none; flex: 1; }
+        .lecture-reminder-save-btn { background: var(--accent-orange); border: none; color: #000; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .timer-task-reminder-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--accent-orange); font-weight: 700; margin-top: 3px; }
+        .timer-task-reminder-badge.is-overdue { color: #ff8a7a; }
         .goal-task-delete { background: transparent; border: none; color: var(--text-gray); cursor: pointer; font-size: 13px; opacity: 0.5; transition: all 0.2s; padding: 2px 4px; }
         .goal-task-delete:hover { opacity: 1; color: var(--danger); }
         .goal-task-add-row { display: flex; gap: 8px; padding-top: 8px; }
@@ -538,7 +552,7 @@
         <div class="nav-tabs">
             <button class="tab-trigger active" onclick="activateScreen('timer-tab', 'screen-timer')" id="nav-btn-timer">Timer</button>
             <button class="tab-trigger" onclick="activateScreen('analysis-tab', 'screen-analysis')" id="nav-btn-analysis">Analysis</button>
-            <button class="tab-trigger" onclick="activateScreen('goals-tab', 'screen-goals')" id="nav-btn-goals">Goals</button>
+            <button class="tab-trigger" onclick="activateScreen('goals-tab', 'screen-goals')" id="nav-btn-goals">Subjects</button>
             <button class="tab-trigger" onclick="activateScreen('habits-tab', 'screen-habits')" id="nav-btn-habits">Habits</button>
             <button class="tab-trigger" onclick="activateScreen('admin-tab', 'screen-admin')" id="nav-btn-admin" style="display:none;">Admin ⚙️</button>
         </div>
@@ -776,8 +790,8 @@
         <div class="screen-view glass-card" id="screen-goals">
             <div class="dashboard-scaled-panel">
                 <div class="dash-section-header section-header-with-action">
-                    <span id="goals-header-title">Goals</span>
-                    <button class="add-item-pill-btn" onclick="openGoalModal()" id="goals-add-btn">+ <span id="goals-add-btn-txt">New Goal</span></button>
+                    <span id="goals-header-title">Subjects</span>
+                    <button class="add-item-pill-btn" onclick="openGoalModal()" id="goals-add-btn">+ <span id="goals-add-btn-txt">New Subject</span></button>
                 </div>
                 <div class="goals-cards-grid" id="goals-grid-wrapper"></div>
                 <div class="empty-state-box" id="goals-empty-state" style="display:none;">No goals yet — add your first one!</div>
@@ -826,23 +840,12 @@
     </div>
     <div class="modal-overlay" id="goal-modal">
         <div class="modal-box">
-            <h3 id="goal-modal-heading">Add New Goal</h3>
-            <label class="field-label" id="goal-modal-title-lbl">Goal Title</label>
-            <input type="text" id="modal-goal-title" placeholder="e.g. Finish Anatomy Atlas">
-            <div class="input-row-split">
-                <div style="flex:1;"><label class="field-label" id="goal-modal-target-lbl">Target</label><input type="number" id="modal-goal-target" min="1" value="10"></div>
-                <div style="flex:1;"><label class="field-label" id="goal-modal-unit-lbl">Unit</label><input type="text" id="modal-goal-unit" placeholder="pages, hrs..."></div>
-            </div>
-            <label class="field-label" id="goal-modal-deadline-lbl">Deadline (optional)</label>
-            <input type="date" id="modal-goal-deadline">
-            <label class="field-label" id="goal-modal-tag-lbl">Linked Subject (optional)</label>
+            <h3 id="goal-modal-heading">Add New Subject</h3>
+            <label class="field-label" id="goal-modal-title-lbl">Subject Name</label>
+            <input type="text" id="modal-goal-title" placeholder="e.g. Surgery">
+            <label class="field-label" id="goal-modal-tag-lbl">Linked Tag</label>
             <select id="modal-goal-tag">
                 <option value="">-- None --</option>
-            </select>
-            <label class="field-label" id="goal-modal-type-lbl">Goal Type</label>
-            <select id="modal-goal-type">
-                <option value="count" id="goal-modal-type-count">Count-based (manual)</option>
-                <option value="time" id="goal-modal-type-time">Time-based (auto-tracked from sessions)</option>
             </select>
             <div class="modal-buttons">
                 <button class="modal-btn cancel" onclick="closeGoalModal()" id="goal-modal-cancel">Cancel</button>
@@ -1023,7 +1026,7 @@
         // ----------------------------------------------------------------
         const languageDictionary = {
             en: {
-                logo: "INDEX", navTimer: "Timer", navAnalysis: "Analysis", navGoals: "Goals", navHabits: "Habits",
+                logo: "INDEX", navTimer: "Timer", navAnalysis: "Analysis", navGoals: "Subjects", navHabits: "Habits",
                 currentSessionPlaceholder: "Preparing Clinical Session", btnStart: "Start", btnPause: "Pause", btnStop: "Stop", btnFull: "Focus", btnExitFull: "Exit Focus Mode",
                 tagsLbl: "Subjects & Preparations (Click to select):", dashTitle: "Analytics & Progress Rates",
                 chartWeeklyTitle: "Weekly Subject Breakdown", chartDistTitle: "Tag Relative Distribution",
@@ -1033,25 +1036,28 @@
                 modalTitle: "Edit Session Duration (Minutes)", modalCancel: "Cancel", modalSave: "Confirm",
                 tagModalTitle: "Add New Subject", tagModalPlace: "Subject Name...", tagModalCancel: "Cancel", tagModalSave: "Add",
                 clearConfirm: "Are you sure you want to delete all study data?", deleteConfirm: "Do you want to delete this session?", modeSwitchConfirm: "You have an active/unfinished session. Switching mode now will save it as a completed session first. Continue?",
-                goalsHeaderTitle: "Goals", goalsAddBtnTxt: "New Goal", goalsEmptyState: "No goals yet — add your first one!",
-                goalDeleteConfirm: "Do you want to delete this goal?", goalDeadlineDuePrefix: "Due", goalOverdueTxt: "Overdue", goalCompletedTxt: "Completed 🎉",
-                goalModalHeading: "Add New Goal", goalModalTitleLbl: "Goal Title", goalModalTitlePlace: "e.g. Finish Anatomy Atlas",
+                goalsHeaderTitle: "Subjects", goalsAddBtnTxt: "New Subject", goalsEmptyState: "No subjects yet — add your first one!",
+                goalDeleteConfirm: "Do you want to delete this subject?", goalDeadlineDuePrefix: "Due", goalOverdueTxt: "Overdue", goalCompletedTxt: "Completed 🎉",
+                goalModalHeading: "Add New Subject", goalModalTitleLbl: "Subject Name", goalModalTitlePlace: "e.g. Surgery",
                 goalModalTargetLbl: "Target", goalModalUnitLbl: "Unit", goalModalUnitPlace: "pages, hrs...",
                 goalModalDeadlineLbl: "Deadline (optional)", goalModalCancel: "Cancel", goalModalSave: "Add",
-                goalModalTagLbl: "Linked Subject (optional)", goalModalTypeLbl: "Goal Type",
+                goalModalTagLbl: "Linked Tag", goalModalTypeLbl: "Goal Type",
                 goalTypeCountOpt: "Count-based (manual)", goalTypeTimeOpt: "Time-based (auto-tracked from sessions)",
                 goalAutoTrackedTxt: "Auto-tracked", goalManualTxt: "Manual",
-                goalTasksHeader: "Study Tasks", goalTaskPlaceholder: "e.g. Review chapter 3...",
-                goalTasksEmptyHint: "No study tasks yet — add one below.",
+                goalTasksHeader: "Lectures", goalTaskPlaceholder: "e.g. Lecture 1: Introduction",
+                goalTasksEmptyHint: "No lectures yet — add one below.",
+                lectureRemindersHint: "Click a lecture to add a review reminder",
+                lectureReminderSaveBtn: "Add reminder", lectureReminderDatePlace: "Review date",
+                toastReminderAdded: "Reminder added!",
                 timerNotesHeader: "Quick Notes", timerNotesPlaceholder: "Jot down anything about this study session...",
                 timerCurrentSubjectLbl: "Current Subject", timerTasksHeader: "Study Tasks",
-                timerTasksEmptyState: "No study tasks yet. Add some from the Goals tab.",
+                timerTasksEmptyState: "No lectures yet. Add some from the Subjects tab.",
                 timerNotesClearConfirm: "Clear all notes?",
                 timerTasksFilterPending: "Pending", timerTasksFilterAll: "All", timerTasksFilterDone: "Done",
                 timerTasksFilterEmptyState: "Nothing here.",
                 timerTasksScopeSubject: "This Subject", timerTasksScopeAll: "All Subjects",
                 timerTasksSubjectEmptyState: "No tasks for this subject yet. Add one below, or switch to All Subjects.",
-                linkedGoalEmptyCta: "+ Link a goal to this subject",
+                linkedGoalEmptyCta: "+ Link a subject to this tag",
                 examModeTodayTxt: "Today!", examModeDaysLeftSuffix: "day(s) left",
                 habitsHeaderTitle: "Habits", habitsAddBtnTxt: "New Habit", habitsEmptyState: "No habits yet — start tracking one!",
                 habitDeleteConfirm: "Do you want to delete this habit?", habitStreakTxt: "day streak",
@@ -1059,7 +1065,7 @@
                 habitModalHeading: "Add New Habit", habitModalNameLbl: "Habit Name", habitModalNamePlace: "e.g. Read 20 pages daily",
                 habitModalCancel: "Cancel", habitModalSave: "Add",
                 toastSessionSaved: "Session saved successfully!", toastDataCleared: "All data cleared!",
-                toastGoalAdded: "Goal added!", toastHabitAdded: "Habit added!", toastTagAdded: "Subject added!",
+                toastGoalAdded: "Subject added!", toastHabitAdded: "Habit added!", toastTagAdded: "Tag added!",
                 goalsSettingsTitle: "Study Goals Settings", goalsDailyLbl: "Daily Goal (hours)",
                 goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
                 goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
@@ -1099,7 +1105,7 @@
                 productivityHrs: "hours"
             },
             ar: {
-                logo: "إندكس", navTimer: "المؤقت", navAnalysis: "التحليلات والإحصائيات", navGoals: "الأهداف", navHabits: "العادات",
+                logo: "إندكس", navTimer: "المؤقت", navAnalysis: "التحليلات والإحصائيات", navGoals: "المواد", navHabits: "العادات",
                 currentSessionPlaceholder: "تحضير الجلسة السريرية", btnStart: "ابدأ (Start)", btnPause: "مؤقت (Pause)", btnStop: "حفظ وإنهاء (Stop)", btnFull: "تركيز (Focus)", btnExitFull: "خروج من وضع التركيز",
                 tagsLbl: "المواد والتحضيرات الحالية (اضغط للاختيار):", dashTitle: "لوحة التحليلات ومعدلات التقدم",
                 chartWeeklyTitle: "توزيع الجهد الدراسي الأسبوعي", chartDistTitle: "توزيع المواد النسبي",
@@ -1111,25 +1117,28 @@
                 clearConfirm: "هل أنت متأكد تماماً من حذف كافة البيانات المخزنة وتصفير السجل والتحليلات؟",
                 deleteConfirm: "هل تريد حذف هذه الجلسة الدراسية بعينها؟",
                 modeSwitchConfirm: "لديك جلسة شغالة أو لسا مخلصتش. تغيير الوضع الآن هيحفظها كجلسة منتهية أولاً. تريد المتابعة؟",
-                goalsHeaderTitle: "الأهداف", goalsAddBtnTxt: "هدف جديد", goalsEmptyState: "لسه معملتش أي هدف — ضيف أول هدف ليك دلوقتي!",
-                goalDeleteConfirm: "هل تريد حذف هذا الهدف؟", goalDeadlineDuePrefix: "الموعد النهائي", goalOverdueTxt: "متأخر عن الموعد", goalCompletedTxt: "تم الإنجاز 🎉",
-                goalModalHeading: "إضافة هدف جديد", goalModalTitleLbl: "عنوان الهدف", goalModalTitlePlace: "مثال: إنهاء أطلس التشريح",
+                goalsHeaderTitle: "المواد الدراسية", goalsAddBtnTxt: "مادة جديدة", goalsEmptyState: "لسه معملتش أي مادة — ضيف أول مادة ليك دلوقتي!",
+                goalDeleteConfirm: "هل تريد حذف هذه المادة؟", goalDeadlineDuePrefix: "الموعد النهائي", goalOverdueTxt: "متأخر عن الموعد", goalCompletedTxt: "تم الإنجاز 🎉",
+                goalModalHeading: "إضافة مادة جديدة", goalModalTitleLbl: "اسم المادة", goalModalTitlePlace: "مثال: الجراحة",
                 goalModalTargetLbl: "الهدف الرقمي", goalModalUnitLbl: "الوحدة", goalModalUnitPlace: "صفحة، ساعة...",
                 goalModalDeadlineLbl: "الموعد النهائي (اختياري)", goalModalCancel: "إلغاء", goalModalSave: "إضافة",
-                goalModalTagLbl: "ربط بمادة دراسية (اختياري)", goalModalTypeLbl: "نوع الهدف",
+                goalModalTagLbl: "ربط بالتاج", goalModalTypeLbl: "نوع الهدف",
                 goalTypeCountOpt: "بالعدد (يدوي)", goalTypeTimeOpt: "بالوقت (تتبع تلقائي من الجلسات)",
                 goalAutoTrackedTxt: "تتبع تلقائي", goalManualTxt: "يدوي",
-                goalTasksHeader: "المهام الدراسية", goalTaskPlaceholder: "مثال: مراجعة الفصل الثالث...",
-                goalTasksEmptyHint: "لسه مفيش مهام دراسية — ضيف واحدة تحت.",
+                goalTasksHeader: "المحاضرات", goalTaskPlaceholder: "مثال: محاضرة 1: مقدمة",
+                goalTasksEmptyHint: "لسه مفيش محاضرات — ضيف واحدة تحت.",
+                lectureRemindersHint: "اضغط على المحاضرة عشان تضيف تذكير مراجعة",
+                lectureReminderSaveBtn: "إضافة تذكير", lectureReminderDatePlace: "تاريخ المراجعة",
+                toastReminderAdded: "تم إضافة التذكير!",
                 timerNotesHeader: "ملاحظات سريعة", timerNotesPlaceholder: "دوّن أي حاجة عن الجلسة الدراسية دي...",
                 timerCurrentSubjectLbl: "المادة الحالية", timerTasksHeader: "المهام الدراسية",
-                timerTasksEmptyState: "لسه مفيش مهام دراسية. ضيف شوية من تبويب الأهداف.",
+                timerTasksEmptyState: "لسه مفيش محاضرات. ضيف شوية من تبويب المواد.",
                 timerNotesClearConfirm: "هل تريد مسح كل الملاحظات؟",
                 timerTasksFilterPending: "الحالية", timerTasksFilterAll: "الكل", timerTasksFilterDone: "المنجزة",
                 timerTasksFilterEmptyState: "لا يوجد شيء هنا.",
                 timerTasksScopeSubject: "المادة دي", timerTasksScopeAll: "كل المواد",
                 timerTasksSubjectEmptyState: "لسه مفيش مهام للمادة دي. ضيف واحدة تحت، أو بدّل لـ«كل المواد».",
-                linkedGoalEmptyCta: "+ اربط هدف بالمادة دي",
+                linkedGoalEmptyCta: "+ اربط مادة بالتاج ده",
                 examModeTodayTxt: "النهاردة!", examModeDaysLeftSuffix: "يوم متبقي",
                 habitsHeaderTitle: "العادات", habitsAddBtnTxt: "عادة جديدة", habitsEmptyState: "لسه معملتش أي عادة — ابدأ بتتبع واحدة!",
                 habitDeleteConfirm: "هل تريد حذف هذه العادة؟", habitStreakTxt: "يوم متتالي",
@@ -1137,7 +1146,7 @@
                 habitModalHeading: "إضافة عادة جديدة", habitModalNameLbl: "اسم العادة", habitModalNamePlace: "مثال: قراءة 20 صفحة يومياً",
                 habitModalCancel: "إلغاء", habitModalSave: "إضافة",
                 toastSessionSaved: "تم حفظ الجلسة بنجاح!", toastDataCleared: "تم مسح كل البيانات!",
-                toastGoalAdded: "تم إضافة الهدف!", toastHabitAdded: "تم إضافة العادة!", toastTagAdded: "تم إضافة المادة!",
+                toastGoalAdded: "تم إضافة المادة!", toastHabitAdded: "تم إضافة العادة!", toastTagAdded: "تم إضافة التاج!",
                 goalsSettingsTitle: "Study Goals Settings", goalsDailyLbl: "Daily Goal (hours)",
                 goalsWeeklyLbl: "Weekly Goal (hours)", goalsMonthlyLbl: "Monthly Goal (hours)",
                 goalsSettingsCancel: "Cancel", goalsSettingsSave: "Save",
@@ -1689,10 +1698,7 @@
             document.getElementById('goal-modal-heading').innerText = d.goalModalHeading;
             document.getElementById('goal-modal-title-lbl').innerText = d.goalModalTitleLbl;
             document.getElementById('modal-goal-title').placeholder = d.goalModalTitlePlace;
-            document.getElementById('goal-modal-target-lbl').innerText = d.goalModalTargetLbl;
-            document.getElementById('goal-modal-unit-lbl').innerText = d.goalModalUnitLbl;
-            document.getElementById('modal-goal-unit').placeholder = d.goalModalUnitPlace;
-            document.getElementById('goal-modal-deadline-lbl').innerText = d.goalModalDeadlineLbl;
+
             document.getElementById('goal-modal-cancel').innerText = d.goalModalCancel;
             document.getElementById('goal-modal-save').innerText = d.goalModalSave;
             const goalTagLbl = document.getElementById('goal-modal-tag-lbl');
@@ -2530,10 +2536,6 @@
         function generateUniqueRecordId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
         function openGoalModal(presetTag) {
             document.getElementById('modal-goal-title').value = '';
-            document.getElementById('modal-goal-target').value = 10;
-            document.getElementById('modal-goal-unit').value = '';
-            document.getElementById('modal-goal-deadline').value = '';
-            document.getElementById('modal-goal-type').value = presetTag ? 'time' : 'count';
 
             const tagSelect = document.getElementById('modal-goal-tag');
             tagSelect.innerHTML = `<option value="">-- None --</option>`;
@@ -2551,22 +2553,18 @@
         function closeGoalModal() { document.getElementById('goal-modal').classList.remove('modal-open'); }
         function saveGoalFromModal() {
             const title = document.getElementById('modal-goal-title').value.trim();
-            const target = parseFloat(document.getElementById('modal-goal-target').value);
-            const unit = document.getElementById('modal-goal-unit').value.trim();
-            const deadline = document.getElementById('modal-goal-deadline').value;
             const linkedTag = document.getElementById('modal-goal-tag').value;
-            const goalType = document.getElementById('modal-goal-type').value;
-            if (!title || !target || target <= 0) return;
+            if (!title) return;
             goalsArray.unshift({
                 id: generateUniqueRecordId(),
                 title: title,
-                target: target,
+                target: 1,
                 current: 0,
-                unit: unit || (goalType === 'time' ? (currentSystemLanguage === 'ar' ? 'دقيقة' : 'min') : ''),
-                deadline: deadline || '',
+                unit: '',
+                deadline: '',
                 linkedTag: linkedTag || '',
-                goalType: goalType || 'count',
-                autoTrack: goalType === 'time' && !!linkedTag,
+                goalType: 'count',
+                autoTrack: false,
                 tasks: []
             });
             dbSet('goals', goalsArray);
@@ -2606,6 +2604,15 @@
             div.innerText = str == null ? '' : String(str);
             return div.innerHTML;
         }
+        const expandedReminderTasksSet = new Set();
+        function formatReminderDateLabel(iso) {
+            const dt = new Date(iso + 'T00:00:00');
+            return dt.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        function isReminderOverdue(iso) {
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            return new Date(iso + 'T00:00:00') < today;
+        }
         function renderGoalsScreen() {
             const d = languageDictionary[currentSystemLanguage];
             const grid = document.getElementById('goals-grid-wrapper');
@@ -2616,60 +2623,55 @@
             emptyState.style.display = 'none';
             goalsArray.forEach(goal => {
                 if (!Array.isArray(goal.tasks)) goal.tasks = [];
-                const pct = goal.target > 0 ? Math.min(100, Math.round((goal.current / goal.target) * 100)) : 0;
-                const isCompleted = pct >= 100;
-                const deadlineInfo = formatDeadlineBadge(goal.deadline, d);
-                const ringColor = isCompleted ? '#00d26a' : 'var(--accent-orange)';
-                const goalStepValue = goal.target >= 20 ? Math.max(1, Math.round(goal.target / 20)) : 1;
-                const isAutoTime = goal.goalType === 'time' && goal.linkedTag;
-
-                const progressText = isAutoTime
-                    ? `<strong>${goal.current}</strong> / ${goal.target} ${goal.unit || 'min'} <span class="goal-linked-tag-pill">🔗 ${escapeGoalHtml(goal.linkedTag)}</span>`
-                    : `<strong>${goal.current}</strong> / ${goal.target} ${goal.unit || ''}`;
-
-                const typeBadge = goal.goalType === 'time'
-                    ? `<span class="goal-type-badge time-type">⏱ ${d.goalAutoTrackedTxt || 'Auto-tracked'}</span>`
-                    : `<span class="goal-type-badge count-type">🔢 ${d.goalManualTxt || 'Manual'}</span>`;
-
                 const doneTasksCount = goal.tasks.filter(t => t.done).length;
                 const isPanelOpen = expandedGoalTasksSet.has(goal.id);
+
                 const tasksListHtml = goal.tasks.length > 0
-                    ? goal.tasks.map(task => `
+                    ? goal.tasks.map(task => {
+                        if (!Array.isArray(task.reminders)) task.reminders = [];
+                        const remindersOpen = expandedReminderTasksSet.has(task.id);
+                        const totalReminders = task.reminders.length;
+                        const remindersHtml = task.reminders.length > 0
+                            ? task.reminders.slice().sort((a, b) => a.date.localeCompare(b.date)).map(r => `
+                                <div class="lecture-reminder-chip ${isReminderOverdue(r.date) && !task.done ? 'is-overdue' : ''}">
+                                    <span class="lr-icon">🔔</span>
+                                    <span class="lr-date">${formatReminderDateLabel(r.date)}</span>
+                                    <button class="lecture-reminder-del" onclick="event.stopPropagation(); deleteLectureReminder('${goal.id}','${task.id}','${r.id}')">✕</button>
+                                </div>`).join('')
+                            : '';
+                        return `
                         <div class="goal-task-item ${task.done ? 'is-done' : ''}">
-                            <div class="goal-task-checkbox ${task.done ? 'checked' : ''}" onclick="toggleGoalTaskDone('${goal.id}','${task.id}')">${task.done ? '✓' : ''}</div>
-                            <div class="goal-task-text">${escapeGoalHtml(task.text)}</div>
-                            <button class="goal-task-delete" onclick="deleteGoalTask('${goal.id}','${task.id}')">✕</button>
-                        </div>`).join('')
-                    : `<div class="goal-tasks-empty-hint">${d.goalTasksEmptyHint || 'No study tasks yet — add one below.'}</div>`;
+                            <div class="goal-task-checkbox ${task.done ? 'checked' : ''}" onclick="event.stopPropagation(); toggleGoalTaskDone('${goal.id}','${task.id}')">${task.done ? '✓' : ''}</div>
+                            <div class="goal-task-text" onclick="toggleLectureReminderPanel('${task.id}')" title="${d.lectureRemindersHint || 'Click to add a review reminder'}">${escapeGoalHtml(task.text)}${totalReminders > 0 ? `<div class="timer-task-reminder-badge ${task.reminders.some(r => isReminderOverdue(r.date)) && !task.done ? 'is-overdue' : ''}">🔔 ${totalReminders}</div>` : ''}</div>
+                            <button class="goal-task-delete" onclick="event.stopPropagation(); deleteGoalTask('${goal.id}','${task.id}')">✕</button>
+                        </div>
+                        <div class="lecture-reminders-panel ${remindersOpen ? 'is-open' : ''}">
+                            ${remindersHtml}
+                            <div class="lecture-reminder-add-row">
+                                <input type="date" class="lecture-reminder-date-input" id="reminder-date-${task.id}">
+                                <button class="lecture-reminder-save-btn" onclick="addLectureReminder('${goal.id}','${task.id}')">${d.lectureReminderSaveBtn || 'Add reminder'}</button>
+                            </div>
+                        </div>`;
+                    }).join('')
+                    : `<div class="goal-tasks-empty-hint">${d.goalTasksEmptyHint || 'No lectures yet — add one below.'}</div>`;
 
                 const card = document.createElement('div');
-                card.className = `goal-card ${isCompleted ? 'is-completed' : ''}`;
+                card.className = `goal-card`;
                 card.innerHTML = `
                     <div class="goal-card-top">
                         <div>
                             <div class="goal-card-title">${escapeGoalHtml(goal.title)}</div>
-                            ${isCompleted ? `<div class="goal-card-deadline" style="color:#00d26a;">${d.goalCompletedTxt}</div>` : (deadlineInfo.text ? `<div class="goal-card-deadline ${deadlineInfo.cls}">${deadlineInfo.text}</div>` : '')}
-                            ${typeBadge}
+                            ${goal.linkedTag ? `<span class="goal-linked-tag-pill">🔗 ${escapeGoalHtml(goal.linkedTag)}</span>` : ''}
                         </div>
                         <button class="item-delete-btn" onclick="deleteGoal('${goal.id}')">✕</button>
                     </div>
-                    <div class="donut-ring" style="background: conic-gradient(${ringColor} ${pct * 3.6}deg, rgba(255,255,255,0.06) 0deg);">
-                        <div class="donut-ring-inner">${pct}%</div>
+                    <div class="goal-tasks-toggle is-open">
+                        <span>📚 ${d.goalTasksHeader || 'Lectures'} ${goal.tasks.length ? `(<span class="gt-count">${doneTasksCount}/${goal.tasks.length}</span>)` : ''}</span>
                     </div>
-                    <div class="goal-progress-summary">${progressText}</div>
-                    <div class="stepper-row">
-                        <button class="stepper-btn" onclick="adjustGoalProgress('${goal.id}', -${goalStepValue})" ${isAutoTime ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>−</button>
-                        <div class="stepper-value">${goal.current} ${goal.unit || ''}</div>
-                        <button class="stepper-btn" onclick="adjustGoalProgress('${goal.id}', ${goalStepValue})" ${isAutoTime ? 'disabled style="opacity:0.3;cursor:not-allowed;"' : ''}>+</button>
-                    </div>
-                    <div class="goal-tasks-toggle ${isPanelOpen ? 'is-open' : ''}" onclick="toggleGoalTasksPanel('${goal.id}')">
-                        <span>📋 ${d.goalTasksHeader || 'Study Tasks'} ${goal.tasks.length ? `(<span class="gt-count">${doneTasksCount}/${goal.tasks.length}</span>)` : ''}</span>
-                        <span class="gt-chevron">▾</span>
-                    </div>
-                    <div class="goal-tasks-panel ${isPanelOpen ? 'is-open' : ''}" id="goal-tasks-panel-${goal.id}">
+                    <div class="goal-tasks-panel is-open">
                         <div class="goal-tasks-list">${tasksListHtml}</div>
                         <div class="goal-task-add-row">
-                            <input type="text" class="goal-task-input" id="goal-task-input-${goal.id}" placeholder="${d.goalTaskPlaceholder || 'e.g. Review chapter 3...'}" onkeypress="if(event.key==='Enter') addGoalTask('${goal.id}')">
+                            <input type="text" class="goal-task-input" id="goal-task-input-${goal.id}" placeholder="${d.goalTaskPlaceholder || 'e.g. Lecture 1: Introduction'}" onkeypress="if(event.key==='Enter') addGoalTask('${goal.id}')">
                             <button class="goal-task-add-confirm" onclick="addGoalTask('${goal.id}')">+</button>
                         </div>
                     </div>`;
@@ -2689,7 +2691,7 @@
             const text = input ? input.value.trim() : '';
             if (!text) return;
             if (!Array.isArray(goal.tasks)) goal.tasks = [];
-            goal.tasks.push({ id: generateUniqueRecordId(), text: text, done: false });
+            goal.tasks.push({ id: generateUniqueRecordId(), text: text, done: false, reminders: [] });
             expandedGoalTasksSet.add(goalId);
             dbSet('goals', goalsArray);
             renderGoalsScreen();
@@ -2701,12 +2703,8 @@
             if (!goal || !Array.isArray(goal.tasks)) return;
             const task = goal.tasks.find(t => t.id === taskId);
             if (!task) return;
+            // Mark done/undone: item stays in place and just dims — it is never removed or struck through.
             task.done = !task.done;
-            // For manual (count-based) goals, let checking off a study task nudge progress forward too
-            if (goal.goalType !== 'time') {
-                const goalStepValue = goal.target >= 20 ? Math.max(1, Math.round(goal.target / 20)) : 1;
-                goal.current = Math.max(0, Math.min(goal.target, (goal.current || 0) + (task.done ? goalStepValue : -goalStepValue)));
-            }
             expandedGoalTasksSet.add(goalId);
             dbSet('goals', goalsArray);
             renderGoalsScreen();
@@ -2716,8 +2714,43 @@
             if (!goal || !Array.isArray(goal.tasks)) return;
             goal.tasks = goal.tasks.filter(t => t.id !== taskId);
             expandedGoalTasksSet.add(goalId);
+            expandedReminderTasksSet.delete(taskId);
             dbSet('goals', goalsArray);
             renderGoalsScreen();
+        }
+        function toggleLectureReminderPanel(taskId) {
+            if (expandedReminderTasksSet.has(taskId)) expandedReminderTasksSet.delete(taskId);
+            else expandedReminderTasksSet.add(taskId);
+            renderGoalsScreen();
+            renderTimerTasksPanel();
+        }
+        function addLectureReminder(goalId, taskId) {
+            const goal = goalsArray.find(g => g.id === goalId);
+            if (!goal || !Array.isArray(goal.tasks)) return;
+            const task = goal.tasks.find(t => t.id === taskId);
+            if (!task) return;
+            const dateInput = document.getElementById(`reminder-date-${taskId}`);
+            const dateVal = dateInput ? dateInput.value : '';
+            if (!dateVal) return;
+            if (!Array.isArray(task.reminders)) task.reminders = [];
+            task.reminders.push({ id: generateUniqueRecordId(), date: dateVal });
+            expandedReminderTasksSet.add(taskId);
+            dbSet('goals', goalsArray);
+            renderGoalsScreen();
+            renderTimerTasksPanel();
+            const d = languageDictionary[currentSystemLanguage];
+            showToast(d.toastReminderAdded || 'Reminder added!', task.text, 'success');
+        }
+        function deleteLectureReminder(goalId, taskId, reminderId) {
+            const goal = goalsArray.find(g => g.id === goalId);
+            if (!goal || !Array.isArray(goal.tasks)) return;
+            const task = goal.tasks.find(t => t.id === taskId);
+            if (!task || !Array.isArray(task.reminders)) return;
+            task.reminders = task.reminders.filter(r => r.id !== reminderId);
+            expandedReminderTasksSet.add(taskId);
+            dbSet('goals', goalsArray);
+            renderGoalsScreen();
+            renderTimerTasksPanel();
         }
         function renderLinkedGoalChip() {
             const subjectPill = document.getElementById('timer-current-subject-pill');
@@ -2725,20 +2758,23 @@
             const chip = document.getElementById('linked-goal-chip');
             const emptyCta = document.getElementById('linked-goal-empty-cta');
             if (!chip) return;
-            const linkedGoal = goalsArray.find(g => g.goalType === 'time' && g.linkedTag === currentlySelectedTag && g.current < g.target);
+            const linkedGoal = goalsArray.find(g => g.linkedTag === currentlySelectedTag);
             if (!linkedGoal) {
                 chip.classList.remove('is-visible');
                 if (emptyCta) {
                     const d = languageDictionary[currentSystemLanguage];
-                    emptyCta.innerText = (d.linkedGoalEmptyCta || '+ Link a goal to this subject');
+                    emptyCta.innerText = (d.linkedGoalEmptyCta || '+ Link a subject to this tag');
                     emptyCta.style.display = 'block';
                 }
                 return;
             }
             if (emptyCta) emptyCta.style.display = 'none';
-            const pct = linkedGoal.target > 0 ? Math.min(100, Math.round((linkedGoal.current / linkedGoal.target) * 100)) : 0;
+            if (!Array.isArray(linkedGoal.tasks)) linkedGoal.tasks = [];
+            const totalLectures = linkedGoal.tasks.length;
+            const doneLectures = linkedGoal.tasks.filter(t => t.done).length;
+            const pct = totalLectures > 0 ? Math.min(100, Math.round((doneLectures / totalLectures) * 100)) : 0;
             document.getElementById('lg-chip-title').innerText = linkedGoal.title;
-            document.getElementById('lg-chip-progress').innerText = `${linkedGoal.current}/${linkedGoal.target} ${linkedGoal.unit || 'min'} (${pct}%)`;
+            document.getElementById('lg-chip-progress').innerText = `${doneLectures}/${totalLectures} (${pct}%)`;
             document.getElementById('lg-chip-fill').style.width = pct + '%';
             chip.classList.add('is-visible');
         }
@@ -2770,6 +2806,7 @@
                 (goal.tasks || []).forEach(task => {
                     allTasks.push({
                         goalId: goal.id, goalTitle: goal.title, taskId: task.id, text: task.text, done: task.done,
+                        reminders: Array.isArray(task.reminders) ? task.reminders : [],
                         matchesTag: !!(goal.linkedTag && goal.linkedTag === currentlySelectedTag)
                     });
                 });
@@ -2792,7 +2829,7 @@
             if (goalSelect) {
                 const prevVal = goalSelect.value;
                 if (goalsArray.length === 0) {
-                    goalSelect.innerHTML = `<option value="">${currentSystemLanguage === 'ar' ? 'لا توجد أهداف — أضف واحداً من تبويب الأهداف' : 'No goals yet — add one in Goals tab'}</option>`;
+                    goalSelect.innerHTML = `<option value="">${currentSystemLanguage === 'ar' ? 'لا توجد مواد — أضف واحدة من تبويب المواد' : 'No subjects yet — add one in Subjects tab'}</option>`;
                     goalSelect.disabled = true;
                 } else {
                     goalSelect.disabled = false;
@@ -2834,7 +2871,8 @@
                     <div class="goal-task-checkbox ${t.done ? 'checked' : ''}" onclick="toggleGoalTaskDone('${t.goalId}','${t.taskId}')">${t.done ? '✓' : ''}</div>
                     <div class="timer-task-info">
                         <div class="timer-task-text">${escapeGoalHtml(t.text)}</div>
-                        <div class="timer-task-goal-src">🎯 ${escapeGoalHtml(t.goalTitle)}</div>
+                        <div class="timer-task-goal-src">📚 ${escapeGoalHtml(t.goalTitle)}</div>
+                        ${t.reminders.length > 0 ? `<div class="timer-task-reminder-badge ${t.reminders.some(r => isReminderOverdue(r.date)) && !t.done ? 'is-overdue' : ''}">🔔 ${t.reminders.length}</div>` : ''}
                     </div>
                     <button class="timer-task-delete" onclick="deleteTaskFromTimerPanel('${t.goalId}','${t.taskId}')">✕</button>
                 </div>`).join('');
