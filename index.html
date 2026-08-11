@@ -1382,8 +1382,8 @@
         }
 
         auth.onAuthStateChanged(async (user) => {
-            document.getElementById('auth-card-loading').style.display = 'none';
             if (!user) {
+                document.getElementById('auth-card-loading').style.display = 'none';
                 hideAllAuthOverlays();
                 if (appHasBooted) { location.reload(); return; }
                 document.getElementById('auth-card-login').style.display = 'block';
@@ -1410,8 +1410,8 @@
                     status: 'approved', isAdmin: true, requestedAt: Date.now(), respondedAt: Date.now()
                 });
                 ACCESS_REF.on('value', renderAdminAccessList);
+                await bootApp();
                 hideAllAuthOverlays();
-                bootApp();
                 return;
             }
 
@@ -1427,8 +1427,11 @@
                     return;
                 }
                 if (record.status === 'approved') {
+                    // Keep the loading spinner up while data is fetched so the
+                    // screen doesn't briefly flash empty/default content before
+                    // your real sessions, goals, and habits are rendered in.
+                    await bootApp();
                     hideAllAuthOverlays();
-                    bootApp();
                 } else if (record.status === 'banned') {
                     hideAllAuthOverlays();
                     document.getElementById('access-revoked-overlay').classList.remove('hidden');
@@ -2500,7 +2503,7 @@
             currentItemsPage.forEach((rowItem, pageLocalIndex) => {
                 let absoluteArrayIndex = archivedSessionsArray.indexOf(rowItem);
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${rowItem.date}</td><td><strong>${rowItem.title}</strong></td><td><span class="session-tag-indicator" style="color: ${getTagColor(rowItem.tag)};">#${rowItem.tag}</span></td><td>${rowItem.duration}</td><td style="color: var(--text-gray); font-size:13px;">${rowItem.range}</td><td><button class="delete-row-btn" onclick="openEditSessionModal(${absoluteArrayIndex})" title="Edit" style="margin-right: 6px; color: var(--accent-orange);">✎</button><button class="delete-row-btn" onclick="deleteIndividualSession(${absoluteArrayIndex})">✕</button></td>`;
+                tr.innerHTML = `<td>${rowItem.date}</td><td><strong>${escapeGoalHtml(rowItem.title)}</strong></td><td><span class="session-tag-indicator" style="color: ${getTagColor(rowItem.tag)};">#${escapeGoalHtml(rowItem.tag)}</span></td><td>${rowItem.duration}</td><td style="color: var(--text-gray); font-size:13px;">${rowItem.range}</td><td><button class="delete-row-btn" onclick="openEditSessionModal(${absoluteArrayIndex})" title="Edit" style="margin-right: 6px; color: var(--accent-orange);">✎</button><button class="delete-row-btn" onclick="deleteIndividualSession(${absoluteArrayIndex})">✕</button></td>`;
                 tableBody.appendChild(tr);
             });
             renderPaginationNodes(sessionsToShow.length);
