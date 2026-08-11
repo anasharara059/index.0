@@ -1521,42 +1521,46 @@
         async function initDatabaseAndLoad() {
             try {
                 await openLocalCache();
-                const savedSessions = await dbGet('sessions');
+                // Fire all reads at once instead of one-by-one: this alone cuts
+                // startup wait time roughly 8x since the round-trips overlap
+                // instead of queuing behind each other.
+                const [
+                    savedSessions, savedTags, savedGoals, savedHabits,
+                    savedStudyGoals, savedSelectedTag, savedQuickNotes,
+                    savedTheme, savedLanguage
+                ] = await Promise.all([
+                    dbGet('sessions'), dbGet('tags'), dbGet('goals'), dbGet('habits'),
+                    dbGet('studyGoals'), dbGet('selectedTag'), dbGet('timerQuickNotes'),
+                    dbGet('appTheme'), dbGet('language')
+                ]);
+
                 if (savedSessions !== undefined) archivedSessionsArray = savedSessions;
-                else await dbSet('sessions', archivedSessionsArray);
-                const savedTags = await dbGet('tags');
+                else dbSet('sessions', archivedSessionsArray);
                 if (savedTags !== undefined) currentTagsList = savedTags;
-                else await dbSet('tags', currentTagsList);
-                const savedGoals = await dbGet('goals');
+                else dbSet('tags', currentTagsList);
                 if (savedGoals !== undefined) goalsArray = savedGoals;
-                else await dbSet('goals', goalsArray);
-                const savedHabits = await dbGet('habits');
+                else dbSet('goals', goalsArray);
                 if (savedHabits !== undefined) habitsArray = savedHabits;
-                else await dbSet('habits', habitsArray);
-                const savedStudyGoals = await dbGet('studyGoals');
+                else dbSet('habits', habitsArray);
                 if (savedStudyGoals !== undefined) studyGoals = { ...studyGoals, ...savedStudyGoals };
-                else await dbSet('studyGoals', studyGoals);
-                const savedSelectedTag = await dbGet('selectedTag');
+                else dbSet('studyGoals', studyGoals);
                 if (savedSelectedTag !== undefined && currentTagsList.includes(savedSelectedTag)) currentlySelectedTag = savedSelectedTag;
-                else { currentlySelectedTag = currentTagsList[0] || currentlySelectedTag; await dbSet('selectedTag', currentlySelectedTag); }
-                const savedQuickNotes = await dbGet('timerQuickNotes');
+                else { currentlySelectedTag = currentTagsList[0] || currentlySelectedTag; dbSet('selectedTag', currentlySelectedTag); }
                 if (savedQuickNotes !== undefined) {
                     if (typeof savedQuickNotes === 'string') {
                         // migrate legacy single shared note into the current subject's note
                         timerQuickNotesMap = savedQuickNotes ? { [currentlySelectedTag]: savedQuickNotes } : {};
-                        await dbSet('timerQuickNotes', timerQuickNotesMap);
+                        dbSet('timerQuickNotes', timerQuickNotesMap);
                     } else {
                         timerQuickNotesMap = savedQuickNotes;
                     }
                 }
-                const savedTheme = await dbGet('appTheme');
                 if (savedTheme !== undefined) currentAppTheme = savedTheme;
-                const savedLanguage = await dbGet('language');
                 if (savedLanguage !== undefined) {
                     currentSystemLanguage = savedLanguage;
                     document.documentElement.setAttribute('dir', currentSystemLanguage === 'ar' ? 'rtl' : 'ltr');
                     document.documentElement.setAttribute('lang', currentSystemLanguage);
-                } else { await dbSet('language', currentSystemLanguage); }
+                } else { dbSet('language', currentSystemLanguage); }
                 await loadCustomTagColors();
             } catch (err) { console.error('DB init failed:', err); }
         }
@@ -1622,6 +1626,7 @@
             document.querySelectorAll('.screen-view').forEach(v => v.classList.remove('active-view'));
             document.querySelectorAll('.tab-trigger').forEach(b => b.classList.remove('active'));
             document.getElementById(screenId).classList.add('active-view');
+            try { localStorage.setItem('index_lastScreen', screenId); } catch (e) {}
             if (screenId === 'screen-timer') document.getElementById('nav-btn-timer').classList.add('active');
             if (screenId === 'screen-analysis') {
                 document.getElementById('nav-btn-analysis').classList.add('active');
@@ -4003,6 +4008,16 @@ let appHasBooted = false;
             renderWeeklySegmentedChart();
             renderStudyTrendChart();
             renderProductivityHeatTimeline();
+
+            // Reopen whatever screen you were last on instead of always
+            // landing back on the Timer tab.
+            try {
+                const lastScreen = localStorage.getItem('index_lastScreen');
+                const validScreens = ['screen-timer', 'screen-analysis', 'screen-goals', 'screen-habits', 'screen-admin'];
+                if (lastScreen && validScreens.includes(lastScreen) && lastScreen !== 'screen-timer') {
+                    activateScreen(null, lastScreen);
+                }
+            } catch (e) {}
         }
     </script>
 <script>
