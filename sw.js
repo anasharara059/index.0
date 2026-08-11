@@ -1,7 +1,7 @@
 // INDEX — Service Worker
 // Bump this version whenever index.html (or any cached asset) changes,
 // so returning users automatically get the fresh copy.
-const CACHE_VERSION = 'index-app-v1';
+const CACHE_VERSION = 'index-app-v2';
 const PRECACHE_URLS = [
   './',
   './index.html',
