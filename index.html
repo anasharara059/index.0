@@ -322,6 +322,11 @@
         .goal-task-text { flex: 1; font-size: 12.5px; color: var(--text-light); text-align: left; word-break: break-word; }
         html[dir="rtl"] .goal-task-text { text-align: right; }
         .goal-task-item.is-done .goal-task-text { color: var(--text-gray); }
+        .goal-task-wrapper { display: flex; flex-direction: column; gap: 6px; }
+        .goal-task-drag-handle { cursor: grab; touch-action: none; color: var(--text-gray); font-size: 15px; padding: 2px 4px; user-select: none; flex-shrink: 0; line-height: 1; }
+        .goal-task-drag-handle:active { cursor: grabbing; }
+        .goal-task-wrapper.is-dragging { opacity: 0.5; }
+        .goal-task-wrapper.is-dragging .goal-task-item { border-color: var(--accent-orange); box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
         .goal-task-text { cursor: pointer; }
         .lecture-reminders-panel { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; padding-left: 29px; }
         .lecture-reminders-panel.is-open { max-height: 400px; margin-top: 4px; }
@@ -2742,7 +2747,9 @@
                                 </div>`).join('')
                             : '';
                         return `
+                        <div class="goal-task-wrapper" data-task-id="${task.id}">
                         <div class="goal-task-item ${task.done ? 'is-done' : ''}">
+                            <div class="goal-task-drag-handle" title="${currentSystemLanguage === 'ar' ? 'اسحب لإعادة الترتيب' : 'Drag to reorder'}">⠿</div>
                             <div class="goal-task-checkbox ${task.done ? 'checked' : ''}" onclick="event.stopPropagation(); toggleGoalTaskDone('${goal.id}','${task.id}')">${task.done ? '✓' : ''}</div>
                             <div class="goal-task-text" onclick="toggleLectureReminderPanel('${task.id}')" title="${d.lectureRemindersHint || 'Click to add a review reminder'}">${escapeGoalHtml(task.text)}${totalReminders > 0 ? `<div class="timer-task-reminder-badge ${task.reminders.some(r => isReminderOverdue(r.date)) && !task.done ? 'is-overdue' : ''}">🔔 ${totalReminders}</div>` : ''}</div>
                             <button class="goal-task-delete" onclick="event.stopPropagation(); deleteGoalTask('${goal.id}','${task.id}')">✕</button>
@@ -2753,6 +2760,7 @@
                                 <input type="date" class="lecture-reminder-date-input" id="reminder-date-${task.id}">
                                 <button class="lecture-reminder-save-btn" onclick="addLectureReminder('${goal.id}','${task.id}')">${d.lectureReminderSaveBtn || 'Add reminder'}</button>
                             </div>
+                        </div>
                         </div>`;
                     }).join('')
                     : `<div class="goal-tasks-empty-hint">${d.goalTasksEmptyHint || 'No lectures yet — add one below.'}</div>`;
@@ -2778,8 +2786,56 @@
                         </div>
                     </div>`;
                 grid.appendChild(card);
+                const tasksListContainer = card.querySelector('.goal-tasks-list');
+                if (tasksListContainer) enableTaskDragAndDrop(tasksListContainer, goal.id);
             });
             refreshTimerSidebar();
+        }
+        function commitTaskOrder(container, goalId) {
+            const goal = goalsArray.find(g => g.id === goalId);
+            if (!goal) return;
+            const orderedIds = Array.from(container.querySelectorAll('.goal-task-wrapper')).map(w => w.dataset.taskId);
+            goal.tasks.sort((a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id));
+            dbSet('goals', goalsArray);
+        }
+        function enableTaskDragAndDrop(container, goalId) {
+            container.querySelectorAll('.goal-task-drag-handle').forEach(handle => {
+                handle.addEventListener('pointerdown', (e) => {
+                    if (e.button !== undefined && e.button !== 0) return;
+                    e.preventDefault();
+                    const wrapper = handle.closest('.goal-task-wrapper');
+                    if (!wrapper) return;
+                    let dragWrapper = wrapper;
+                    dragWrapper.classList.add('is-dragging');
+
+                    function onMove(ev) {
+                        if (!dragWrapper) return;
+                        const y = ev.clientY;
+                        const siblings = Array.from(container.querySelectorAll('.goal-task-wrapper')).filter(w => w !== dragWrapper);
+                        let target = null;
+                        for (const sib of siblings) {
+                            const rect = sib.getBoundingClientRect();
+                            const mid = rect.top + rect.height / 2;
+                            if (y < mid) { target = sib; break; }
+                        }
+                        if (target) container.insertBefore(dragWrapper, target);
+                        else container.appendChild(dragWrapper);
+                    }
+                    function onUp() {
+                        document.removeEventListener('pointermove', onMove);
+                        document.removeEventListener('pointerup', onUp);
+                        document.removeEventListener('pointercancel', onUp);
+                        if (dragWrapper) {
+                            dragWrapper.classList.remove('is-dragging');
+                            commitTaskOrder(container, goalId);
+                        }
+                        dragWrapper = null;
+                    }
+                    document.addEventListener('pointermove', onMove);
+                    document.addEventListener('pointerup', onUp, { once: true });
+                    document.addEventListener('pointercancel', onUp, { once: true });
+                });
+            });
         }
         function toggleGoalTasksPanel(goalId) {
             if (expandedGoalTasksSet.has(goalId)) expandedGoalTasksSet.delete(goalId);
