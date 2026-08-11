@@ -18,6 +18,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#08090d">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="INDEX">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <style>
         @import url('https://fonts.cdnfonts.com/css/digital-7-mono');
     </style>
@@ -564,6 +571,7 @@
             <button class="tab-trigger" onclick="activateScreen('admin-tab', 'screen-admin')" id="nav-btn-admin" style="display:none;">Admin ⚙️</button>
         </div>
         <div class="header-actions">
+            <button class="lang-button" id="pwa-install-btn" onclick="triggerPwaInstall()" title="Install INDEX as an app" style="display:none; background: var(--accent-orange); color:#000; font-weight:800; width:auto; padding:0 14px; gap:6px; font-size:12px;">⬇ <span id="pwa-install-btn-txt">Install App</span></button>
             <button class="lang-button" onclick="toggleAppTheme()" id="theme-toggle-btn" title="Toggle light/dark theme">🌙</button>
             <button class="export-btn" onclick="openGoalsSettingsModal()" id="btn-goals-settings" title="Study Goals">🎯 Goals</button>
             <div class="user-badge" id="user-badge" style="display:none;" onclick="toggleAccountMenu(event)" title="Account Options">
@@ -1043,6 +1051,7 @@
                 tagModalTitle: "Add New Subject", tagModalPlace: "Subject Name...", tagModalCancel: "Cancel", tagModalSave: "Add",
                 clearConfirm: "Are you sure you want to delete all study data?", deleteConfirm: "Do you want to delete this session?", modeSwitchConfirm: "You have an active/unfinished session. Switching mode now will save it as a completed session first. Continue?",
                 goalsHeaderTitle: "Subjects", goalsAddBtnTxt: "New Subject", goalsEmptyState: "No subjects yet — add your first one!",
+                pwaInstallBtnTxt: "Install App",
                 goalsBackBtnTxt: "Back", goalsAddBranchBtnTxt: "New Branch", goalsBranchEmptyState: "No branches yet — add your first one!",
                 subjectBranchSingular: "branch", subjectBranchPlural: "branches", goalsUnassignedGroup: "No Subject",
                 goalDeleteConfirm: "Do you want to delete this subject?", goalDeadlineDuePrefix: "Due", goalOverdueTxt: "Overdue", goalCompletedTxt: "Completed 🎉",
@@ -1126,6 +1135,7 @@
                 deleteConfirm: "هل تريد حذف هذه الجلسة الدراسية بعينها؟",
                 modeSwitchConfirm: "لديك جلسة شغالة أو لسا مخلصتش. تغيير الوضع الآن هيحفظها كجلسة منتهية أولاً. تريد المتابعة؟",
                 goalsHeaderTitle: "المواد الدراسية", goalsAddBtnTxt: "مادة جديدة", goalsEmptyState: "لسه معملتش أي مادة — ضيف أول مادة ليك دلوقتي!",
+                pwaInstallBtnTxt: "تثبيت التطبيق",
                 goalsBackBtnTxt: "رجوع", goalsAddBranchBtnTxt: "فرع جديد", goalsBranchEmptyState: "لسه مفيش فروع — ضيف أول فرع دلوقتي!",
                 subjectBranchSingular: "فرع", subjectBranchPlural: "فروع", goalsUnassignedGroup: "بدون مادة",
                 goalDeleteConfirm: "هل تريد حذف هذه المادة؟", goalDeadlineDuePrefix: "الموعد النهائي", goalOverdueTxt: "متأخر عن الموعد", goalCompletedTxt: "تم الإنجاز 🎉",
@@ -1704,6 +1714,8 @@
             const menuHint = document.getElementById('account-dropdown-hint');
             if (menuHint) menuHint.innerText = d.menuHint;
             document.getElementById('goals-header-title').innerText = d.goalsHeaderTitle;
+            const pwaBtnTxt = document.getElementById('pwa-install-btn-txt');
+            if (pwaBtnTxt) pwaBtnTxt.innerText = d.pwaInstallBtnTxt || 'Install App';
             document.getElementById('goals-add-btn-txt').innerText = d.goalsAddBtnTxt;
             document.getElementById('goals-empty-state').innerText = d.goalsEmptyState;
             document.getElementById('goal-modal-heading').innerText = d.goalModalHeading;
@@ -4004,21 +4016,32 @@ let appHasBooted = false;
     </script>
 <script>
         if ("serviceWorker" in navigator) {
-            const swCode = `self.addEventListener("install",e=>{e.waitUntil(caches.open("index-v1").then(c=>c.addAll(["/"])));self.skipWaiting()});self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))});`;
-            const swBlob = new Blob([swCode], {type: "application/javascript"});
-            const swUrl = URL.createObjectURL(swBlob);
-            navigator.serviceWorker.register(swUrl).catch(()=>{});
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("sw.js").catch((err) => {
+                    console.warn("[PWA] Service worker registration failed:", err);
+                });
+            });
         }
-        let deferredPrompt;
-        window.addEventListener("beforeinstallprompt", e => {
+        let deferredInstallPrompt = null;
+        window.addEventListener("beforeinstallprompt", (e) => {
             e.preventDefault();
-            deferredPrompt = e;
-            setTimeout(() => {
-                if (confirm("Install INDEX as an app on your device?")) {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
-                }
-            }, 3000);
+            deferredInstallPrompt = e;
+            const btn = document.getElementById("pwa-install-btn");
+            if (btn) btn.style.display = "flex";
+        });
+        function triggerPwaInstall() {
+            const btn = document.getElementById("pwa-install-btn");
+            if (!deferredInstallPrompt) { if (btn) btn.style.display = "none"; return; }
+            deferredInstallPrompt.prompt();
+            deferredInstallPrompt.userChoice.finally(() => {
+                deferredInstallPrompt = null;
+                if (btn) btn.style.display = "none";
+            });
+        }
+        window.addEventListener("appinstalled", () => {
+            const btn = document.getElementById("pwa-install-btn");
+            if (btn) btn.style.display = "none";
+            deferredInstallPrompt = null;
         });
     </script>
 </body>
