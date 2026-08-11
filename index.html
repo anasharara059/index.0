@@ -1410,8 +1410,9 @@
                     status: 'approved', isAdmin: true, requestedAt: Date.now(), respondedAt: Date.now()
                 });
                 ACCESS_REF.on('value', renderAdminAccessList);
-                await bootApp();
-                hideAllAuthOverlays();
+                try { await bootApp(); }
+                catch (err) { console.error('bootApp failed:', err); }
+                finally { hideAllAuthOverlays(); }
                 return;
             }
 
@@ -1430,8 +1431,12 @@
                     // Keep the loading spinner up while data is fetched so the
                     // screen doesn't briefly flash empty/default content before
                     // your real sessions, goals, and habits are rendered in.
-                    await bootApp();
-                    hideAllAuthOverlays();
+                    // The try/finally guarantees the overlay is always removed,
+                    // even if something in bootApp throws, so a bad session or
+                    // edge case can never leave the login screen stuck.
+                    try { await bootApp(); }
+                    catch (err) { console.error('bootApp failed:', err); }
+                    finally { hideAllAuthOverlays(); }
                 } else if (record.status === 'banned') {
                     hideAllAuthOverlays();
                     document.getElementById('access-revoked-overlay').classList.remove('hidden');
@@ -4016,21 +4021,21 @@ let appHasBooted = false;
             await initDatabaseAndLoad();
             await loadArchivedWeeks();
             await checkAndArchivePreviousWeek();
-            renderTagsChips();
-            refreshTimerDisplay();
-            loadTimerNotesForCurrentTag();
-            applySubjectTint();
-            applyAppTheme(currentAppTheme);
-            recalculateAndRenderDashboard();
-            renderHistoryGridWithPagination();
-            renderGoalsScreen();
-            refreshTimerSidebar();
-            renderHabitsScreen();
-            syncLanguageInterfaceStrings();
-            updateQuickStats();
-            renderWeeklySegmentedChart();
-            renderStudyTrendChart();
-            renderProductivityHeatTimeline();
+            // Each of these renders an independent part of the UI. Wrapping
+            // each one individually means a problem in one (e.g. an empty
+            // chart for a brand-new account) can't stop the rest of the app
+            // from loading and showing.
+            const steps = [
+                renderTagsChips, refreshTimerDisplay, loadTimerNotesForCurrentTag,
+                applySubjectTint, () => applyAppTheme(currentAppTheme),
+                recalculateAndRenderDashboard, renderHistoryGridWithPagination,
+                renderGoalsScreen, refreshTimerSidebar, renderHabitsScreen,
+                syncLanguageInterfaceStrings, updateQuickStats,
+                renderWeeklySegmentedChart, renderStudyTrendChart, renderProductivityHeatTimeline
+            ];
+            for (const step of steps) {
+                try { step(); } catch (err) { console.error('bootApp step failed:', err); }
+            }
 
             // Reopen whatever screen you were last on instead of always
             // landing back on the Timer tab.
