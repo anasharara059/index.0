@@ -22,36 +22,38 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         :root {
-            /* Core surfaces — deep, slightly cool charcoal for a clinical/academic feel */
-            --bg-deep: #0a0b0e;
-            --bg-surface: #101218;
-            --bg-surface-2: #15171f;
-            --bg-surface-3: #1b1e28;
-            --panel-bg: color-mix(in srgb, var(--bg-surface) 72%, transparent);
+            /* Core surfaces — deep, near-neutral charcoal. Differences between
+               levels are deliberately subtle: depth from contrast, not glow. */
+            --bg-deep: #0a0a0c;
+            --bg-surface: #0f0f13;
+            --bg-surface-2: #141419;
+            --bg-surface-3: #191a20;
+            --panel-bg: color-mix(in srgb, var(--bg-surface) 88%, transparent);
 
-            /* Accent — muted, refined gold used sparingly */
-            --accent-orange: #c9974f;
-            --accent-orange-dim: #a97f42;
-            --accent-purple: #4a6fa0;
-            --accent-purple-dim: #3a5580;
+            /* Accent — a single restrained gold, used only for emphasis */
+            --accent-orange: #b9944f;
+            --accent-orange-dim: #9c7d43;
+            --accent-orange-soft: rgba(185, 148, 79, 0.1);
+            --accent-purple: #46618a;
+            --accent-purple-dim: #384d6d;
 
             /* Typography */
-            --text-light: #f0eee8;
-            --text-gray: #8a8e9c;
-            --text-dim: #5c6070;
+            --text-light: #ececea;
+            --text-gray: #8b8c92;
+            --text-dim: #5a5b62;
 
-            /* Borders */
-            --border-glow: rgba(74, 111, 160, 0.14);
-            --border-soft: rgba(255, 255, 255, 0.055);
-            --border-medium: rgba(255, 255, 255, 0.1);
-            --border-strong: rgba(255, 255, 255, 0.16);
-            --panel-accent: rgba(201, 151, 79, 0.09);
+            /* Borders — thin, low-contrast; the primary depth cue */
+            --border-glow: rgba(70, 97, 138, 0.12);
+            --border-soft: rgba(255, 255, 255, 0.045);
+            --border-medium: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.13);
+            --panel-accent: rgba(185, 148, 79, 0.07);
 
             /* Status */
-            --success: #2fbf78;
-            --danger: #e0594a;
-            --warning: #e0a23c;
-            --info: #4a90d9;
+            --success: #379164;
+            --danger: #b5493b;
+            --warning: #b3843a;
+            --info: #3f7bab;
             --color-medicine: #3498db;
             --color-surgery: #e67e22;
             --color-anatomy: #1abc9c;
@@ -59,54 +61,73 @@
             --color-pediatrics: #2ecc71;
             --color-generic: #9b59b6;
 
-            /* Radius scale */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 18px;
-            --radius-xl: 24px;
+            /* Radius — modest, consistent; nothing oversized or pill-shaped by default */
+            --radius-sm: 6px;
+            --radius-md: 9px;
+            --radius-lg: 13px;
+            --radius-xl: 16px;
 
-            /* Elevation */
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
-            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.45);
-            --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            /* Elevation — quiet and close; no diffuse glow */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.28);
+            --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.34);
+            --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.025);
 
-            /* Motion */
+            /* Motion — brief, purposeful */
             --ease: cubic-bezier(0.4, 0, 0.2, 1);
-            --dur-fast: 0.15s;
-            --dur: 0.25s;
-            --dur-slow: 0.45s;
+            --dur-fast: 0.12s;
+            --dur: 0.2s;
+            --dur-slow: 0.35s;
+
+            /* Spacing scale (4px base) */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 24px;
+            --space-6: 32px;
+            --space-7: 48px;
+            --space-8: 64px;
+
+            /* Type scale */
+            --text-xs: 11px;
+            --text-sm: 12.5px;
+            --text-base: 14px;
+            --text-md: 15px;
+            --text-lg: 18px;
+            --text-xl: 22px;
+            --text-display: 32px;
 
             /* Type families */
             --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             --font-serif: 'Source Serif 4', Georgia, serif;
         }
         [data-theme="light"] {
-            --bg-deep: #f3efe6;
-            --bg-surface: #faf7f0;
-            --bg-surface-2: #ffffff;
-            --bg-surface-3: #f3efe6;
-            --text-light: #201d1a;
+            --bg-deep: #f1ede4;
+            --bg-surface: #f8f5ee;
+            --bg-surface-2: #fffdf9;
+            --bg-surface-3: #f1ede4;
+            --text-light: #221f1b;
             --text-gray: #6b6458;
             --text-dim: #948c7d;
-            --border-glow: rgba(74, 111, 160, 0.12);
-            --border-soft: rgba(32, 29, 26, 0.08);
-            --border-medium: rgba(32, 29, 26, 0.12);
-            --border-strong: rgba(32, 29, 26, 0.2);
-            --panel-accent: rgba(201, 151, 79, 0.14);
-            --shadow-sm: 0 2px 8px rgba(32, 29, 26, 0.06);
-            --shadow-md: 0 8px 24px rgba(32, 29, 26, 0.08);
-            --shadow-lg: 0 20px 50px rgba(32, 29, 26, 0.1);
+            --border-glow: rgba(70, 97, 138, 0.1);
+            --border-soft: rgba(34, 31, 27, 0.07);
+            --border-medium: rgba(34, 31, 27, 0.11);
+            --border-strong: rgba(34, 31, 27, 0.18);
+            --panel-accent: rgba(185, 148, 79, 0.12);
+            --shadow-sm: 0 1px 2px rgba(34, 31, 27, 0.05);
+            --shadow-md: 0 4px 14px rgba(34, 31, 27, 0.07);
+            --shadow-lg: 0 10px 28px rgba(34, 31, 27, 0.09);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-sans); user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         html { color-scheme: dark; }
         html[data-theme="light"] { color-scheme: light; }
-        body { background-color: var(--bg-deep); background-image: radial-gradient(ellipse 1200px 600px at 50% -10%, color-mix(in srgb, var(--accent-purple) 5%, transparent), transparent 60%); color: var(--text-light); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; transition: background-color 0.3s ease, color 0.3s ease; font-size: 14px; letter-spacing: -0.01em; line-height: 1.5; }
-        h1, h2, h3, h4 { font-family: var(--font-serif); letter-spacing: 0; }
-        ::selection { background: color-mix(in srgb, var(--accent-orange) 30%, transparent); color: var(--text-light); }
+        body { background-color: var(--bg-deep); color: var(--text-light); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; transition: background-color 0.3s ease, color 0.3s ease; font-size: var(--text-base); letter-spacing: -0.006em; line-height: 1.55; }
+        h1, h2, h3, h4 { font-family: var(--font-serif); letter-spacing: 0; font-weight: 600; }
+        ::selection { background: color-mix(in srgb, var(--accent-orange) 25%, transparent); color: var(--text-light); }
         button, input, textarea, select { font-family: inherit; }
         button { cursor: pointer; }
-        :focus-visible { outline: 2px solid color-mix(in srgb, var(--accent-orange) 55%, transparent); outline-offset: 2px; }
+        :focus-visible { outline: 1.5px solid color-mix(in srgb, var(--accent-orange) 45%, transparent); outline-offset: 2px; }
         html[dir="ltr"] body { direction: ltr; }
         html[dir="rtl"] body { direction: rtl; }
         ::-webkit-scrollbar { width: 6px; }
@@ -908,6 +929,86 @@
             .fullscreen-overlay-container { gap: 32px; }
             .fullscreen-overlay-container .controls-button-group { flex-wrap: wrap; justify-content: center; max-width: 90vw; }
         }
+
+        /* =====================================================
+           GLOBAL VISUAL IDENTITY — calmer, more academic finish.
+           Cross-cutting chrome only (header, dialogs, generic inputs).
+           No screen content, logic, or data affected.
+           ===================================================== */
+
+        /* Header: less glass, more quiet card-on-canvas */
+        .header-navigation { backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg-deep) 90%, transparent); }
+        .logo-area { font-size: 21px; letter-spacing: 0.1px; }
+        .logo-area::after { background: var(--accent-orange-dim); }
+
+        /* Account dropdown: flat surface instead of a glowing gradient panel */
+        .account-dropdown-menu {
+            background: var(--bg-surface-2);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: none;
+        }
+        .account-dropdown-menu::before { opacity: 0.35; height: 2px; }
+        .account-menu-item:hover { background: color-mix(in srgb, var(--text-light) 4%, transparent); color: var(--accent-orange); }
+
+        /* Modal / dialog system: shared by every screen — flat, quiet, precise */
+        .modal-overlay { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px); }
+        .modal-box {
+            background: var(--bg-surface-2);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+        .modal-box h3 { font-size: var(--text-lg); font-weight: 600; color: var(--text-light); margin-bottom: var(--space-5); letter-spacing: 0; }
+        .modal-box .field-label { font-size: var(--text-xs); letter-spacing: 0.6px; color: var(--text-dim); }
+        .modal-box input, .modal-box select {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-soft);
+            border-radius: var(--radius-md);
+            font-size: var(--text-md);
+            font-weight: 500;
+            padding: 11px 12px;
+            transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background var(--dur) var(--ease);
+        }
+        .modal-box input:focus, .modal-box select:focus {
+            border-color: var(--accent-orange-dim);
+            box-shadow: 0 0 0 3px var(--accent-orange-soft);
+            background: var(--bg-surface-3);
+        }
+        .modal-btn { border-radius: var(--radius-md); font-weight: 600; font-size: var(--text-sm); letter-spacing: 0.2px; transition: background var(--dur) var(--ease), transform var(--dur-fast) var(--ease), box-shadow var(--dur) var(--ease); }
+        .modal-btn.confirm { background: var(--accent-orange); color: #14120c; }
+        .modal-btn.confirm:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); background: var(--accent-orange-dim); }
+        .modal-btn.cancel:hover { transform: translateY(-1px); }
+
+        /* Toasts: calmer surface, no oversized shadow */
+        .toast { background: var(--bg-surface-2); box-shadow: var(--shadow-md); border-radius: var(--radius-md); }
+
+        /* Generic form controls anywhere in the app that aren't already
+           covered by a component-specific rule — a sane, quiet default. */
+        input[type="text"], input[type="number"], input[type="date"], input[type="email"],
+        input[type="password"], textarea, select {
+            color: var(--text-light);
+            border-radius: var(--radius-md);
+        }
+        input::placeholder, textarea::placeholder { color: var(--text-dim); }
+
+        /* Global card/surface language: thin border + quiet shadow, no oversized radii */
+        .metric-card-box, .charts-container-box, .goal-card, .habit-card, .auth-card {
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        .timer-side-panel, .modal-box { border-radius: var(--radius-lg); }
+        .timer-3col-grid, .modal-box, .auth-card { border-radius: var(--radius-lg); }
+
+        /* Reduce shimmer/gradient intensity on progress fills app-wide */
+        .chart-progress-fill::after { animation-duration: 2.6s; }
+
+        /* Auth card: flatten from glass to quiet surface */
+        .auth-card { background: var(--bg-surface-2); backdrop-filter: none; border: 1px solid var(--border-medium); }
+        .auth-logo { color: var(--text-light); font-weight: 600; }
+        .google-signin-btn { border-radius: var(--radius-md); }
     </style>
 <base target="_blank">
 </head>
