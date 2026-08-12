@@ -608,7 +608,7 @@
         /* session statistics — quiet stat bar */
         #screen-timer .quick-stats-row { gap: 0; border: 1px solid var(--t-hairline); border-radius: 3px; overflow: hidden; }
         #screen-timer .quick-stat-chip { background: transparent; border: none; border-radius: 0; padding: 16px 22px; flex: 1; justify-content: center; }
-        #screen-timer .quick-stat-chip + .quick-stat-chip { border-left: 1px solid var(--t-hairline-soft); }
+        #screen-timer .quick-stat-chip + .quick-stat-chip { border-inline-start: 1px solid var(--t-hairline-soft); }
         #screen-timer .quick-stat-chip:hover { transform: none; border-color: transparent; }
         #screen-timer .quick-stat-chip strong { font-family: var(--t-serif); font-size: 19px; font-weight: 700; }
         #screen-timer .quick-stat-chip span { font-family: system-ui, sans-serif; letter-spacing: 0.3px; }
@@ -628,6 +628,62 @@
         #screen-timer .timer-tasks-empty { border: 1px dashed var(--t-hairline); border-radius: 3px; color: var(--t-ink-dim); }
         #screen-timer .timer-quick-add-row { border-top: 1px solid var(--t-hairline-soft); }
         #screen-timer .timer-quick-add-goal { background: var(--t-surface-2); border: 1px solid var(--t-hairline); border-radius: 3px; color: var(--t-ink); font-family: system-ui, sans-serif; }
+
+        /* ============ Final polish: precision, states, consistency ============ */
+
+        /* Purposeful, fast transitions instead of generic 'all 0.3s' */
+        #screen-timer .word-control-btn, #focus-overlay .word-control-btn { transition: color .18s ease, background-color .18s ease, border-color .18s ease, transform .15s cubic-bezier(.4,0,.2,1); }
+        #screen-timer .word-control-btn:active, #focus-overlay .word-control-btn:active { transform: translateY(0) scale(0.97); }
+        #screen-timer .mode-button { transition: color .18s ease, border-color .18s ease; }
+        #screen-timer .mini-tag-chip, #screen-timer .mini-tag-add-btn { transition: color .18s ease, background-color .18s ease, border-color .18s ease; }
+        #screen-timer .quick-stat-chip { transition: background-color .18s ease; }
+        #screen-timer .timer-task-item { transition: border-color .18s ease, background-color .18s ease; }
+        #screen-timer .timer-notes-textarea, #screen-timer .timer-current-subject-pill, #screen-timer .timer-quick-add-goal { transition: border-color .18s ease; }
+        #screen-timer .timer-circle-widget { transition: transform .25s cubic-bezier(.4,0,.2,1); }
+        #screen-timer .linked-goal-empty-cta, #screen-timer .timer-notes-clear-btn, #screen-timer .timer-task-delete { transition: color .18s ease, border-color .18s ease, background-color .18s ease; }
+
+        /* Quiet, on-brand keyboard focus states */
+        #screen-timer button:focus-visible, #screen-timer input:focus-visible, #screen-timer textarea:focus-visible, #screen-timer select:focus-visible,
+        #focus-overlay button:focus-visible { outline: 1.5px solid var(--t-gold-soft); outline-offset: 2px; }
+
+        /* Checkbox aligned to the restrained gold system, no neon glow */
+        #screen-timer .goal-task-checkbox { border-radius: 3px; border-color: var(--t-hairline); background: var(--t-surface-2); transition: border-color .18s ease, background-color .18s ease; }
+        #screen-timer .goal-task-checkbox:hover { border-color: var(--t-gold-soft); }
+        #screen-timer .goal-task-checkbox.checked { background: var(--t-gold); border-color: var(--t-gold); box-shadow: none; color: #14100a; }
+        #screen-timer .timer-task-item .goal-task-checkbox { border-radius: 3px; }
+        #screen-timer .timer-task-delete { border-radius: 3px; }
+        #screen-timer .timer-task-delete:hover { background: color-mix(in srgb, var(--t-danger) 10%, transparent); }
+
+        /* Exam-mode banner in the same restrained danger tone as the rest of the screen */
+        #screen-timer .exam-mode-banner { background: color-mix(in srgb, var(--t-danger) 12%, transparent); border: 1px solid color-mix(in srgb, var(--t-danger) 35%, transparent); color: var(--t-danger); border-radius: 3px; font-family: system-ui, sans-serif; letter-spacing: 0.3px; }
+
+        /* Scrollbars inside the timer screen pick up the same palette */
+        #screen-timer .timer-tasks-panel-list::-webkit-scrollbar-thumb, #screen-timer .timer-side-panel::-webkit-scrollbar-thumb { background: var(--t-hairline); }
+        #screen-timer .timer-tasks-panel-list::-webkit-scrollbar-thumb:hover, #screen-timer .timer-side-panel::-webkit-scrollbar-thumb:hover { background: var(--t-gold-soft); }
+        #screen-timer .timer-tasks-panel-list::-webkit-scrollbar-track, #screen-timer .timer-side-panel::-webkit-scrollbar-track { background: transparent; }
+
+        /* Deliberate spacing rhythm around the focal timer, rather than one flat gap */
+        #screen-timer .timer-screen-layout { gap: 24px; }
+        #screen-timer .timer-circle-widget { margin: 8px 0; }
+        #screen-timer .quick-stats-row { margin-top: 10px; }
+        #screen-timer .timer-tasks-empty { font-family: system-ui, sans-serif; letter-spacing: 0.2px; }
+
+        /* Session title measured to the same column width as the circle beneath it */
+        #screen-timer .session-title-field { width: 100%; max-width: 440px; padding: 8px 4px; }
+
+        /* Responsive: keep proportion and spacing intentional at each breakpoint */
+        @media (max-width: 1250px) {
+            #screen-timer .timer-side-panel { padding: 28px 24px; }
+            #screen-timer .timer-circle-widget { margin: 4px 0; }
+        }
+        @media (max-width: 768px) {
+            #screen-timer .word-control-btn, #focus-overlay .word-control-btn { padding: 12px 20px; letter-spacing: 1.1px; }
+            #screen-timer .quick-stats-row { flex-wrap: wrap; }
+            #screen-timer .quick-stat-chip { flex: 1 1 50%; border-block-end: 1px solid var(--t-hairline-soft); }
+            #screen-timer .quick-stat-chip:nth-last-child(-n+2) { border-block-end: none; }
+            #screen-timer .quick-stat-chip:nth-child(odd) { border-inline-start: none; }
+            #screen-timer .timer-side-panel { padding: 24px 20px; }
+        }
     </style>
 <base target="_blank">
 </head>
