@@ -185,9 +185,8 @@
         .mini-tag-chip:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--text-light) 15%, transparent); }
         .mini-tag-chip.selected { background: rgba(217, 165, 74, 0.16); border-color: var(--accent-orange); color: var(--accent-orange); font-weight: 700; box-shadow: 0 4px 15px rgba(217, 165, 74, 0.2); }
         .mini-tag-chip .tag-color-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .mini-tag-chip .remove-icon { font-weight: bold; color: var(--danger); cursor: pointer; opacity: 0; width: 0; overflow: hidden; display: inline-block; text-align: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .mini-tag-chip:hover .remove-icon { opacity: 1; width: 14px; margin-left: 6px; }
-        html[dir="rtl"] .mini-tag-chip:hover .remove-icon { margin-left: 0; margin-right: 6px; }
+        .mini-tag-chip .remove-icon { font-weight: bold; color: var(--danger); cursor: pointer; opacity: 0; width: 14px; margin-inline-start: 6px; overflow: hidden; display: inline-block; text-align: center; pointer-events: none; transition: opacity 0.2s ease; }
+        .mini-tag-chip:hover .remove-icon { opacity: 1; pointer-events: auto; }
         .mini-tag-add-btn { width: 36px; height: 36px; border-radius: 50%; background: color-mix(in srgb, var(--text-light) 3%, transparent); border: 1.5px dashed var(--text-gray); color: var(--text-gray); display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 20px; font-weight: 400; transition: all 0.3s ease; }
         .mini-tag-add-btn:hover { border-color: var(--accent-purple); color: var(--accent-purple); background: rgba(62, 92, 138, 0.1); transform: scale(1.1) rotate(90deg); }
         .analysis-screen-layout { animation: fadeIn 0.5s ease-out; }
