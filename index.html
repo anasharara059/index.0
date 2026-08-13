@@ -684,6 +684,80 @@
             #screen-timer .timer-side-panel { padding: 24px 20px; }
         }
     </style>
+    <style id="analysis-visual-refinement">
+        /* ============ Analysis screen — same flat / hairline / serif language as the Timer ============ */
+        #screen-analysis {
+            --a-surface: color-mix(in srgb, var(--bg-deep) 92%, var(--text-light) 8%);
+            --a-surface-2: color-mix(in srgb, var(--bg-deep) 87%, var(--text-light) 13%);
+            --a-hairline: color-mix(in srgb, var(--text-light) 13%, transparent);
+            --a-hairline-soft: color-mix(in srgb, var(--text-light) 7%, transparent);
+            --a-gold: #c9a463;
+            --a-gold-soft: color-mix(in srgb, var(--a-gold) 40%, transparent);
+            --a-gold-wash: color-mix(in srgb, var(--a-gold) 9%, transparent);
+            --a-ink: var(--text-light);
+            --a-ink-dim: color-mix(in srgb, var(--text-gray) 90%, var(--a-gold) 10%);
+            --a-serif: 'Source Serif 4', Georgia, serif;
+        }
+        #screen-analysis.analysis-screen-layout { animation: fadeIn 0.5s ease-out; }
+        #screen-analysis .dashboard-scaled-panel { gap: 30px; }
+
+        /* section headers — same masthead treatment as the session title */
+        #screen-analysis .dash-section-header { font-family: var(--a-serif); font-size: 19px; font-weight: 600; letter-spacing: 0.2px; border-bottom: 1px solid var(--a-hairline); padding-bottom: 14px; }
+
+        /* metric cards — flat graphite surfaces, hairline edges, no gradient/glow */
+        #screen-analysis .metric-card-box { background: var(--a-surface); border: 1px solid var(--a-hairline); border-radius: 3px; padding: 26px; box-shadow: none; transition: border-color .18s ease; }
+        #screen-analysis .metric-card-box::before { display: none; }
+        #screen-analysis .metric-card-box:hover { transform: none; border-color: var(--a-gold-soft); box-shadow: none; }
+        #screen-analysis .metric-text-group .label { font-family: var(--a-serif); font-weight: 600; letter-spacing: 0.5px; text-transform: none; color: var(--a-ink-dim); font-size: 12.5px; }
+        #screen-analysis .value-wrapper .value { font-family: var(--a-serif); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--a-ink); animation: none; }
+        #screen-analysis .value-wrapper .unit { font-family: system-ui, sans-serif; color: var(--a-ink-dim); }
+        #screen-analysis .metric-text-group .subtext { font-family: system-ui, sans-serif; letter-spacing: 0.2px; }
+        #screen-analysis .subtext.green { color: color-mix(in srgb, var(--success) 65%, var(--a-ink-dim) 35%); }
+        #screen-analysis .subtext.orange { color: var(--a-gold); }
+        #screen-analysis .subtext.red { color: color-mix(in srgb, var(--danger) 58%, var(--a-ink-dim) 42%); }
+        #screen-analysis .mini-ring-bg { stroke: var(--a-hairline); }
+        #screen-analysis .mini-ring-fill { filter: none; }
+        #screen-analysis .mini-ring-fill.fill-orange { stroke: var(--a-gold); }
+        #screen-analysis .mini-ring-text { font-family: var(--a-serif); font-weight: 600; }
+
+        /* chart / breakdown panels — same panel treatment as the side panels on Timer */
+        #screen-analysis .charts-container-box { background: var(--a-surface); border: 1px solid var(--a-hairline); border-radius: 3px; padding: 26px; transition: border-color .18s ease; box-shadow: none; }
+        #screen-analysis .charts-container-box:hover { border-color: var(--a-gold-soft); box-shadow: none; }
+        #screen-analysis .charts-box-title { font-family: var(--a-serif); font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: none; color: var(--a-ink-dim); padding-bottom: 14px; border-bottom: 1px solid var(--a-hairline-soft); margin-bottom: 18px; }
+        #screen-analysis .weekly-day-label { font-family: system-ui, sans-serif; color: var(--a-ink-dim); }
+        #screen-analysis .weekly-stacked-track { background: var(--a-hairline-soft); border-radius: 2px; }
+        #screen-analysis .chart-progress-labels { font-family: system-ui, sans-serif; color: var(--a-ink); }
+        #screen-analysis .chart-progress-rail { background: var(--a-hairline-soft); border-radius: 2px; }
+        #screen-analysis .chart-progress-fill { background: var(--a-gold); border-radius: 2px; }
+        #screen-analysis .chart-progress-fill::after { display: none; }
+
+        /* sessions log */
+        #screen-analysis .sessions-table-wrapper { border-radius: 3px; border-color: var(--a-hairline); }
+        #screen-analysis .sessions-history-table { font-family: system-ui, sans-serif; }
+        #screen-analysis .sessions-history-table th, #screen-analysis .sessions-history-table td { border-color: var(--a-hairline-soft); }
+        #screen-analysis .sessions-history-table th { font-family: var(--a-serif); font-weight: 600; letter-spacing: 1px; color: var(--a-ink-dim); background: transparent; }
+        #screen-analysis .sessions-history-table tr:hover td { background: var(--a-surface-2); }
+        #screen-analysis .session-tag-indicator { border-radius: 3px; background: var(--a-surface-2); border: 1px solid var(--a-hairline); }
+        #screen-analysis .delete-row-btn { border-radius: 3px; }
+
+        #screen-analysis .search-filter-bar { gap: 10px; }
+        #screen-analysis .search-input, #screen-analysis .filter-select { background: var(--a-surface-2); border: 1px solid var(--a-hairline); border-radius: 3px; color: var(--a-ink); font-family: system-ui, sans-serif; transition: border-color .18s ease; }
+        #screen-analysis .search-input:focus, #screen-analysis .filter-select:focus { border-color: var(--a-gold-soft); box-shadow: none; }
+        #screen-analysis .search-input::placeholder { color: var(--a-ink-dim); }
+
+        #screen-analysis .pagination-page-node { border-radius: 3px; border-color: var(--a-hairline); color: var(--a-ink-dim); }
+        #screen-analysis .pagination-page-node.active-node { background: var(--a-gold); color: #14100a; box-shadow: none; }
+        #screen-analysis .pagination-page-node:hover:not(.active-node) { border-color: var(--a-gold-soft); color: var(--a-gold); }
+
+        /* "Add Past Session" — same restrained outline treatment as the Timer controls */
+        #screen-analysis .add-item-pill-btn { background: transparent; border: 1px solid var(--a-gold-soft); color: var(--a-gold); border-radius: 3px; font-family: system-ui, sans-serif; letter-spacing: 0.4px; box-shadow: none; transition: color .18s ease, background-color .18s ease, border-color .18s ease; }
+        #screen-analysis .add-item-pill-btn:hover { background: var(--a-gold-wash); transform: none; box-shadow: none; }
+
+        /* keyboard focus + scrollbars matched to the same restrained gold system */
+        #screen-analysis button:focus-visible, #screen-analysis input:focus-visible, #screen-analysis select:focus-visible { outline: 1.5px solid var(--a-gold-soft); outline-offset: 2px; }
+        #screen-analysis .sessions-table-wrapper::-webkit-scrollbar-thumb { background: var(--a-hairline); }
+        #screen-analysis .sessions-table-wrapper::-webkit-scrollbar-thumb:hover { background: var(--a-gold-soft); }
+    </style>
 <base target="_blank">
 </head>
 <body>
