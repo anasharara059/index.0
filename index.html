@@ -85,6 +85,21 @@
         .screen-view.active-view { display: block; }
         .timer-screen-layout { display: flex; flex-direction: column; align-items: center; gap: 30px; text-align: center; animation: fadeIn 0.6s ease-out; padding: 14px 8px 4px; }
         .timer-3col-grid { display: grid; grid-template-columns: 296px minmax(0, 1fr) 296px; gap: 32px; align-items: stretch; background: radial-gradient(ellipse 900px 480px at 50% 0%, color-mix(in srgb, var(--subject-tint, var(--accent-orange)) 9%, transparent), transparent 70%); border-radius: 28px; transition: background 0.6s ease; }
+        .daily-countdown-bar { display: flex; align-items: center; justify-content: center; gap: 26px; background: linear-gradient(160deg, color-mix(in srgb, var(--bg-deep) 65%, transparent), color-mix(in srgb, var(--bg-deep) 40%, transparent)); border: 1px solid var(--border-soft); border-radius: 18px; padding: 16px 24px; margin-bottom: 24px; animation: fadeIn 0.5s ease-out; }
+        .dcb-item { display: flex; align-items: baseline; gap: 8px; }
+        .dcb-icon { font-size: 15px; opacity: 0.85; }
+        .dcb-value { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; font-size: 20px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-light); }
+        .dcb-label { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-gray); }
+        .dcb-remaining .dcb-value { color: var(--accent-orange); }
+        .dcb-focused .dcb-value { color: var(--success); }
+        .dcb-available .dcb-value { color: var(--info); }
+        .dcb-available.dcb-negative .dcb-value { color: var(--danger); }
+        .dcb-sep { width: 1px; height: 26px; background: var(--border-soft); }
+        @media (max-width: 720px) { .daily-countdown-bar { flex-wrap: wrap; gap: 14px 20px; padding: 14px 16px; } .dcb-sep { display: none; } .dcb-value { font-size: 17px; } }
+        #screen-timer .daily-countdown-bar { background: var(--t-surface); border: 1px solid var(--t-hairline); border-radius: 3px; }
+        #screen-timer .dcb-label { font-family: var(--t-serif); color: var(--t-ink-dim); }
+        #screen-timer .dcb-remaining .dcb-value { color: var(--t-gold); }
+        #screen-timer .dcb-sep { background: var(--t-hairline-soft); }
         .timer-focal-column { display: flex; flex-direction: column; }
         .timer-context-block { display: flex; flex-direction: column; gap: 14px; }
         .timer-context-block + .timer-context-block { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--border-soft); }
@@ -839,6 +854,25 @@
     </div>
     <div class="screens-container">
         <div class="screen-view glass-card active-view" id="screen-timer">
+            <div class="daily-countdown-bar" id="daily-countdown-bar">
+                <div class="dcb-item dcb-remaining">
+                    <span class="dcb-icon">⏳</span>
+                    <span class="dcb-value" id="dcb-remaining-value">--:--:--</span>
+                    <span class="dcb-label" id="dcb-remaining-label">Remaining</span>
+                </div>
+                <div class="dcb-sep"></div>
+                <div class="dcb-item dcb-focused">
+                    <span class="dcb-icon">🔥</span>
+                    <span class="dcb-value" id="dcb-focused-value">--:--:--</span>
+                    <span class="dcb-label" id="dcb-focused-label">Focused</span>
+                </div>
+                <div class="dcb-sep"></div>
+                <div class="dcb-item dcb-available">
+                    <span class="dcb-icon">✅</span>
+                    <span class="dcb-value" id="dcb-available-value">--:--:--</span>
+                    <span class="dcb-label" id="dcb-available-label">Available</span>
+                </div>
+            </div>
             <div class="timer-3col-grid">
                 <div class="timer-side-panel timer-side-panel-left">
                     <div class="timer-context-block">
@@ -1307,6 +1341,7 @@
                 toastReminderAdded: "Reminder added!",
                 timerNotesHeader: "Quick Notes", timerNotesPlaceholder: "Jot down anything about this study session...",
                 timerCurrentSubjectLbl: "Current Subject", timerTasksHeader: "Study Tasks",
+                dcbRemainingLbl: "Remaining", dcbFocusedLbl: "Focused", dcbAvailableLbl: "Available",
                 timerTasksEmptyState: "No lectures yet. Add some from the Subjects tab.",
                 timerNotesClearConfirm: "Clear all notes?",
                 timerTasksFilterPending: "Pending", timerTasksFilterAll: "All", timerTasksFilterDone: "Done",
@@ -1391,6 +1426,7 @@
                 toastReminderAdded: "تم إضافة التذكير!",
                 timerNotesHeader: "ملاحظات سريعة", timerNotesPlaceholder: "دوّن أي حاجة عن الجلسة الدراسية دي...",
                 timerCurrentSubjectLbl: "المادة الحالية", timerTasksHeader: "المهام الدراسية",
+                dcbRemainingLbl: "المتبقي", dcbFocusedLbl: "التركيز", dcbAvailableLbl: "المتاح",
                 timerTasksEmptyState: "لسه مفيش محاضرات. ضيف شوية من تبويب المواد.",
                 timerNotesClearConfirm: "هل تريد مسح كل الملاحظات؟",
                 timerTasksFilterPending: "الحالية", timerTasksFilterAll: "الكل", timerTasksFilterDone: "المنجزة",
@@ -2000,6 +2036,12 @@
             if (timerNotesArea) timerNotesArea.placeholder = d.timerNotesPlaceholder;
             const timerSubjectLbl = document.getElementById('timer-current-subject-lbl');
             if (timerSubjectLbl) timerSubjectLbl.innerText = d.timerCurrentSubjectLbl;
+            const dcbRemainingLbl = document.getElementById('dcb-remaining-label');
+            if (dcbRemainingLbl) dcbRemainingLbl.innerText = d.dcbRemainingLbl;
+            const dcbFocusedLbl = document.getElementById('dcb-focused-label');
+            if (dcbFocusedLbl) dcbFocusedLbl.innerText = d.dcbFocusedLbl;
+            const dcbAvailableLbl = document.getElementById('dcb-available-label');
+            if (dcbAvailableLbl) dcbAvailableLbl.innerText = d.dcbAvailableLbl;
             const timerTasksHeader = document.getElementById('timer-tasks-header');
             if (timerTasksHeader) timerTasksHeader.innerText = d.timerTasksHeader;
             const tfPending = document.getElementById('tf-btn-pending');
@@ -2121,6 +2163,7 @@
                 archivedSessionsArray.unshift({
                     date: fullISODate, title: rawSessionTitle, tag: currentlySelectedTag,
                     duration: minutesFormattedString,
+                    durationSeconds: totalElapsedSecondsTracked,
                     range: combinedRange
                 });
                 dbSet('sessions', archivedSessionsArray);
@@ -2305,6 +2348,62 @@
             document.getElementById('qs-sessions').innerText = archivedSessionsArray.length;
             document.getElementById('qs-streak').innerText = streak;
         }
+
+        // ===================== Daily Countdown (fully independent of Analysis/Goals) =====================
+        // Working window: 7:00 AM -> 12:00 AM (midnight). Change these two values if your day is different.
+        const DAILY_WINDOW_START_HOUR = 7;
+        const DAILY_WINDOW_END_HOUR = 24; // 24 = midnight (next day 00:00)
+
+        function formatSecondsToHMS(totalSecondsRaw) {
+            const totalSeconds = Math.max(0, Math.round(totalSecondsRaw));
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function getDailyCountdownRemainingSeconds(now) {
+            const dayStart = new Date(now); dayStart.setHours(DAILY_WINDOW_START_HOUR, 0, 0, 0);
+            const dayEnd = new Date(now); dayEnd.setHours(DAILY_WINDOW_END_HOUR, 0, 0, 0);
+            const fullWindowSeconds = Math.round((dayEnd - dayStart) / 1000);
+            if (now <= dayStart) return fullWindowSeconds; // day hasn't started yet -> full budget still available
+            if (now >= dayEnd) return 0;
+            return Math.max(0, Math.round((dayEnd - now) / 1000));
+        }
+
+        function getFocusedSecondsToday(now) {
+            const todayISO = getLocalISODate(now);
+            let sum = archivedSessionsArray
+                .filter(s => s.date === todayISO)
+                .reduce((acc, s) => acc + (typeof s.durationSeconds === 'number' ? s.durationSeconds : (parseInt(s.duration) || 0) * 60), 0);
+            // Include the in-progress (running or paused-but-unsaved) session's elapsed time
+            if (currentSessionStartTimeStamp && totalElapsedSecondsTracked > 0) {
+                sum += totalElapsedSecondsTracked;
+            }
+            return sum;
+        }
+
+        function updateDailyCountdownWidget() {
+            const remainingEl = document.getElementById('dcb-remaining-value');
+            const focusedEl = document.getElementById('dcb-focused-value');
+            const availableEl = document.getElementById('dcb-available-value');
+            if (!remainingEl || !focusedEl || !availableEl) return;
+
+            const now = new Date();
+            const remainingSeconds = getDailyCountdownRemainingSeconds(now);
+            const focusedSeconds = getFocusedSecondsToday(now);
+            const availableSecondsRaw = remainingSeconds - focusedSeconds;
+
+            remainingEl.innerText = formatSecondsToHMS(remainingSeconds);
+            focusedEl.innerText = formatSecondsToHMS(focusedSeconds);
+            availableEl.innerText = formatSecondsToHMS(availableSecondsRaw);
+
+            const availableItem = availableEl.closest('.dcb-available');
+            if (availableItem) availableItem.classList.toggle('dcb-negative', availableSecondsRaw < 0);
+        }
+
+        // Ticks every second on its own clock, regardless of the Timer/Analysis/Goals state.
+        setInterval(updateDailyCountdownWidget, 1000);
 
         function recalculateAndRenderDashboard() {
             const todayISO = getLocalISODate(new Date());
@@ -4278,7 +4377,7 @@ let appHasBooted = false;
                 applySubjectTint, () => applyAppTheme(currentAppTheme),
                 recalculateAndRenderDashboard, renderHistoryGridWithPagination,
                 renderGoalsScreen, refreshTimerSidebar, renderHabitsScreen,
-                syncLanguageInterfaceStrings, updateQuickStats,
+                syncLanguageInterfaceStrings, updateQuickStats, updateDailyCountdownWidget,
                 renderWeeklySegmentedChart, renderStudyTrendChart, renderProductivityHeatTimeline
             ];
             for (const step of steps) {
