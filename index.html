@@ -270,6 +270,91 @@
         .filter-select { background: color-mix(in srgb, var(--text-light) 3%, transparent); border: 1px solid var(--border-soft); color: var(--text-light); padding: 10px 16px; border-radius: 12px; font-size: 13px; outline: none; cursor: pointer; min-width: 140px; }
         .filter-select:focus { border-color: var(--accent-orange); }
         .filter-select option { background: #141622; color: #fff; }
+        /* ================================================================
+           MINI FLOATING TIMER — fixed above every app screen
+           ================================================================ */
+        #mini-floating-timer {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 200000;
+            display: none;
+            align-items: center;
+            gap: 9px;
+            min-width: 154px;
+            height: 46px;
+            padding: 0 12px;
+            background: rgba(10, 11, 15, 0.94);
+            border: 1px solid rgba(217, 165, 74, 0.48);
+            border-radius: 7px;
+            box-shadow: 0 8px 28px rgba(0,0,0,.35), 0 0 18px rgba(217,165,74,.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            user-select: none;
+            cursor: grab;
+            pointer-events: auto;
+        }
+        #mini-floating-timer.is-visible { display: flex; }
+        #mini-floating-timer:active { cursor: grabbing; }
+        #mini-floating-timer .mini-timer-status {
+            width: 7px;
+            height: 7px;
+            min-width: 7px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            box-shadow: 0 0 8px rgba(217,165,74,.7);
+        }
+        #mini-floating-timer.paused .mini-timer-status {
+            background: var(--warning);
+            box-shadow: 0 0 8px rgba(243,156,18,.55);
+        }
+        #mini-floating-timer .mini-timer-time {
+            font-family: 'Digital-7 Mono', 'Courier New', monospace;
+            font-size: 21px;
+            line-height: 1;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent-orange);
+            white-space: nowrap;
+        }
+        #mini-floating-timer.paused .mini-timer-time { color: var(--warning); }
+        #mini-floating-timer .mini-timer-label {
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: .7px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            margin-left: 1px;
+        }
+        #mini-floating-timer .mini-timer-hide {
+            border: 0;
+            background: transparent;
+            color: var(--text-gray);
+            width: 20px;
+            height: 24px;
+            padding: 0;
+            margin-left: auto;
+            font-size: 14px;
+            line-height: 24px;
+            cursor: pointer;
+            opacity: .65;
+        }
+        #mini-floating-timer .mini-timer-hide:hover {
+            color: var(--text-light);
+            opacity: 1;
+        }
+        @media (max-width: 600px) {
+            #mini-floating-timer {
+                top: 10px;
+                right: 10px;
+                min-width: 145px;
+                height: 42px;
+                padding: 0 10px;
+            }
+            #mini-floating-timer .mini-timer-time { font-size: 18px; }
+        }
+
         .fullscreen-overlay-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-deep); z-index: 99999; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 40px; animation: fadeIn 0.4s ease-out; }
         .fullscreen-overlay-container.is-active { display: flex; }
         .fullscreen-overlay-container .timer-circle-widget { width: min(500px, 60vmin); height: min(500px, 60vmin); }
@@ -1204,7 +1289,14 @@
             </div>
         </div>
     </div>
-<div class="fullscreen-overlay-container" id="focus-overlay">
+<!-- Floating mini timer -->
+    <div id="mini-floating-timer" aria-live="polite" title="Drag to move">
+        <span class="mini-timer-status"></span>
+        <span class="mini-timer-time" id="mini-timer-numbers">00:25:00</span>
+        <span class="mini-timer-label">FOCUS</span>
+        <button class="mini-timer-hide" id="mini-timer-hide" type="button" aria-label="Hide timer">×</button>
+    </div>
+    <div class="fullscreen-overlay-container" id="focus-overlay">
         <div class="timer-circle-widget" onclick="openTimeEditModal()">
             <svg class="timer-svg" viewBox="0 0 360 360"><circle class="rail" cx="180" cy="180" r="174"></circle><circle class="fill-progress" id="fs-ring-filler" cx="180" cy="180" r="174"></circle></svg>
             <div class="timer-digits" id="fs-timer-numbers">25:00</div>
@@ -1266,6 +1358,8 @@
         // ----------------------------------------------------------------
         function stopAndSaveClock(isTimeout = false) {
             isClockRunning = false;
+            const miniTimerEl = document.getElementById('mini-floating-timer');
+            if (miniTimerEl) miniTimerEl.classList.remove('is-visible', 'paused');
             if (timerWorker) timerWorker.postMessage({ type: 'stop' });
             workerStartTime = null;
             workerPausedAccumulator = 0;
@@ -2105,6 +2199,11 @@
         function startClock() {
             if (isClockRunning) return;
             isClockRunning = true;
+            const miniTimerEl = document.getElementById('mini-floating-timer');
+            if (miniTimerEl) {
+                miniTimerEl.classList.add('is-visible');
+                miniTimerEl.classList.remove('paused');
+            }
             document.getElementById('timer-numbers').classList.add('running');
             document.getElementById('timer-numbers').classList.remove('paused');
             document.getElementById('ctrl-start').classList.add('active');
@@ -2128,6 +2227,8 @@
         function pauseClock() {
             if (!isClockRunning) return; // منع استدعاء التوقيف وهو أصلاً واقف عشان ما يضيعش وقت البووز غلط
             isClockRunning = false;
+            const miniTimerEl = document.getElementById('mini-floating-timer');
+            if (miniTimerEl) miniTimerEl.classList.add('is-visible', 'paused');
             workerLastPauseTime = Date.now();
             if (timerWorker) timerWorker.postMessage({ type: 'pause' });
             document.getElementById('timer-numbers').classList.remove('running');
@@ -2227,6 +2328,21 @@
             if (mainTimerEl) mainTimerEl.innerText = timeOutput;
             let fsTimerEl = document.getElementById('fs-timer-numbers');
             if (fsTimerEl) fsTimerEl.innerText = timeOutput;
+
+            // Floating timer mirrors the same clock as HH:MM:SS.
+            const miniTimerEl = document.getElementById('mini-floating-timer');
+            const miniTimerNumbers = document.getElementById('mini-timer-numbers');
+            if (miniTimerEl && miniTimerNumbers) {
+                const totalDisplaySeconds = Math.max(0, (runningMinutes * 60) + runningSeconds);
+                const miniHours = Math.floor(totalDisplaySeconds / 3600);
+                const miniMinutes = Math.floor((totalDisplaySeconds % 3600) / 60);
+                const miniSeconds = totalDisplaySeconds % 60;
+                miniTimerNumbers.innerText =
+                    `${miniHours.toString().padStart(2, '0')}:${miniMinutes.toString().padStart(2, '0')}:${miniSeconds.toString().padStart(2, '0')}`;
+                miniTimerEl.classList.toggle('is-visible', isClockRunning || totalElapsedSecondsTracked > 0);
+                miniTimerEl.classList.toggle('paused', !isClockRunning && totalElapsedSecondsTracked > 0);
+            }
+
             let computedPercentage = 0;
             if (currentMode === 'stopwatch') { computedPercentage = (runningSeconds / 60); }
             else {
@@ -2260,6 +2376,68 @@
             else overlay.classList.remove('is-active');
             refreshTimerDisplay();
         }
+
+        // Floating timer can be dragged anywhere and remembers its position.
+        (function initMiniFloatingTimer() {
+            const mini = document.getElementById('mini-floating-timer');
+            if (!mini) return;
+
+            const savedLeft = parseInt(localStorage.getItem('indexMiniTimerLeft'), 10);
+            const savedTop = parseInt(localStorage.getItem('indexMiniTimerTop'), 10);
+            if (Number.isFinite(savedLeft) && Number.isFinite(savedTop)) {
+                mini.style.left = `${Math.max(0, savedLeft)}px`;
+                mini.style.top = `${Math.max(0, savedTop)}px`;
+                mini.style.right = 'auto';
+            }
+
+            let dragging = false;
+            let moved = false;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            mini.addEventListener('pointerdown', function(e) {
+                if (e.target.closest('.mini-timer-hide')) return;
+                dragging = true;
+                moved = false;
+                const rect = mini.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+                mini.setPointerCapture(e.pointerId);
+            });
+
+            mini.addEventListener('pointermove', function(e) {
+                if (!dragging) return;
+                moved = true;
+                const maxLeft = Math.max(0, window.innerWidth - mini.offsetWidth);
+                const maxTop = Math.max(0, window.innerHeight - mini.offsetHeight);
+                mini.style.left = `${Math.max(0, Math.min(e.clientX - offsetX, maxLeft))}px`;
+                mini.style.top = `${Math.max(0, Math.min(e.clientY - offsetY, maxTop))}px`;
+                mini.style.right = 'auto';
+            });
+
+            mini.addEventListener('pointerup', function() {
+                if (!dragging) return;
+                dragging = false;
+                if (moved) {
+                    const rect = mini.getBoundingClientRect();
+                    localStorage.setItem('indexMiniTimerLeft', Math.round(rect.left));
+                    localStorage.setItem('indexMiniTimerTop', Math.round(rect.top));
+                }
+            });
+
+            document.getElementById('mini-timer-hide')?.addEventListener('click', function(e) {
+                e.stopPropagation();
+                mini.classList.remove('is-visible');
+            });
+
+            window.addEventListener('resize', function() {
+                if (!mini.classList.contains('is-visible')) return;
+                const rect = mini.getBoundingClientRect();
+                mini.style.left = `${Math.max(0, Math.min(rect.left, window.innerWidth - mini.offsetWidth))}px`;
+                mini.style.top = `${Math.max(0, Math.min(rect.top, window.innerHeight - mini.offsetHeight))}px`;
+                mini.style.right = 'auto';
+            });
+        })();
 
         function openTimeEditModal() { document.getElementById('modal-time-input').value = runningMinutes; document.getElementById('time-modal').classList.add('modal-open'); }
         function closeTimeEditModal() { document.getElementById('time-modal').classList.remove('modal-open'); }
