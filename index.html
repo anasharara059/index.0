@@ -613,7 +613,126 @@
             opacity: 1;
         }
                 @media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
-    </style>
+    
+/* ===== INDEX UX POLISH v3 ===== */
+:root {
+  --ux-green: #2f6f4e;
+  --ux-green-soft: rgba(47,111,78,.12);
+  --ux-stone: #8b7a68;
+  --ux-stone-soft: rgba(139,122,104,.12);
+  --ux-ink: #2a241f;
+  --ux-surface-day: #f5eee3;
+  --ux-surface-2-day: #fbf7f0;
+}
+
+/* Toasts — quieter, denser, more informative */
+.toast-container { top: 88px; right: 22px; left: auto; gap: 8px; width: min(380px, calc(100vw - 28px)); pointer-events: none; }
+html[dir="rtl"] .toast-container { right: auto; left: 22px; }
+.toast {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 13px 14px;
+  gap: 11px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--text-light) 10%, transparent);
+  background: color-mix(in srgb, var(--bg-deep) 94%, var(--text-light) 6%);
+  box-shadow: 0 16px 36px rgba(38,32,25,.14), 0 2px 8px rgba(38,32,25,.08);
+  backdrop-filter: blur(16px) saturate(1.05);
+  pointer-events: auto;
+  animation: uxToastIn .34s cubic-bezier(.22,1,.36,1);
+}
+.toast::before { content:""; width:3px; height:calc(100% - 18px); position:absolute; inset-inline-start:8px; top:9px; border-radius:99px; background:var(--toast-accent,var(--ux-green)); opacity:.9; }
+.toast.success { --toast-accent: var(--ux-green); }
+.toast.error { --toast-accent: #b94a3f; }
+.toast.warning { --toast-accent: #a36a12; }
+.toast.info { --toast-accent: #766553; }
+.toast-icon { width:26px; height:26px; display:grid; place-items:center; flex:none; border-radius:8px; background:color-mix(in srgb, var(--toast-accent) 11%, transparent); font-size:14px; }
+.toast-content { min-width:0; }
+.toast-title { font-size:12.5px; line-height:1.3; font-weight:800; letter-spacing:.1px; color:var(--text-light); }
+.toast-message { font-size:11.5px; line-height:1.45; color:var(--text-gray); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.toast-close { width:26px; height:26px; border-radius:8px; padding:0; font-size:13px; display:grid; place-items:center; background:transparent; }
+.toast-close:hover { background:color-mix(in srgb, var(--text-light) 7%, transparent); }
+.toast-progress { position:absolute; inset-inline:0; bottom:0; height:2px; background:var(--toast-accent,var(--ux-green)); transform-origin:var(--toast-origin, left); animation:uxToastProgress var(--toast-duration,3s) linear forwards; opacity:.6; }
+html[dir="rtl"] .toast-progress { --toast-origin:right; }
+.toast.removing { animation: uxToastOut .26s cubic-bezier(.55,0,.78,.2) forwards; }
+@keyframes uxToastIn { from { opacity:0; transform:translateY(-6px) scale(.985); } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes uxToastOut { to { opacity:0; transform:translateY(-4px) scale(.985); max-height:0; margin-block:0; padding-block:0; } }
+@keyframes uxToastProgress { from { transform:scaleX(1); } to { transform:scaleX(0); } }
+
+/* Empty states — clear hierarchy + gentle CTA-ready composition */
+.empty-state-box,
+.timer-tasks-empty,
+.goal-tasks-empty-hint {
+  position:relative;
+  background:color-mix(in srgb, var(--text-light) 2.5%, transparent);
+  border:1px dashed color-mix(in srgb, var(--text-light) 16%, transparent);
+  color:var(--text-gray);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+.empty-state-box { min-height:156px; display:none; align-items:center; justify-content:center; flex-direction:column; gap:7px; padding:28px 20px; }
+.empty-state-box::before { content:"✦"; width:36px; height:36px; display:grid; place-items:center; border-radius:11px; background:var(--ux-green-soft); color:var(--ux-green); font-size:16px; border:1px solid color-mix(in srgb, var(--ux-green) 28%, transparent); }
+.empty-state-box::after { content:"Start with one small item"; font-size:11px; font-weight:700; letter-spacing:.25px; color:color-mix(in srgb, var(--text-gray) 86%, transparent); }
+html[lang="ar"] .empty-state-box::after { content:"ابدأ بعنصر واحد صغير"; }
+.timer-tasks-empty { min-height:124px; display:grid; place-items:center; line-height:1.6; }
+.timer-tasks-empty::before { content:"◌"; display:block; width:30px; height:30px; line-height:28px; text-align:center; border-radius:9px; background:var(--ux-stone-soft); color:var(--ux-stone); margin:0 auto 7px; }
+
+/* Timer — focus-first hierarchy */
+#screen-timer .timer-3col-grid { gap:24px; }
+#screen-timer .timer-side-panel { border-radius:18px; padding:22px 20px; box-shadow:0 10px 28px rgba(41,34,28,.06); }
+#screen-timer .timer-current-subject-pill { border-radius:12px; padding:12px 14px; }
+#screen-timer .timer-mode-selector { background:color-mix(in srgb, var(--text-light) 4%, transparent); border-color:var(--border-soft); padding:4px; }
+#screen-timer .mode-button { padding:8px 16px; }
+#screen-timer .mode-button.active { background:var(--ux-green); color:#fff; box-shadow:0 5px 14px rgba(47,111,78,.2); }
+#screen-timer .timer-circle-widget { filter:drop-shadow(0 14px 24px rgba(49,42,34,.06)); }
+#screen-timer .timer-svg .fill-progress { filter:drop-shadow(0 0 5px color-mix(in srgb, var(--ux-green) 28%, transparent)); }
+#screen-timer .controls-button-group .word-control-btn { border-radius:11px; min-height:42px; }
+#screen-timer .controls-button-group .btn-start.active,
+#screen-timer .controls-button-group .btn-start:hover { background:var(--ux-green); border-color:var(--ux-green); color:#fff; box-shadow:0 8px 20px rgba(47,111,78,.17); }
+#screen-timer .session-info-badge { box-shadow:0 8px 22px rgba(38,32,25,.05); }
+#screen-timer .quick-stat-chip:hover,
+#screen-timer .mini-tag-chip:hover { transform:translateY(-2px); box-shadow:0 7px 18px rgba(38,32,25,.07); }
+
+/* Dashboard — editorial cards, less chrome */
+#screen-analysis .dashboard-scaled-panel { gap:26px; }
+#screen-analysis .dash-section-header { border-bottom:1px solid var(--border-soft); padding-bottom:10px; font-size:20px; }
+#screen-analysis .metric-card-box {
+  border-radius:16px;
+  padding:20px 22px;
+  background:color-mix(in srgb, var(--text-light) 2.2%, transparent);
+  box-shadow:0 7px 22px rgba(38,32,25,.045);
+}
+#screen-analysis .metric-card-box:hover { transform:translateY(-3px); box-shadow:0 14px 30px rgba(38,32,25,.08); border-color:color-mix(in srgb, var(--ux-green) 26%, var(--border-soft)); }
+#screen-analysis .metric-card-box::before { height:2px; background:var(--ux-green); }
+#screen-analysis .subtext.green { color:var(--ux-green); }
+#screen-analysis .mini-ring-fill.fill-green { stroke:var(--ux-green); filter:drop-shadow(0 0 3px rgba(47,111,78,.24)); }
+#screen-analysis .value-wrapper .value { letter-spacing:-.7px; }
+
+/* Micro-interactions: interactive surfaces only */
+button, .tab-trigger, .mode-button, .quick-stat-chip, .mini-tag-chip, .metric-card-box, .timer-task-item, .linked-goal-empty-cta { will-change:transform; }
+button:not(:disabled):active { transform:translateY(1px) scale(.985); }
+.tab-trigger, .mode-button, .lang-button, .clear-btn, .export-btn, .word-control-btn, .mini-tag-chip, .quick-stat-chip, .timer-task-item, .metric-card-box { transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease, color .18s ease; }
+:focus-visible { outline:2px solid color-mix(in srgb, var(--ux-green) 75%, white 25%); outline-offset:3px; border-radius:8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+}
+@media (max-width: 720px) {
+  .toast-container { top:72px; right:12px; left:12px; width:auto; }
+  html[dir="rtl"] .toast-container { left:12px; right:12px; }
+  #screen-analysis .metric-card-box { padding:18px; }
+}
+
+#screen-timer .timer-circle-widget.ux-running::after {
+  content:""; position:absolute; inset:8%; border-radius:50%; border:1px solid color-mix(in srgb, var(--ux-green) 16%, transparent); animation:uxFocusPulse 2.8s ease-in-out infinite;
+}
+#screen-timer .timer-circle-widget.ux-paused::after {
+  content:""; position:absolute; inset:9%; border-radius:50%; border:1px dashed color-mix(in srgb, var(--warning) 18%, transparent);
+}
+@keyframes uxFocusPulse { 0%,100%{opacity:.35;transform:scale(.99)} 50%{opacity:.8;transform:scale(1.01)} }
+</style>
     <style id="modern-day-theme">
         /* ===== Modern Day Theme: warm beige + stone + forest ===== */
         :root {
@@ -2456,15 +2575,52 @@
             return formatMinutesToHM(totalMinutes);
         }
 
-        function showToast(title, message, type = 'info', duration = 3000) {
+        function showToast(title, message, type = 'info', duration = 3200) {
             const container = document.getElementById('toast-container');
+            if (!container) return;
             const toast = document.createElement('div');
-            toast.className = 'toast';
-            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
-            toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
+            toast.className = `toast ${type}`;
+            toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
+            const icons = { success: '✓', error: '!', warning: '⚠', info: 'i' };
+            const safeTitle = String(title ?? '');
+            const safeMessage = String(message ?? '');
+            toast.innerHTML = `<span class="toast-icon" aria-hidden="true">${icons[type] || icons.info}</span><div class="toast-content"><div class="toast-title"></div><div class="toast-message"></div></div><button class="toast-close" type="button" aria-label="Close notification">×</button><div class="toast-progress"></div>`;
+            toast.querySelector('.toast-title').textContent = safeTitle;
+            toast.querySelector('.toast-message').textContent = safeMessage;
+            toast.style.setProperty('--toast-duration', `${duration}ms`);
+            const close = () => {
+                toast.classList.add('removing');
+                setTimeout(() => toast.remove(), 280);
+            };
+            toast.querySelector('.toast-close').addEventListener('click', close);
             container.appendChild(toast);
-            setTimeout(() => { toast.classList.add('removing'); setTimeout(() => toast.remove(), 300); }, duration);
+            window.setTimeout(close, duration);
         }
+
+        function enhanceEmptyStates() {
+            const states = [
+                ['goals-empty-state', 'subjects'],
+                ['habits-empty-state', 'habits'],
+                ['admin-empty-state', 'requests']
+            ];
+            states.forEach(([id, kind]) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.dataset.emptyKind = kind;
+            });
+        }
+
+
+        function syncUxTimerState() {
+            const timer = document.getElementById('timer-numbers');
+            const trigger = document.getElementById('main-timer-trigger');
+            if (!timer || !trigger) return;
+            const active = timer.classList.contains('running');
+            trigger.classList.toggle('ux-running', active);
+            trigger.classList.toggle('ux-paused', timer.classList.contains('paused'));
+        }
+
+        setInterval(syncUxTimerState, 700);
 
         function activateScreen(tabId, screenId) {
             document.querySelectorAll('.screen-view').forEach(v => v.classList.remove('active-view'));
@@ -4987,6 +5143,7 @@ document.addEventListener('keydown', function(e) {
         }
 
 let appHasBooted = false;
+        enhanceEmptyStates();
         async function bootApp() {
             if (appHasBooted) return;
             appHasBooted = true;
