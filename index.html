@@ -905,7 +905,77 @@ button:not(:disabled):active { transform:translateY(1px) scale(.985); }
         @media (max-width: 768px) {
             html[data-theme="light"] .header-navigation { box-shadow: 0 5px 18px rgba(75,61,48,0.08); }
         }
-    </style>
+    
+        /* ===== Deep Focus Mode ===== */
+        .focus-mode-icon {
+            min-height: 36px;
+            padding: 0 11px;
+            border: 1px solid var(--border-soft);
+            background: color-mix(in srgb, var(--text-light) 3%, transparent);
+            color: var(--text-gray);
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            font: 700 11.5px/1 system-ui, sans-serif;
+            transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .15s ease;
+        }
+        .focus-mode-icon:hover { color: var(--ux-green, var(--accent-orange)); border-color: color-mix(in srgb, var(--ux-green, var(--accent-orange)) 35%, var(--border-soft)); }
+        .focus-mode-icon:active { transform: scale(.97); }
+        .focus-mode-icon-glyph { font-size: 15px; line-height: 1; }
+        .focus-mode-icon.is-active { background: var(--ux-green, var(--accent-orange)); color: #fff; border-color: var(--ux-green, var(--accent-orange)); }
+        .focus-mode-icon.is-active .focus-mode-icon-glyph { transform: scale(1.05); }
+
+        #focus-overlay {
+            background:
+                radial-gradient(900px 500px at 50% 24%, color-mix(in srgb, var(--ux-green, #2f6f4e) 8%, transparent), transparent 70%),
+                var(--bg-deep);
+        }
+        #focus-overlay .focus-next-action {
+            width: min(620px, calc(100vw - 40px));
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        #focus-overlay .focus-next-kicker {
+            font: 700 10px/1 system-ui, sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+        }
+        #focus-overlay .focus-next-text {
+            font: 600 clamp(18px, 2vw, 26px)/1.3 'Source Serif 4', Georgia, serif;
+            color: var(--text-light);
+            max-width: 620px;
+            margin: 0 auto;
+        }
+        #focus-overlay .focus-next-sub {
+            margin-top: 7px;
+            font: 500 12px/1.4 system-ui, sans-serif;
+            color: var(--text-gray);
+        }
+        #focus-overlay .focus-park {
+            position: absolute;
+            bottom: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 1px solid var(--border-soft);
+            background: color-mix(in srgb, var(--text-light) 3%, transparent);
+            color: var(--text-gray);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font: 600 11px/1 system-ui, sans-serif;
+        }
+        #focus-overlay .focus-park:hover { color: var(--text-light); }
+        @media (max-width: 720px) {
+            .focus-mode-icon-label { display: none; }
+            .focus-mode-icon { width: 36px; justify-content: center; padding: 0; }
+        }
+        html[data-theme="light"] .focus-mode-icon { background: rgba(255,255,255,.65); border-color: rgba(73,62,50,.15); color: var(--day-ink-soft); }
+        html[data-theme="light"] .focus-mode-icon:hover { color: var(--day-green-deep); border-color: rgba(39,115,74,.28); }
+        html[data-theme="light"] .focus-mode-icon.is-active { color:#fff; background: var(--day-green); border-color:var(--day-green); }
+</style>
     <style id="timer-visual-refinement">
         /* ============ Timer screen — refined visual language ============ */
         #screen-timer, #focus-overlay {
@@ -1840,6 +1910,9 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
         <div class="header-actions">
             <button class="lang-button" id="pwa-install-btn" onclick="triggerPwaInstall()" title="Install INDEX as an app" style="display:none; background: var(--accent-orange); color:#000; font-weight:800; width:auto; padding:0 14px; gap:6px; font-size:12px;">⬇ <span id="pwa-install-btn-txt">Install App</span></button>
             <button class="lang-button" onclick="toggleAppTheme()" id="theme-toggle-btn" title="Toggle light/dark theme">🌙</button>
+            <button class="focus-mode-icon" onclick="toggleDeepFocusMode()" id="deep-focus-toggle" title="Enter Focus Mode" aria-label="Enter Focus Mode">
+                <span class="focus-mode-icon-glyph">◉</span><span class="focus-mode-icon-label" id="deep-focus-label">Focus</span>
+            </button>
             <button class="export-btn" onclick="openGoalsSettingsModal()" id="btn-goals-settings" title="Study Goals">🎯 Goals</button>
             <div class="user-badge" id="user-badge" style="display:none;" onclick="toggleAccountMenu(event)" title="Account Options">
                 <img id="user-badge-photo" src="" alt="">
@@ -1939,7 +2012,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
                         <button class="word-control-btn btn-start" onclick="startClock()" id="ctrl-start">Start</button>
                         <button class="word-control-btn btn-pause" onclick="pauseClock()" id="ctrl-pause">Pause</button>
                         <button class="word-control-btn btn-stop" onclick="stopAndSaveClock()" id="ctrl-stop">Stop</button>
-                        <button class="word-control-btn btn-full" onclick="toggleFocusMode(true)" id="ctrl-full">Focus</button>
+                        <button class="word-control-btn btn-full" onclick="toggleDeepFocusMode()" id="ctrl-full">Focus</button>
                     </div>
                     <div class="quick-stats-row" id="quick-stats">
                         <div class="quick-stat-chip"><span class="stat-icon">🔥</span><span>Today: <strong id="qs-today">0.0h</strong></span></div>
@@ -2228,6 +2301,11 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
         <button class="mini-timer-hide" id="mini-timer-hide" type="button" aria-label="Hide timer">×</button>
     </div>
     <div class="fullscreen-overlay-container" id="focus-overlay">
+        <div class="focus-next-action" id="focus-next-action" aria-live="polite">
+            <div class="focus-next-kicker">NEXT ACTION</div>
+            <div class="focus-next-text" id="focus-next-text">One focused session.</div>
+            <div class="focus-next-sub" id="focus-next-sub">No pressure. Just start.</div>
+        </div>
         <div class="timer-circle-widget" onclick="openTimeEditModal()">
             <svg class="timer-svg" viewBox="0 0 360 360"><circle class="rail" cx="180" cy="180" r="174"></circle><circle class="fill-progress" id="fs-ring-filler" cx="180" cy="180" r="174"></circle></svg>
             <div class="timer-digits" id="fs-timer-numbers">25:00</div>
@@ -2236,8 +2314,9 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
             <button class="word-control-btn btn-start" onclick="startClock()">Start</button>
             <button class="word-control-btn btn-pause" onclick="pauseClock()">Pause</button>
             <button class="word-control-btn btn-stop" onclick="stopAndSaveClock()">Stop</button>
-            <button class="word-control-btn btn-full" onclick="toggleFocusMode(false)" id="fs-exit-btn">Exit Full Screen</button>
+            <button class="word-control-btn btn-full" onclick="toggleDeepFocusMode()" id="fs-exit-btn">Exit Focus</button>
         </div>
+        <button class="focus-park" type="button" onclick="parkFocusThought()" id="focus-park-btn">💭 Park a distraction</button>
     </div>
     <div class="shortcuts-hint" id="shortcuts-hint">
         <kbd>Space</kbd> Start/Pause &nbsp; <kbd>S</kbd> Stop &nbsp; <kbd>F</kbd> Focus &nbsp; <kbd>1-4</kbd> Tabs
@@ -3340,12 +3419,87 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
 
         function toggleFocusMode(activate) {
             const overlay = document.getElementById('focus-overlay');
-            if (activate) overlay.classList.add('is-active');
-            else overlay.classList.remove('is-active');
+            if (!overlay) return;
+            if (activate) {
+                overlay.classList.add('is-active');
+                document.body.classList.add('deep-focus-active');
+                const btn = document.getElementById('deep-focus-toggle');
+                if (btn) btn.classList.add('is-active');
+                const label = document.getElementById('deep-focus-label');
+                if (label) label.textContent = 'Focus On';
+                updateFocusNextAction();
+                try { localStorage.setItem('indexDeepFocus','1'); } catch(e) {}
+            } else {
+                overlay.classList.remove('is-active');
+                document.body.classList.remove('deep-focus-active');
+                const btn = document.getElementById('deep-focus-toggle');
+                if (btn) btn.classList.remove('is-active');
+                const label = document.getElementById('deep-focus-label');
+                if (label) label.textContent = 'Focus';
+                try { localStorage.removeItem('indexDeepFocus'); } catch(e) {}
+            }
             refreshTimerDisplay();
         }
 
+        function toggleDeepFocusMode() {
+            const overlay = document.getElementById('focus-overlay');
+            const active = overlay && overlay.classList.contains('is-active');
+            toggleFocusMode(!active);
+        }
+
+        function updateFocusNextAction() {
+            const titleEl = document.getElementById('focus-next-text');
+            const subEl = document.getElementById('focus-next-sub');
+            if (!titleEl || !subEl) return;
+            let task = null;
+            const items = document.querySelectorAll('#timer-tasks-panel-list .timer-task-item');
+            for (const item of items) {
+                if (!item.classList.contains('is-done')) {
+                    const text = item.querySelector('.timer-task-text');
+                    if (text && text.textContent.trim()) { task = text.textContent.trim(); break; }
+                }
+            }
+            if (task) {
+                titleEl.textContent = task;
+                subEl.textContent = currentlySelectedTag ? currentlySelectedTag : 'Just this task. Nothing else.';
+            } else {
+                const session = document.getElementById('session-current-title');
+                const sessionText = session && session.value && session.value.trim() ? session.value.trim() : 'One focused session.';
+                titleEl.textContent = sessionText;
+                subEl.textContent = 'Just start. You can decide the next step later.';
+            }
+        }
+
+        function parkFocusThought() {
+            const thought = prompt('What distracted you?');
+            if (thought && thought.trim()) {
+                const key = 'indexFocusParking';
+                let list = [];
+                try { list = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
+                list.push({ text: thought.trim(), at: new Date().toISOString() });
+                localStorage.setItem(key, JSON.stringify(list.slice(-50)));
+                const sub = document.getElementById('focus-next-sub');
+                if (sub) sub.textContent = 'Distraction parked. Back to the task.';
+                setTimeout(updateFocusNextAction, 1300);
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const overlay = document.getElementById('focus-overlay');
+                if (overlay && overlay.classList.contains('is-active')) toggleDeepFocusMode();
+            }
+        });
+
         // Floating timer can be dragged anywhere and remembers its position.
+        (function initDeepFocusMode() {
+            try {
+                if (localStorage.getItem('indexDeepFocus') === '1') {
+                    setTimeout(() => toggleFocusMode(true), 0);
+                }
+            } catch(e) {}
+        })();
+
         (function initMiniFloatingTimer() {
             const mini = document.getElementById('mini-floating-timer');
             if (!mini) return;
