@@ -614,6 +614,179 @@
         }
                 @media (max-width: 768px) { .header-navigation { padding: 12px 16px; flex-wrap: wrap; gap: 10px; } .nav-tabs { order: 3; width: 100%; justify-content: center; } .timer-circle-widget { width: 280px; height: 280px; } .timer-digits { font-size: 56px; } .metrics-cards-grid { grid-template-columns: 1fr; } .charts-double-column { grid-template-columns: 1fr; } .goals-cards-grid, .habits-cards-grid { grid-template-columns: 1fr; } .shortcuts-hint { display: none; } }
     </style>
+    <style id="modern-day-theme">
+        /* ===== Modern Day Theme: warm beige + stone + forest ===== */
+        :root {
+            --day-bg: #d8cbb7;
+            --day-bg-deep: #cdbda6;
+            --day-surface: #eee5d7;
+            --day-surface-strong: #f4ecdf;
+            --day-surface-muted: #e4d8c7;
+            --day-stone: #75685a;
+            --day-stone-deep: #554a3f;
+            --day-ink: #2f2a25;
+            --day-ink-soft: #635a50;
+            --day-line: rgba(82, 69, 56, 0.18);
+            --day-line-strong: rgba(82, 69, 56, 0.28);
+            --day-green: #26734a;
+            --day-green-deep: #1d5b3a;
+            --day-green-soft: rgba(38, 115, 74, 0.12);
+            --day-brown: #7a5c43;
+            --day-brown-soft: rgba(122, 92, 67, 0.12);
+            --day-warn: #a66a1f;
+        }
+
+        html[data-theme="light"] body {
+            background: linear-gradient(180deg, var(--day-bg) 0%, #d4c5af 100%);
+            color: var(--day-ink);
+        }
+
+        html[data-theme="light"] {
+            --bg-deep: var(--day-bg);
+            --panel-bg: rgba(238, 229, 215, 0.86);
+            --accent-orange: var(--day-brown);
+            --accent-purple: var(--day-stone);
+            --text-light: var(--day-ink);
+            --text-gray: var(--day-ink-soft);
+            --border-glow: rgba(38, 115, 74, 0.16);
+            --border-soft: var(--day-line);
+            --panel-accent: var(--day-brown-soft);
+            --success: var(--day-green);
+            --warning: var(--day-warn);
+            --info: #466b78;
+        }
+
+        html[data-theme="light"] ::-webkit-scrollbar-track { background: #cfc0aa; }
+        html[data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--day-stone); }
+        html[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: var(--day-green); }
+
+        html[data-theme="light"] .header-navigation {
+            background: rgba(238, 229, 215, 0.94);
+            border-bottom-color: var(--day-line-strong);
+            box-shadow: 0 8px 28px rgba(74, 60, 47, 0.08);
+            backdrop-filter: blur(18px);
+        }
+        html[data-theme="light"] .logo-area { color: var(--day-ink); border-bottom-color: var(--day-green); }
+        html[data-theme="light"] .nav-tabs {
+            background: rgba(117, 104, 90, 0.10);
+            border-color: var(--day-line);
+            box-shadow: inset 0 1px rgba(255,255,255,0.28);
+        }
+        html[data-theme="light"] .tab-trigger:hover { color: var(--day-green-deep); }
+        html[data-theme="light"] .tab-trigger.active { color: #fff; }
+        html[data-theme="light"] .tab-trigger::before { background: var(--day-green); }
+        html[data-theme="light"] .tab-trigger.active { box-shadow: 0 5px 18px rgba(38, 115, 74, 0.20); }
+        html[data-theme="light"] .lang-button,
+        html[data-theme="light"] .account-menu,
+        html[data-theme="light"] .quick-stat-chip,
+        html[data-theme="light"] .metric-card-box,
+        html[data-theme="light"] .goal-card,
+        html[data-theme="light"] .habit-card,
+        html[data-theme="light"] .timer-side-panel,
+        html[data-theme="light"] .daily-countdown-bar {
+            background: linear-gradient(145deg, rgba(244,236,223,0.96), rgba(232,221,206,0.90));
+            border-color: var(--day-line);
+            box-shadow: 0 10px 28px rgba(75, 61, 48, 0.08);
+        }
+
+        html[data-theme="light"] .clear-btn { background: rgba(180, 65, 55, 0.08); border-color: rgba(180,65,55,0.24); }
+        html[data-theme="light"] .export-btn { background: var(--day-green-soft); border-color: rgba(38,115,74,0.28); color: var(--day-green-deep); }
+        html[data-theme="light"] .export-btn:hover { background: var(--day-green); color: #fff; }
+        html[data-theme="light"] .clear-btn:hover { color: #fff; }
+
+        html[data-theme="light"] .metric-card-box:hover,
+        html[data-theme="light"] .goal-card:hover,
+        html[data-theme="light"] .habit-card:hover { box-shadow: 0 16px 34px rgba(75,61,48,0.13); }
+        html[data-theme="light"] .metric-card-box::before,
+        html[data-theme="light"] .goal-card::before { background: var(--day-green); }
+        html[data-theme="light"] .subtext.green { color: var(--day-green-deep); }
+        html[data-theme="light"] .value-wrapper .value,
+        html[data-theme="light"] .quick-stat-chip strong { color: var(--day-ink); }
+
+        /* Inputs: solid, readable, no translucent dark film */
+        html[data-theme="light"] input,
+        html[data-theme="light"] select,
+        html[data-theme="light"] textarea,
+        html[data-theme="light"] .timer-notes-textarea,
+        html[data-theme="light"] .timer-quick-add-goal,
+        html[data-theme="light"] .modal-box input,
+        html[data-theme="light"] .modal-box select {
+            background: rgba(250,246,239,0.94);
+            color: var(--day-ink) !important;
+            border-color: var(--day-line-strong);
+        }
+        html[data-theme="light"] input::placeholder,
+        html[data-theme="light"] textarea::placeholder,
+        html[data-theme="light"] .timer-notes-textarea::placeholder { color: #81766a; opacity: 1; }
+        html[data-theme="light"] input:focus,
+        html[data-theme="light"] select:focus,
+        html[data-theme="light"] textarea:focus,
+        html[data-theme="light"] .timer-notes-textarea:focus { border-color: var(--day-green); box-shadow: 0 0 0 3px rgba(38,115,74,0.10); }
+
+        /* Timer gets a calm paper-like surface with green focus accents */
+        html[data-theme="light"] #screen-timer,
+        html[data-theme="light"] #focus-overlay {
+            --t-surface: #eee5d7;
+            --t-surface-2: #f6eee3;
+            --t-hairline: rgba(82,69,56,0.18);
+            --t-hairline-soft: rgba(82,69,56,0.11);
+            --t-gold: var(--day-green);
+            --t-gold-soft: rgba(38,115,74,0.30);
+            --t-gold-wash: rgba(38,115,74,0.10);
+            --t-ink: var(--day-ink);
+            --t-ink-dim: var(--day-ink-soft);
+            --t-warn: var(--day-warn);
+            --t-danger: #b34d42;
+        }
+        html[data-theme="light"] #screen-timer .timer-3col-grid {
+            background: radial-gradient(ellipse 1000px 520px at 50% 0%, rgba(38,115,74,0.07), transparent 72%);
+        }
+        html[data-theme="light"] #screen-timer .timer-side-panel,
+        html[data-theme="light"] #screen-timer .metric-card-box,
+        html[data-theme="light"] #screen-timer .quick-stat-chip {
+            box-shadow: 0 10px 28px rgba(75,61,48,0.07);
+        }
+        html[data-theme="light"] #screen-timer .timer-task-item {
+            background: #f8f1e7;
+            border-color: var(--day-line);
+        }
+        html[data-theme="light"] #screen-timer .timer-task-item.is-matching { background: var(--day-green-soft); border-color: rgba(38,115,74,0.28); }
+        html[data-theme="light"] #screen-timer .timer-current-subject-pill { color: var(--day-green-deep); border-color: rgba(38,115,74,0.28); background: var(--day-green-soft); }
+        html[data-theme="light"] #screen-timer .word-control-btn.btn-start.active { background: var(--day-green); border-color: var(--day-green); color: #fff; }
+        html[data-theme="light"] #screen-timer .timer-svg .fill-progress { filter: drop-shadow(0 0 7px rgba(38,115,74,0.20)); }
+
+        /* Green becomes the semantic action color; stone/brown stay structural */
+        html[data-theme="light"] .add-item-pill-btn,
+        html[data-theme="light"] .modal-btn.confirm { background: var(--day-green); color: #fff; }
+        html[data-theme="light"] .add-item-pill-btn:hover,
+        html[data-theme="light"] .modal-btn.confirm:hover { background: var(--day-green-deep); }
+        html[data-theme="light"] .mini-tag-chip.selected,
+        html[data-theme="light"] .timer-task-item.is-matching { color: var(--day-green-deep); }
+        html[data-theme="light"] .mini-tag-add-btn:hover { border-color: var(--day-green); color: var(--day-green); background: var(--day-green-soft); }
+        html[data-theme="light"] .timer-task-info:hover .timer-task-text,
+        html[data-theme="light"] .user-badge:hover::after { color: var(--day-green-deep); }
+
+        /* Remove common dark-mode hard-coded fills while preserving the dark theme */
+        html[data-theme="light"] .nav-tabs,
+        html[data-theme="light"] .timer-mode-selector,
+        html[data-theme="light"] .timer-tasks-filter-row,
+        html[data-theme="light"] .timer-tasks-scope-row { background-color: rgba(117,104,90,0.08); }
+        html[data-theme="light"] .modal-overlay { background: rgba(54,46,39,0.34); }
+        html[data-theme="light"] .modal-box { background: linear-gradient(145deg, #f3e9dc, #e6d9c7); border-color: var(--day-line-strong); color: var(--day-ink); box-shadow: 0 24px 70px rgba(61,49,39,0.22); }
+        html[data-theme="light"] .modal-box h3 { color: var(--day-green-deep); }
+        html[data-theme="light"] .modal-btn.cancel { background: #ded1bf; color: var(--day-ink); }
+        html[data-theme="light"] .modal-btn.cancel:hover { background: #d4c4af; }
+
+        /* Better contrast for status text */
+        html[data-theme="light"] .timer-notes-savestate { color: var(--day-green-deep); }
+        html[data-theme="light"] .dcb-focused .dcb-value { color: var(--day-green-deep); }
+        html[data-theme="light"] .dcb-remaining .dcb-value { color: var(--day-brown); }
+        html[data-theme="light"] .dcb-available .dcb-value { color: #426775; }
+
+        @media (max-width: 768px) {
+            html[data-theme="light"] .header-navigation { box-shadow: 0 5px 18px rgba(75,61,48,0.08); }
+        }
+    </style>
     <style id="timer-visual-refinement">
         /* ============ Timer screen — refined visual language ============ */
         #screen-timer, #focus-overlay {
@@ -859,6 +1032,11 @@
         #screen-analysis .sessions-table-wrapper::-webkit-scrollbar-thumb:hover { background: var(--a-gold-soft); }
     </style>
 <base target="_blank">
+    <style id="modern-day-theme-final">
+        html[data-theme="light"] .timer-notes-textarea { color: var(--day-ink) !important; background: #f8f0e5 !important; }
+        html[data-theme="light"] .timer-quick-add-goal { color: var(--day-ink) !important; background: #f8f0e5 !important; }
+        html[data-theme="light"] .modal-box input, html[data-theme="light"] .modal-box select { color: var(--day-ink) !important; background: #faf5ed !important; }
+    </style>
 </head>
 <body>
     <div class="toast-container" id="toast-container"></div>
