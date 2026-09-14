@@ -905,77 +905,7 @@ button:not(:disabled):active { transform:translateY(1px) scale(.985); }
         @media (max-width: 768px) {
             html[data-theme="light"] .header-navigation { box-shadow: 0 5px 18px rgba(75,61,48,0.08); }
         }
-    
-        /* ===== Deep Focus Mode ===== */
-        .focus-mode-icon {
-            min-height: 36px;
-            padding: 0 11px;
-            border: 1px solid var(--border-soft);
-            background: color-mix(in srgb, var(--text-light) 3%, transparent);
-            color: var(--text-gray);
-            border-radius: 9px;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            cursor: pointer;
-            font: 700 11.5px/1 system-ui, sans-serif;
-            transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .15s ease;
-        }
-        .focus-mode-icon:hover { color: var(--ux-green, var(--accent-orange)); border-color: color-mix(in srgb, var(--ux-green, var(--accent-orange)) 35%, var(--border-soft)); }
-        .focus-mode-icon:active { transform: scale(.97); }
-        .focus-mode-icon-glyph { font-size: 15px; line-height: 1; }
-        .focus-mode-icon.is-active { background: var(--ux-green, var(--accent-orange)); color: #fff; border-color: var(--ux-green, var(--accent-orange)); }
-        .focus-mode-icon.is-active .focus-mode-icon-glyph { transform: scale(1.05); }
-
-        #focus-overlay {
-            background:
-                radial-gradient(900px 500px at 50% 24%, color-mix(in srgb, var(--ux-green, #2f6f4e) 8%, transparent), transparent 70%),
-                var(--bg-deep);
-        }
-        #focus-overlay .focus-next-action {
-            width: min(620px, calc(100vw - 40px));
-            text-align: center;
-            margin-bottom: 4px;
-        }
-        #focus-overlay .focus-next-kicker {
-            font: 700 10px/1 system-ui, sans-serif;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--text-gray);
-            margin-bottom: 8px;
-        }
-        #focus-overlay .focus-next-text {
-            font: 600 clamp(18px, 2vw, 26px)/1.3 'Source Serif 4', Georgia, serif;
-            color: var(--text-light);
-            max-width: 620px;
-            margin: 0 auto;
-        }
-        #focus-overlay .focus-next-sub {
-            margin-top: 7px;
-            font: 500 12px/1.4 system-ui, sans-serif;
-            color: var(--text-gray);
-        }
-        #focus-overlay .focus-park {
-            position: absolute;
-            bottom: 26px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 1px solid var(--border-soft);
-            background: color-mix(in srgb, var(--text-light) 3%, transparent);
-            color: var(--text-gray);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font: 600 11px/1 system-ui, sans-serif;
-        }
-        #focus-overlay .focus-park:hover { color: var(--text-light); }
-        @media (max-width: 720px) {
-            .focus-mode-icon-label { display: none; }
-            .focus-mode-icon { width: 36px; justify-content: center; padding: 0; }
-        }
-        html[data-theme="light"] .focus-mode-icon { background: rgba(255,255,255,.65); border-color: rgba(73,62,50,.15); color: var(--day-ink-soft); }
-        html[data-theme="light"] .focus-mode-icon:hover { color: var(--day-green-deep); border-color: rgba(39,115,74,.28); }
-        html[data-theme="light"] .focus-mode-icon.is-active { color:#fff; background: var(--day-green); border-color:var(--day-green); }
-</style>
+    </style>
     <style id="timer-visual-refinement">
         /* ============ Timer screen — refined visual language ============ */
         #screen-timer, #focus-overlay {
@@ -1496,370 +1426,36 @@ button:not(:disabled):active { transform:translateY(1px) scale(.985); }
     </style>
 
 
-<style id="index-unified-ui-v4">
-/* =========================================================
-   INDEX v4 — Cool Academic / Productivity UI
-   One visual language across Timer / Analysis / Subjects / Habits
-   ========================================================= */
-:root{
-  --ui-bg:#f5f6f8;
-  --ui-surface:#ffffff;
-  --ui-surface-2:#fafbfc;
-  --ui-surface-3:#f1f3f5;
-  --ui-ink:#181b20;
-  --ui-ink-2:#454b54;
-  --ui-muted:#737a84;
-  --ui-line:#e2e5e9;
-  --ui-line-2:#d7dbe0;
-  --ui-green:#2f6f52;
-  --ui-green-deep:#245a42;
-  --ui-green-soft:#eaf3ed;
-  --ui-gold:#a57c3e;
-  --ui-gold-soft:#f5efe4;
-  --ui-danger:#c94b45;
-  --ui-warning:#a56d20;
-  --ui-info:#4d7180;
-}
-
-html[data-theme="light"]{
-  --bg-deep:var(--ui-bg) !important;
-  --panel-bg:rgba(255,255,255,.96) !important;
-  --accent-orange:var(--ui-green) !important;
-  --accent-purple:var(--ui-green) !important;
-  --text-light:var(--ui-ink) !important;
-  --text-gray:var(--ui-muted) !important;
-  --border-glow:rgba(47,111,82,.12) !important;
-  --border-soft:var(--ui-line) !important;
-  --panel-accent:var(--ui-green-soft) !important;
-  --success:var(--ui-green) !important;
-  --warning:var(--ui-warning) !important;
-  --info:var(--ui-info) !important;
-  --danger:var(--ui-danger) !important;
-  --day-bg:var(--ui-bg) !important;
-  --day-surface:var(--ui-surface) !important;
-  --day-surface-strong:var(--ui-surface) !important;
-  --day-surface-muted:var(--ui-surface-3) !important;
-  --day-stone:var(--ui-muted) !important;
-  --day-stone-deep:var(--ui-ink-2) !important;
-  --day-ink:var(--ui-ink) !important;
-  --day-ink-soft:var(--ui-muted) !important;
-  --day-line:var(--ui-line) !important;
-  --day-line-strong:var(--ui-line-2) !important;
-  --day-green:var(--ui-green) !important;
-  --day-green-deep:var(--ui-green-deep) !important;
-  --day-green-soft:var(--ui-green-soft) !important;
-  --day-brown:var(--ui-gold) !important;
-  --day-brown-soft:var(--ui-gold-soft) !important;
-  --day-warn:var(--ui-warning) !important;
-}
-
-html[data-theme="light"] body{
-  background:var(--ui-bg) !important;
-  color:var(--ui-ink) !important;
-}
-
-/* Header: lighter, flatter, less crowded */
-html[data-theme="light"] .header-navigation{
-  padding:12px 28px !important;
-  background:rgba(255,255,255,.94) !important;
-  border-bottom:1px solid var(--ui-line) !important;
-  box-shadow:0 1px 10px rgba(20,28,36,.045) !important;
-  backdrop-filter:blur(14px);
-}
-html[data-theme="light"] .logo-area{
-  color:var(--ui-ink) !important;
-  font-family:'Source Serif 4',Georgia,serif;
-  font-size:23px;
-  letter-spacing:.4px;
-  border:0 !important;
-}
-html[data-theme="light"] .logo-area::after{
-  background:var(--ui-green) !important;
-  box-shadow:0 0 0 4px rgba(47,111,82,.09) !important;
-}
-html[data-theme="light"] .nav-tabs{
-  background:var(--ui-surface-3) !important;
-  border:1px solid var(--ui-line) !important;
-  box-shadow:none !important;
-  border-radius:10px !important;
-  padding:3px !important;
-  gap:2px !important;
-}
-html[data-theme="light"] .tab-trigger{
-  color:var(--ui-muted) !important;
-  padding:8px 15px !important;
-  border-radius:8px !important;
-  font-size:12px !important;
-  font-weight:650 !important;
-}
-html[data-theme="light"] .tab-trigger:hover{color:var(--ui-green-deep) !important;transform:none !important;}
-html[data-theme="light"] .tab-trigger.active{
-  background:var(--ui-surface) !important;
-  color:var(--ui-green-deep) !important;
-  box-shadow:0 1px 5px rgba(20,28,36,.07), inset 0 0 0 1px rgba(47,111,82,.06) !important;
-}
-html[data-theme="light"] .tab-trigger::before{display:none !important;}
-
-html[data-theme="light"] .header-actions{gap:7px !important;}
-html[data-theme="light"] .header-actions > button,
-html[data-theme="light"] .lang-button,
-html[data-theme="light"] .export-btn,
-html[data-theme="light"] .clear-btn{
-  min-height:36px !important;
-  border-radius:8px !important;
-  box-shadow:none !important;
-}
-html[data-theme="light"] .lang-button{
-  background:var(--ui-surface) !important;
-  border:1px solid var(--ui-line) !important;
-  color:var(--ui-ink-2) !important;
-}
-html[data-theme="light"] .lang-button:hover{border-color:#b8c4bd !important;color:var(--ui-green) !important;transform:none !important;}
-html[data-theme="light"] .export-btn{
-  background:var(--ui-green) !important;
-  border-color:var(--ui-green) !important;
-  color:#fff !important;
-}
-html[data-theme="light"] .clear-btn{
-  background:#fff7f6 !important;
-  border-color:#ecc7c4 !important;
-  color:var(--ui-danger) !important;
-}
-
-/* Global content shell */
-html[data-theme="light"] .screens-container{
-  max-width:1440px !important;
-  padding:0 26px !important;
-  margin:24px auto !important;
-}
-html[data-theme="light"] .screen-view.glass-card{
-  background:transparent !important;
-  border:0 !important;
-  box-shadow:none !important;
-  border-radius:0 !important;
-}
-html[data-theme="light"] .dashboard-scaled-panel{
-  gap:28px !important;
-  padding:12px 0 24px !important;
-}
-
-/* Consistent section headers */
-html[data-theme="light"] .dash-section-header{
-  font-family:'Source Serif 4',Georgia,serif !important;
-  color:var(--ui-ink) !important;
-  font-size:20px !important;
-  font-weight:650 !important;
-  border-bottom:1px solid var(--ui-line) !important;
-  padding-bottom:12px !important;
-  margin-bottom:10px !important;
-}
-
-/* Universal surfaces */
-html[data-theme="light"] .metric-card-box,
-html[data-theme="light"] .charts-container-box,
-html[data-theme="light"] .goal-card,
-html[data-theme="light"] .habit-card,
-html[data-theme="light"] .timer-side-panel,
-html[data-theme="light"] .daily-countdown-bar{
-  background:var(--ui-surface) !important;
-  border:1px solid var(--ui-line) !important;
-  box-shadow:0 2px 10px rgba(20,28,36,.035) !important;
-  border-radius:10px !important;
-}
-html[data-theme="light"] .metric-card-box:hover,
-html[data-theme="light"] .goal-card:hover,
-html[data-theme="light"] .habit-card:hover,
-html[data-theme="light"] .charts-container-box:hover{
-  transform:none !important;
-  box-shadow:0 5px 16px rgba(20,28,36,.06) !important;
-  border-color:#ccd5d0 !important;
-}
-html[data-theme="light"] .metric-card-box::before,
-html[data-theme="light"] .goal-card::before{background:var(--ui-green) !important;}
-html[data-theme="light"] .value-wrapper .value,
-html[data-theme="light"] .quick-stat-chip strong{color:var(--ui-ink) !important;}
-
-/* Cards / charts typography */
-html[data-theme="light"] #screen-analysis .metric-card-box{
-  padding:22px !important;
-  border-radius:10px !important;
-}
-html[data-theme="light"] #screen-analysis .metric-text-group .label,
-html[data-theme="light"] #screen-analysis .charts-box-title{
-  color:var(--ui-muted) !important;
-  font-family:system-ui,-apple-system,'Segoe UI',sans-serif !important;
-}
-html[data-theme="light"] #screen-analysis .charts-container-box{padding:22px !important;}
-html[data-theme="light"] #screen-analysis .chart-progress-fill,
-html[data-theme="light"] #screen-analysis .weekly-stacked-track > *{background:var(--ui-green) !important;}
-
-/* Timer: keep it the focal point, but make the language match the dashboard */
-html[data-theme="light"] #screen-timer .timer-3col-grid{
-  background:transparent !important;
-  border-radius:0 !important;
-}
-html[data-theme="light"] #screen-timer .timer-side-panel{
-  background:var(--ui-surface) !important;
-  border:1px solid var(--ui-line) !important;
-  border-radius:10px !important;
-  padding:26px 22px !important;
-  box-shadow:0 2px 10px rgba(20,28,36,.035) !important;
-}
-html[data-theme="light"] #screen-timer .timer-side-panel-header{
-  font-family:system-ui,-apple-system,'Segoe UI',sans-serif !important;
-  font-size:12px !important;
-  font-weight:750 !important;
-  letter-spacing:1.1px !important;
-  color:var(--ui-ink-2) !important;
-}
-html[data-theme="light"] #screen-timer .session-title-field{
-  font-family:'Source Serif 4',Georgia,serif !important;
-  color:var(--ui-ink) !important;
-  border-bottom:1px solid var(--ui-line-2) !important;
-  font-size:26px !important;
-}
-html[data-theme="light"] #screen-timer .session-title-field:focus{border-bottom-color:var(--ui-green) !important;}
-html[data-theme="light"] #screen-timer .timer-mode-selector{
-  border-bottom:1px solid var(--ui-line) !important;
-  gap:24px !important;
-}
-html[data-theme="light"] #screen-timer .mode-button{
-  color:var(--ui-muted) !important;
-  font-size:11px !important;
-  letter-spacing:1px !important;
-}
-html[data-theme="light"] #screen-timer .mode-button.active{
-  color:var(--ui-green) !important;
-  border-bottom-color:var(--ui-green) !important;
-}
-html[data-theme="light"] #screen-timer .timer-svg .rail{stroke:#d9dde1 !important;}
-html[data-theme="light"] #screen-timer .timer-svg .fill-progress{
-  stroke:var(--ui-green) !important;
-  filter:drop-shadow(0 0 5px rgba(47,111,82,.18)) !important;
-}
-html[data-theme="light"] #screen-timer .timer-digits{
-  color:var(--ui-ink) !important;
-  font-family:system-ui,-apple-system,'Segoe UI',sans-serif !important;
-  font-weight:650 !important;
-  letter-spacing:2px !important;
-}
-html[data-theme="light"] #screen-timer .timer-digits.running{color:var(--ui-green) !important;}
-html[data-theme="light"] #screen-timer .timer-digits.paused{color:var(--ui-warning) !important;}
-html[data-theme="light"] #screen-timer .timer-current-subject-pill{
-  background:var(--ui-green-soft) !important;
-  color:var(--ui-green-deep) !important;
-  border:1px solid #cde0d4 !important;
-  border-radius:8px !important;
-}
-html[data-theme="light"] #screen-timer .word-control-btn{
-  color:var(--ui-ink-2) !important;
-  border:1px solid var(--ui-line-2) !important;
-  border-radius:8px !important;
-  background:var(--ui-surface) !important;
-}
-html[data-theme="light"] #screen-timer .word-control-btn.btn-start{border-color:#a9c9b6 !important;color:var(--ui-green) !important;}
-html[data-theme="light"] #screen-timer .word-control-btn.btn-start.active{background:var(--ui-green) !important;color:#fff !important;border-color:var(--ui-green) !important;}
-html[data-theme="light"] #screen-timer .word-control-btn.btn-pause{border-color:#dec79d !important;color:var(--ui-warning) !important;}
-html[data-theme="light"] #screen-timer .word-control-btn.btn-stop{border-color:#e6c0bd !important;color:var(--ui-danger) !important;}
-html[data-theme="light"] #screen-timer .word-control-btn.btn-full:hover{background:var(--ui-surface-3) !important;}
-
-/* Timer stat strip */
-html[data-theme="light"] #screen-timer .quick-stats-row{
-  background:var(--ui-surface) !important;
-  border:1px solid var(--ui-line) !important;
-  border-radius:10px !important;
-  box-shadow:none !important;
-}
-html[data-theme="light"] #screen-timer .quick-stat-chip{color:var(--ui-muted) !important;}
-html[data-theme="light"] #screen-timer .quick-stat-chip + .quick-stat-chip{border-inline-start:1px solid var(--ui-line) !important;}
-html[data-theme="light"] #screen-timer .quick-stat-chip strong{color:var(--ui-ink) !important;}
-
-/* Timer tasks */
-html[data-theme="light"] #screen-timer .timer-tasks-scope-row,
-html[data-theme="light"] #screen-timer .timer-tasks-filter-row{
-  border-bottom-color:var(--ui-line) !important;
-}
-html[data-theme="light"] #screen-timer .timer-tasks-scope-btn,
-html[data-theme="light"] #screen-timer .timer-tasks-filter-btn{
-  color:var(--ui-muted) !important;
-}
-html[data-theme="light"] #screen-timer .timer-tasks-scope-btn.active,
-html[data-theme="light"] #screen-timer .timer-tasks-filter-btn.active{
-  color:var(--ui-green) !important;
-  border-bottom-color:var(--ui-green) !important;
-}
-html[data-theme="light"] #screen-timer .timer-task-item{
-  background:var(--ui-surface-2) !important;
-  border:1px solid var(--ui-line) !important;
-  border-radius:8px !important;
-}
-html[data-theme="light"] #screen-timer .timer-task-item.is-matching{
-  background:var(--ui-green-soft) !important;
-  border-color:#cde0d4 !important;
-}
-html[data-theme="light"] #screen-timer .timer-notes-textarea,
-html[data-theme="light"] #screen-timer .timer-quick-add-goal,
-html[data-theme="light"] input,
-html[data-theme="light"] select,
-html[data-theme="light"] textarea{
-  background:#fff !important;
-  color:var(--ui-ink) !important;
-  border:1px solid var(--ui-line-2) !important;
-  border-radius:8px !important;
-}
-html[data-theme="light"] #screen-timer .timer-notes-textarea:focus,
-html[data-theme="light"] input:focus,
-html[data-theme="light"] select:focus,
-html[data-theme="light"] textarea:focus{
-  border-color:#9cbeaa !important;
-  box-shadow:0 0 0 3px rgba(47,111,82,.08) !important;
-}
-
-/* Generic buttons */
-html[data-theme="light"] .add-item-pill-btn,
-html[data-theme="light"] .modal-btn.confirm{
-  background:var(--ui-green) !important;
-  color:#fff !important;
-  border:1px solid var(--ui-green) !important;
-  border-radius:8px !important;
-  box-shadow:none !important;
-}
-html[data-theme="light"] .add-item-pill-btn:hover,
-html[data-theme="light"] .modal-btn.confirm:hover{background:var(--ui-green-deep) !important;transform:none !important;}
-html[data-theme="light"] .modal-btn.cancel{
-  background:var(--ui-surface-3) !important;
-  color:var(--ui-ink-2) !important;
-  border:1px solid var(--ui-line) !important;
-  border-radius:8px !important;
-}
-
-/* Replace remaining brown-ish / purple-ish accents in the day UI */
-html[data-theme="light"] .subtext.orange,
-html[data-theme="light"] .dcb-remaining .dcb-value{color:var(--ui-gold) !important;}
-html[data-theme="light"] .subtext.green,
-html[data-theme="light"] .dcb-focused .dcb-value{color:var(--ui-green) !important;}
-html[data-theme="light"] .dcb-available .dcb-value{color:var(--ui-info) !important;}
-html[data-theme="light"] .timer-tasks-progress-fill{background:var(--ui-green) !important;}
-
-/* Focus ring and selection */
-html[data-theme="light"] :focus-visible{
-  outline:2px solid rgba(47,111,82,.55) !important;
-  outline-offset:2px;
-}
-
-/* Scrollbar */
-html[data-theme="light"] ::-webkit-scrollbar{width:7px;}
-html[data-theme="light"] ::-webkit-scrollbar-track{background:transparent !important;}
-html[data-theme="light"] ::-webkit-scrollbar-thumb{background:#cbd0d6 !important;border-radius:999px !important;}
-html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !important;}
-
-/* Responsive */
-@media (max-width:900px){
-  html[data-theme="light"] .header-navigation{padding:11px 16px !important;}
-  html[data-theme="light"] .screens-container{padding:0 16px !important;margin:18px auto !important;}
-}
+<style id="study-calendar-module-styles">
+/* ==================== Study Calendar module ==================== */
+#screen-calendar{padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;}
+.cal-shell{display:grid;grid-template-columns:248px minmax(0,1fr);gap:14px;min-height:calc(100vh - 150px);}
+.cal-sidebar,.cal-main-card,.cal-side-card{background:color-mix(in srgb,var(--text-light) 4%,transparent);border:1px solid var(--border-soft);box-shadow:0 12px 30px rgba(0,0,0,.06);}
+.cal-sidebar{border-radius:18px;padding:16px;align-self:start;position:sticky;top:86px;}
+.cal-main-card{border-radius:18px;overflow:hidden;min-width:0;}
+.cal-side-card{border-radius:16px;padding:15px;}
+.cal-brand-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;}
+.cal-brand-title{font-weight:800;letter-spacing:.2px}.cal-brand-sub{font-size:11px;color:var(--text-gray);margin-top:2px}
+.cal-new-btn{width:100%;border:1px solid color-mix(in srgb,var(--accent-orange) 70%,transparent);background:var(--accent-orange);color:#000;border-radius:11px;padding:10px 12px;font-weight:800;cursor:pointer;margin-bottom:16px;}
+.cal-mini-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:800;}
+.cal-mini-nav{display:flex;gap:4px}.cal-mini-nav button,.cal-toolbar button{border:1px solid var(--border-soft);background:transparent;color:var(--text-light);border-radius:9px;min-width:30px;min-height:30px;cursor:pointer;}
+.cal-mini-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:11px;text-align:center;}
+.cal-mini-dow{color:var(--text-gray);padding:4px 0;font-weight:700}.cal-mini-day{padding:6px 0;border-radius:8px;cursor:pointer;color:var(--text-gray)}.cal-mini-day:hover{background:color-mix(in srgb,var(--text-light) 7%,transparent)}.cal-mini-day.is-selected{background:var(--accent-orange);color:#000;font-weight:800}.cal-mini-day.has-events{box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--accent-orange) 65%,transparent)}
+.cal-section-title{display:flex;justify-content:space-between;align-items:center;font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--text-gray);font-weight:800;margin:18px 0 8px;}
+.cal-filter-list{display:flex;flex-direction:column;gap:5px;max-height:300px;overflow:auto}.cal-filter-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 9px;background:transparent;border:1px solid transparent;border-radius:9px;color:var(--text-gray);text-align:start;cursor:pointer}.cal-filter-btn:hover,.cal-filter-btn.active{background:color-mix(in srgb,var(--accent-orange) 10%,transparent);border-color:color-mix(in srgb,var(--accent-orange) 24%,transparent);color:var(--text-light)}
+.cal-dot{width:8px;height:8px;border-radius:50%;background:var(--accent-orange);flex:0 0 8px}.cal-filter-meta{margin-inline-start:auto;font-size:10px;color:var(--text-gray)}
+.cal-main-toolbar{display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--border-soft);flex-wrap:wrap}.cal-title-wrap{margin-inline-end:auto}.cal-title{font-size:19px;font-weight:850}.cal-subtitle{font-size:11px;color:var(--text-gray);margin-top:3px}.cal-toolbar{display:flex;gap:5px;align-items:center}.cal-toolbar .cal-today{padding:0 11px}.cal-view-toggle{display:flex;background:color-mix(in srgb,var(--text-light) 5%,transparent);border:1px solid var(--border-soft);padding:3px;border-radius:10px}.cal-view-toggle button{border:0!important;min-width:0!important;padding:7px 11px;border-radius:8px}.cal-view-toggle button.active{background:var(--accent-orange);color:#000;font-weight:800}
+.cal-body{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:12px;padding:12px}.cal-scroll{overflow:auto;max-height:calc(100vh - 250px);border:1px solid var(--border-soft);border-radius:13px}.cal-week-head,.cal-time-grid{display:grid;grid-template-columns:62px repeat(7,minmax(120px,1fr));min-width:902px}.cal-week-head{position:sticky;top:0;z-index:4;background:color-mix(in srgb,var(--text-light) 6%,transparent);border-bottom:1px solid var(--border-soft)}.cal-head-time{padding:10px 7px;color:var(--text-gray);font-size:10px}.cal-day-head{text-align:center;padding:9px 4px;border-inline-start:1px solid var(--border-soft);font-size:11px;font-weight:800}.cal-day-head small{display:block;color:var(--text-gray);font-weight:600;margin-bottom:4px}.cal-day-head.is-today{color:var(--accent-orange)}.cal-day-head span{display:inline-grid;place-items:center;width:29px;height:29px;border-radius:9px}.cal-day-head.is-today span{background:var(--accent-orange);color:#000}
+.cal-times{position:relative}.cal-hour{height:48px;padding:10px 6px 0;color:var(--text-gray);font-size:10px;text-align:center}.cal-columns{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));position:relative;}.cal-column{height:1152px;border-inline-start:1px solid var(--border-soft);position:relative;background-image:linear-gradient(to bottom,var(--border-soft) 1px,transparent 1px);background-size:100% 48px}.cal-event{position:absolute;left:4px;right:4px;border-radius:9px;padding:7px 8px;overflow:hidden;cursor:pointer;border-inline-start:3px solid currentColor;box-shadow:0 5px 14px rgba(0,0,0,.06)}.cal-event strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal-event span{display:block;font-size:10px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal-event em{display:block;font-size:9px;margin-top:5px;opacity:.75;font-style:normal}.cal-event.is-done{opacity:.52;text-decoration:line-through}.cal-event.orange{background:color-mix(in srgb,var(--accent-orange) 18%,transparent);color:var(--accent-orange)}.cal-event.green{background:rgba(47,111,78,.18);color:#67c58b}.cal-event.blue{background:rgba(52,152,219,.18);color:#72bbef}.cal-event.red{background:rgba(198,74,64,.18);color:#f19187}.cal-empty-hint{text-align:center;padding:35px;color:var(--text-gray);font-size:12px}
+.cal-month{padding:8px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;min-width:760px}.cal-month-dow{text-align:center;font-size:10px;color:var(--text-gray);padding:6px 0}.cal-month-cell{min-height:108px;border:1px solid var(--border-soft);border-radius:10px;padding:7px;cursor:pointer;overflow:hidden}.cal-month-cell:hover{background:color-mix(in srgb,var(--text-light) 3%,transparent)}.cal-month-cell.is-today{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent-orange) 55%,transparent)}.cal-month-num{font-size:11px;font-weight:800;color:var(--text-gray)}.cal-month-cell.is-today .cal-month-num{color:var(--accent-orange)}.cal-month-event{font-size:9px;padding:4px 5px;border-radius:6px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:color-mix(in srgb,var(--accent-orange) 12%,transparent);color:var(--text-light)}
+.cal-day-wrap{display:grid;grid-template-columns:62px minmax(420px,1fr);min-width:482px}.cal-day-column{height:1152px;border-inline-start:1px solid var(--border-soft);position:relative;background-image:linear-gradient(to bottom,var(--border-soft) 1px,transparent 1px);background-size:100% 48px}.cal-day-event{position:absolute;left:6px;right:6px}
+.cal-side-stack{display:flex;flex-direction:column;gap:10px}.cal-side-card h4{margin:0 0 9px;font-size:12px}.cal-stat-row{display:flex;justify-content:space-between;gap:8px;font-size:11px;padding:6px 0;border-bottom:1px solid var(--border-soft)}.cal-stat-row:last-child{border-bottom:0}.cal-stat-row b{font-variant-numeric:tabular-nums}.cal-upcoming{display:flex;flex-direction:column;gap:7px}.cal-up-item{padding:8px;border:1px solid var(--border-soft);border-radius:9px}.cal-up-title{font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cal-up-time{font-size:9px;color:var(--text-gray);margin-top:3px}
+.cal-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.46);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100000}.cal-modal-overlay.open{display:flex}.cal-modal{width:min(560px,calc(100vw - 28px));background:var(--bg-deep);border:1px solid var(--border-soft);border-radius:16px;padding:18px;box-shadow:0 24px 80px rgba(0,0,0,.3)}.cal-modal h3{margin:0}.cal-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:14px}.cal-field{display:flex;flex-direction:column;gap:5px}.cal-field.full{grid-column:1/-1}.cal-field label{font-size:10px;color:var(--text-gray);font-weight:800}.cal-field input,.cal-field select,.cal-field textarea{width:100%;background:color-mix(in srgb,var(--text-light) 4%,transparent);color:var(--text-light);border:1px solid var(--border-soft);border-radius:9px;padding:9px;outline:none}.cal-field input:focus,.cal-field select:focus,.cal-field textarea:focus{border-color:color-mix(in srgb,var(--accent-orange) 55%,transparent)}.cal-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}.cal-modal-actions button{border-radius:9px;padding:9px 13px;border:1px solid var(--border-soft);background:transparent;color:var(--text-light);cursor:pointer}.cal-save{background:var(--accent-orange)!important;color:#000!important;border-color:var(--accent-orange)!important;font-weight:800}.cal-delete{margin-inline-end:auto;color:var(--danger)!important;border-color:color-mix(in srgb,var(--danger) 35%,transparent)!important}
+html[data-theme="light"] .cal-sidebar,html[data-theme="light"] .cal-main-card,html[data-theme="light"] .cal-side-card{background:rgba(249,245,238,.72);box-shadow:0 10px 24px rgba(66,54,43,.06)}
+html[data-theme="light"] .cal-modal{background:#f5ede3;color:#322b24}.cal-mini-day,.cal-filter-btn,.cal-event,.cal-month-event{user-select:none}
+@media(max-width:1180px){.cal-shell{grid-template-columns:1fr}.cal-sidebar{position:static}.cal-body{grid-template-columns:1fr}.cal-side-stack{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.cal-filter-list{max-height:180px}}
+@media(max-width:760px){.cal-main-toolbar{padding:10px}.cal-title{font-size:16px}.cal-toolbar{width:100%;overflow:auto}.cal-view-toggle{margin-inline-start:auto}.cal-side-stack{grid-template-columns:1fr}.cal-shell{min-height:0}.cal-body{padding:8px}.cal-sidebar{padding:12px}.cal-form-grid{grid-template-columns:1fr}.cal-field.full{grid-column:auto}.cal-modal{padding:15px}.cal-scroll{max-height:calc(100vh - 310px)}}
 </style>
-
 </head>
 <body>
     <div class="toast-container" id="toast-container"></div>
@@ -1902,6 +1498,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
         <div class="logo-area" id="logo-text">INDEX</div>
         <div class="nav-tabs">
             <button class="tab-trigger active" onclick="activateScreen('timer-tab', 'screen-timer')" id="nav-btn-timer">Timer</button>
+            <button class="tab-trigger" onclick="activateScreen('calendar-tab', 'screen-calendar')" id="nav-btn-calendar">Calendar</button>
             <button class="tab-trigger" onclick="activateScreen('analysis-tab', 'screen-analysis')" id="nav-btn-analysis">Analysis</button>
             <button class="tab-trigger" onclick="activateScreen('goals-tab', 'screen-goals')" id="nav-btn-goals">Subjects</button>
             <button class="tab-trigger" onclick="activateScreen('habits-tab', 'screen-habits')" id="nav-btn-habits">Habits</button>
@@ -1910,9 +1507,6 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
         <div class="header-actions">
             <button class="lang-button" id="pwa-install-btn" onclick="triggerPwaInstall()" title="Install INDEX as an app" style="display:none; background: var(--accent-orange); color:#000; font-weight:800; width:auto; padding:0 14px; gap:6px; font-size:12px;">⬇ <span id="pwa-install-btn-txt">Install App</span></button>
             <button class="lang-button" onclick="toggleAppTheme()" id="theme-toggle-btn" title="Toggle light/dark theme">🌙</button>
-            <button class="focus-mode-icon" onclick="toggleDeepFocusMode()" id="deep-focus-toggle" title="Enter Focus Mode" aria-label="Enter Focus Mode">
-                <span class="focus-mode-icon-glyph">◉</span><span class="focus-mode-icon-label" id="deep-focus-label">Focus</span>
-            </button>
             <button class="export-btn" onclick="openGoalsSettingsModal()" id="btn-goals-settings" title="Study Goals">🎯 Goals</button>
             <div class="user-badge" id="user-badge" style="display:none;" onclick="toggleAccountMenu(event)" title="Account Options">
                 <img id="user-badge-photo" src="" alt="">
@@ -2012,7 +1606,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
                         <button class="word-control-btn btn-start" onclick="startClock()" id="ctrl-start">Start</button>
                         <button class="word-control-btn btn-pause" onclick="pauseClock()" id="ctrl-pause">Pause</button>
                         <button class="word-control-btn btn-stop" onclick="stopAndSaveClock()" id="ctrl-stop">Stop</button>
-                        <button class="word-control-btn btn-full" onclick="toggleDeepFocusMode()" id="ctrl-full">Focus</button>
+                        <button class="word-control-btn btn-full" onclick="toggleFocusMode(true)" id="ctrl-full">Focus</button>
                     </div>
                     <div class="quick-stats-row" id="quick-stats">
                         <div class="quick-stat-chip"><span class="stat-icon">🔥</span><span>Today: <strong id="qs-today">0.0h</strong></span></div>
@@ -2041,6 +1635,40 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
                         <select class="timer-quick-add-goal" id="timer-quick-add-goal-select" onchange="onTimerBranchSelectChange()"></select>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="screen-view" id="screen-calendar">
+            <div class="cal-shell">
+                <aside class="cal-sidebar">
+                    <div class="cal-brand-row">
+                        <div><div class="cal-brand-title" id="cal-brand-title">Study Calendar</div><div class="cal-brand-sub" id="cal-brand-sub">Plan your study time</div></div>
+                        <span style="font-size:18px">📅</span>
+                    </div>
+                    <button class="cal-new-btn" id="cal-new-btn" onclick="calOpenCreate()">＋ New study task</button>
+                    <div class="cal-mini-head"><span id="cal-mini-month">—</span><span class="cal-mini-nav"><button onclick="calShiftMiniMonth(-1)">‹</button><button onclick="calShiftMiniMonth(1)">›</button></span></div>
+                    <div class="cal-mini-grid" id="cal-mini-grid"></div>
+                    <div class="cal-section-title"><span id="cal-subjects-title">Subjects</span></div>
+                    <div class="cal-filter-list" id="cal-subject-filters"></div>
+                    <div class="cal-section-title"><span id="cal-branches-title">Branches</span></div>
+                    <div class="cal-filter-list" id="cal-branch-filters"></div>
+                </aside>
+                <main class="cal-main-card">
+                    <div class="cal-main-toolbar">
+                        <div class="cal-title-wrap"><div class="cal-title" id="cal-main-title">Calendar</div><div class="cal-subtitle" id="cal-main-subtitle">—</div></div>
+                        <div class="cal-toolbar"><button class="cal-today" id="cal-today-btn" onclick="calGoToday()">Today</button><button onclick="calShift(-1)" aria-label="Previous">‹</button><button onclick="calShift(1)" aria-label="Next">›</button></div>
+                        <div class="cal-view-toggle"><button id="cal-view-day" onclick="calSetView('day')">Day</button><button id="cal-view-week" class="active" onclick="calSetView('week')">Week</button><button id="cal-view-month" onclick="calSetView('month')">Month</button></div>
+                        <button onclick="calOpenCreate()" title="New study task">＋</button>
+                    </div>
+                    <div class="cal-body">
+                        <div class="cal-scroll" id="cal-scroll"></div>
+                        <div class="cal-side-stack">
+                            <div class="cal-side-card"><h4 id="cal-today-card-title">Today</h4><div id="cal-today-stats"></div></div>
+                            <div class="cal-side-card"><h4 id="cal-upcoming-title">Upcoming</h4><div class="cal-upcoming" id="cal-upcoming-list"></div></div>
+                            <div class="cal-side-card"><h4 id="cal-tips-title">Quick actions</h4><button class="cal-filter-btn" onclick="calSetView('day');calGoToday()">◉ <span id="cal-focus-today">Focus today</span></button><button class="cal-filter-btn" onclick="activateScreen('timer-tab','screen-timer')">⏱ <span id="cal-open-timer">Open timer</span></button></div>
+                        </div>
+                    </div>
+                </main>
             </div>
         </div>
         <div class="screen-view glass-card analysis-screen-layout" id="screen-analysis">
@@ -2194,6 +1822,23 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
             </div>
         </div>
     </div>
+
+    <div class="cal-modal-overlay" id="cal-task-modal">
+        <div class="cal-modal">
+            <h3 id="cal-modal-title">Schedule study task</h3>
+            <div class="cal-form-grid">
+                <div class="cal-field full"><label id="cal-task-label">Task / lecture</label><input id="cal-task-title" placeholder="e.g. Heart Failure"></div>
+                <div class="cal-field"><label id="cal-subject-label">Subject</label><select id="cal-subject-select"></select></div>
+                <div class="cal-field"><label id="cal-branch-label">Branch</label><select id="cal-branch-select"></select></div>
+                <div class="cal-field"><label id="cal-date-label">Date</label><input type="date" id="cal-date-input"></div>
+                <div class="cal-field"><label id="cal-start-label">Start</label><input type="time" id="cal-start-input" value="10:00"></div>
+                <div class="cal-field"><label id="cal-end-label">End</label><input type="time" id="cal-end-input" value="11:00"></div>
+                <div class="cal-field"><label id="cal-status-label">Status</label><select id="cal-status-select"><option value="pending">Pending</option><option value="done">Done</option></select></div>
+                <div class="cal-field full"><label id="cal-notes-label">Notes</label><textarea id="cal-notes-input" rows="2" placeholder="Optional"></textarea></div>
+            </div>
+            <div class="cal-modal-actions"><button class="cal-delete" id="cal-delete-btn" onclick="calDeleteCurrent()" style="display:none">Delete schedule</button><button onclick="calCloseModal()" id="cal-cancel-btn">Cancel</button><button class="cal-save" onclick="calSaveTask()" id="cal-save-btn">Save</button></div>
+        </div>
+    </div>
     <div class="modal-overlay" id="time-modal">
         <div class="modal-box">
             <h3 id="modal-heading">Edit Session Duration (Minutes)</h3>
@@ -2301,11 +1946,6 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
         <button class="mini-timer-hide" id="mini-timer-hide" type="button" aria-label="Hide timer">×</button>
     </div>
     <div class="fullscreen-overlay-container" id="focus-overlay">
-        <div class="focus-next-action" id="focus-next-action" aria-live="polite">
-            <div class="focus-next-kicker">NEXT ACTION</div>
-            <div class="focus-next-text" id="focus-next-text">One focused session.</div>
-            <div class="focus-next-sub" id="focus-next-sub">No pressure. Just start.</div>
-        </div>
         <div class="timer-circle-widget" onclick="openTimeEditModal()">
             <svg class="timer-svg" viewBox="0 0 360 360"><circle class="rail" cx="180" cy="180" r="174"></circle><circle class="fill-progress" id="fs-ring-filler" cx="180" cy="180" r="174"></circle></svg>
             <div class="timer-digits" id="fs-timer-numbers">25:00</div>
@@ -2314,9 +1954,8 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
             <button class="word-control-btn btn-start" onclick="startClock()">Start</button>
             <button class="word-control-btn btn-pause" onclick="pauseClock()">Pause</button>
             <button class="word-control-btn btn-stop" onclick="stopAndSaveClock()">Stop</button>
-            <button class="word-control-btn btn-full" onclick="toggleDeepFocusMode()" id="fs-exit-btn">Exit Focus</button>
+            <button class="word-control-btn btn-full" onclick="toggleFocusMode(false)" id="fs-exit-btn">Exit Full Screen</button>
         </div>
-        <button class="focus-park" type="button" onclick="parkFocusThought()" id="focus-park-btn">💭 Park a distraction</button>
     </div>
     <div class="shortcuts-hint" id="shortcuts-hint">
         <kbd>Space</kbd> Start/Pause &nbsp; <kbd>S</kbd> Stop &nbsp; <kbd>F</kbd> Focus &nbsp; <kbd>1-4</kbd> Tabs
@@ -3072,6 +2711,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
             document.getElementById(screenId).classList.add('active-view');
             try { localStorage.setItem('index_lastScreen', screenId); } catch (e) {}
             if (screenId === 'screen-timer') document.getElementById('nav-btn-timer').classList.add('active');
+            if (screenId === 'screen-calendar') { document.getElementById('nav-btn-calendar').classList.add('active'); calRender(); }
             if (screenId === 'screen-analysis') {
                 document.getElementById('nav-btn-analysis').classList.add('active');
                 recalculateAndRenderDashboard();
@@ -3419,87 +3059,12 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
 
         function toggleFocusMode(activate) {
             const overlay = document.getElementById('focus-overlay');
-            if (!overlay) return;
-            if (activate) {
-                overlay.classList.add('is-active');
-                document.body.classList.add('deep-focus-active');
-                const btn = document.getElementById('deep-focus-toggle');
-                if (btn) btn.classList.add('is-active');
-                const label = document.getElementById('deep-focus-label');
-                if (label) label.textContent = 'Focus On';
-                updateFocusNextAction();
-                try { localStorage.setItem('indexDeepFocus','1'); } catch(e) {}
-            } else {
-                overlay.classList.remove('is-active');
-                document.body.classList.remove('deep-focus-active');
-                const btn = document.getElementById('deep-focus-toggle');
-                if (btn) btn.classList.remove('is-active');
-                const label = document.getElementById('deep-focus-label');
-                if (label) label.textContent = 'Focus';
-                try { localStorage.removeItem('indexDeepFocus'); } catch(e) {}
-            }
+            if (activate) overlay.classList.add('is-active');
+            else overlay.classList.remove('is-active');
             refreshTimerDisplay();
         }
 
-        function toggleDeepFocusMode() {
-            const overlay = document.getElementById('focus-overlay');
-            const active = overlay && overlay.classList.contains('is-active');
-            toggleFocusMode(!active);
-        }
-
-        function updateFocusNextAction() {
-            const titleEl = document.getElementById('focus-next-text');
-            const subEl = document.getElementById('focus-next-sub');
-            if (!titleEl || !subEl) return;
-            let task = null;
-            const items = document.querySelectorAll('#timer-tasks-panel-list .timer-task-item');
-            for (const item of items) {
-                if (!item.classList.contains('is-done')) {
-                    const text = item.querySelector('.timer-task-text');
-                    if (text && text.textContent.trim()) { task = text.textContent.trim(); break; }
-                }
-            }
-            if (task) {
-                titleEl.textContent = task;
-                subEl.textContent = currentlySelectedTag ? currentlySelectedTag : 'Just this task. Nothing else.';
-            } else {
-                const session = document.getElementById('session-current-title');
-                const sessionText = session && session.value && session.value.trim() ? session.value.trim() : 'One focused session.';
-                titleEl.textContent = sessionText;
-                subEl.textContent = 'Just start. You can decide the next step later.';
-            }
-        }
-
-        function parkFocusThought() {
-            const thought = prompt('What distracted you?');
-            if (thought && thought.trim()) {
-                const key = 'indexFocusParking';
-                let list = [];
-                try { list = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
-                list.push({ text: thought.trim(), at: new Date().toISOString() });
-                localStorage.setItem(key, JSON.stringify(list.slice(-50)));
-                const sub = document.getElementById('focus-next-sub');
-                if (sub) sub.textContent = 'Distraction parked. Back to the task.';
-                setTimeout(updateFocusNextAction, 1300);
-            }
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const overlay = document.getElementById('focus-overlay');
-                if (overlay && overlay.classList.contains('is-active')) toggleDeepFocusMode();
-            }
-        });
-
         // Floating timer can be dragged anywhere and remembers its position.
-        (function initDeepFocusMode() {
-            try {
-                if (localStorage.getItem('indexDeepFocus') === '1') {
-                    setTimeout(() => toggleFocusMode(true), 0);
-                }
-            } catch(e) {}
-        })();
-
         (function initMiniFloatingTimer() {
             const mini = document.getElementById('mini-floating-timer');
             if (!mini) return;
@@ -5158,6 +4723,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
             if (e.code === 'Digit2') { e.preventDefault(); activateScreen('analysis-tab', 'screen-analysis'); }
             if (e.code === 'Digit3') { e.preventDefault(); activateScreen('goals-tab', 'screen-goals'); }
             if (e.code === 'Digit4') { e.preventDefault(); activateScreen('habits-tab', 'screen-habits'); }
+            if (e.code === 'Digit5') { e.preventDefault(); activateScreen('calendar-tab', 'screen-calendar'); }
         });
 
         
@@ -5726,5 +5292,154 @@ let appHasBooted = false;
             deferredInstallPrompt = null;
         });
     </script>
-</body>
+
+<script>
+/* ==================== Study Calendar module ==================== */
+let calView = 'week';
+let calCursor = new Date(); calCursor.setHours(0,0,0,0);
+let calMiniCursor = new Date(calCursor.getFullYear(), calCursor.getMonth(), 1);
+let calSubjectFilter = 'all';
+let calBranchFilter = 'all';
+let calEditingRef = null;
+let calTempCreate = null;
+
+const calI18n = {
+  en:{brand:'Study Calendar',sub:'Plan your study time',newTask:'＋ New study task',subjects:'Subjects',branches:'Branches',today:'Today',day:'Day',week:'Week',month:'Month',calendar:'Calendar',plan:'Plan your study time',todayCard:'Today',upcoming:'Upcoming',quick:'Quick actions',focusToday:'Focus today',openTimer:'Open timer',empty:'No scheduled tasks for this view.',all:'All',schedule:'Schedule study task',task:'Task / lecture',subject:'Subject',branch:'Branch',date:'Date',start:'Start',end:'End',status:'Status',notes:'Notes',pending:'Pending',done:'Done',cancel:'Cancel',save:'Save',delete:'Delete schedule',saved:'Task scheduled',deleted:'Schedule deleted',noBranches:'No branches for this subject',allSubjects:'All subjects',allBranches:'All branches'},
+  ar:{brand:'التقويم الدراسي',sub:'خطّط لوقت الدراسة',newTask:'＋ مهمة دراسية جديدة',subjects:'المواد',branches:'الفروع',today:'اليوم',day:'يوم',week:'أسبوع',month:'شهر',calendar:'التقويم',plan:'خطّط لوقت الدراسة',todayCard:'اليوم',upcoming:'القادم',quick:'إجراءات سريعة',focusToday:'ركّز على اليوم',openTimer:'فتح المؤقت',empty:'لا توجد مهام مجدولة في هذا العرض.',all:'الكل',schedule:'جدولة مهمة دراسية',task:'المهمة / المحاضرة',subject:'المادة',branch:'الفرع',date:'التاريخ',start:'البداية',end:'النهاية',status:'الحالة',notes:'ملاحظات',pending:'معلقة',done:'منجزة',cancel:'إلغاء',save:'حفظ',delete:'حذف الجدولة',saved:'تمت جدولة المهمة',deleted:'تم حذف الجدولة',noBranches:'لا توجد فروع لهذه المادة',allSubjects:'كل المواد',allBranches:'كل الفروع'}
+};
+function calT(k){return (calI18n[currentSystemLanguage==='ar'?'ar':'en'][k]||k)}
+function calISO(d){return getLocalISODate(d)}
+function calDateFromISO(s){const [y,m,day]=s.split('-').map(Number);return new Date(y,m-1,day)}
+function calPad(n){return String(n).padStart(2,'0')}
+function calMinutes(t){if(!t)return 0;const [h,m]=t.split(':').map(Number);return h*60+m}
+function calFmtTime(t){return new Date(`2000-01-01T${t}:00`).toLocaleTimeString(currentSystemLanguage==='ar'?'ar-EG':'en-US',{hour:'numeric',minute:'2-digit'})}
+function calFmtDate(d,opt={weekday:'short',month:'short',day:'numeric'}){return d.toLocaleDateString(currentSystemLanguage==='ar'?'ar-EG':'en-US',opt)}
+function calDaysForWeek(d){const x=new Date(d); const day=x.getDay(); const mondayOffset=day===0?-6:1-day; x.setDate(x.getDate()+mondayOffset); return Array.from({length:7},(_,i)=>{const z=new Date(x);z.setDate(x.getDate()+i);return z})}
+function calTaskEntries(){
+  const rows=[];
+  (goalsArray||[]).forEach(goal=>{
+    const subject=goal.linkedTag||'';
+    (goal.tasks||[]).forEach(task=>{
+      const sc=task.schedule;
+      if(!sc || !sc.date || !sc.start) return;
+      rows.push({goal,task,subject,branch:goal.title,date:sc.date,start:sc.start,end:sc.end||sc.start,title:task.text||goal.title,notes:sc.notes||'',done:!!task.done});
+    });
+  });
+  return rows.filter(x=>calSubjectFilter==='all'||x.subject===calSubjectFilter).filter(x=>calBranchFilter==='all'||x.goal.id===calBranchFilter);
+}
+function calSubjects(){return [...new Set((goalsArray||[]).map(g=>g.linkedTag).filter(Boolean))]}
+function calBranchesForSubject(subject){return (goalsArray||[]).filter(g=>g.linkedTag===subject)}
+function calColor(i){return ['orange','green','blue','red'][i%4]}
+function calFilterColor(){return 'var(--accent-orange)'}
+function calVisibleTitle(d){
+  if(calView==='day') return calFmtDate(d,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  if(calView==='month') return d.toLocaleDateString(currentSystemLanguage==='ar'?'ar-EG':'en-US',{month:'long',year:'numeric'});
+  const days=calDaysForWeek(d), a=days[0], b=days[6];
+  return a.getMonth()===b.getMonth() ? `${a.toLocaleDateString(currentSystemLanguage==='ar'?'ar-EG':'en-US',{month:'long'})} ${a.getDate()}–${b.getDate()}, ${a.getFullYear()}` : `${a.toLocaleDateString(currentSystemLanguage==='ar'?'ar-EG':'en-US',{month:'short',day:'numeric'})} – ${b.toLocaleDateString(currentSystemLanguage==='ar'?'ar-EG':'en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+}
+function calUpdateStaticText(){
+  const map={
+    'cal-brand-title':'brand','cal-brand-sub':'sub','cal-new-btn':'newTask','cal-subjects-title':'subjects','cal-branches-title':'branches','cal-today-btn':'today','cal-view-day':'day','cal-view-week':'week','cal-view-month':'month','cal-main-title':'calendar','cal-main-subtitle':'plan','cal-today-card-title':'todayCard','cal-upcoming-title':'upcoming','cal-tips-title':'quick','cal-focus-today':'focusToday','cal-open-timer':'openTimer','cal-modal-title':'schedule','cal-task-label':'task','cal-subject-label':'subject','cal-branch-label':'branch','cal-date-label':'date','cal-start-label':'start','cal-end-label':'end','cal-status-label':'status','cal-notes-label':'notes','cal-cancel-btn':'cancel','cal-save-btn':'save','cal-delete-btn':'delete'
+  };
+  Object.entries(map).forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.textContent=calT(k)});
+}
+function calRenderFilters(){
+  const sg=document.getElementById('cal-subject-filters'), bg=document.getElementById('cal-branch-filters'); if(!sg||!bg)return;
+  const subjects=calSubjects(); sg.innerHTML='';
+  sg.appendChild(calFilterBtn('all',calT('allSubjects'),calSubjectFilter==='all','subject'));
+  subjects.forEach(s=>{const c=(goalsArray||[]).filter(g=>g.linkedTag===s).reduce((n,g)=>n+(g.tasks||[]).filter(t=>t.schedule&&t.schedule.date&&t.schedule.start).length,0); sg.appendChild(calFilterBtn(s,s,c===0?false:calSubjectFilter===s,'subject',c));});
+  const branches=(goalsArray||[]).filter(g=>calSubjectFilter==='all'||g.linkedTag===calSubjectFilter); bg.innerHTML='';
+  bg.appendChild(calFilterBtn('all',calT('allBranches'),calBranchFilter==='all','branch'));
+  branches.forEach(g=>{const c=(g.tasks||[]).filter(t=>t.schedule&&t.schedule.date&&t.schedule.start).length; bg.appendChild(calFilterBtn(g.id,g.title,calBranchFilter===g.id,'branch',c));});
+}
+function calFilterBtn(value,label,active,type,count){const b=document.createElement('button');b.className='cal-filter-btn'+(active?' active':'');b.innerHTML=`<span class="cal-dot"></span><span>${escapeGoalHtml(label)}</span>${count!==undefined?`<span class="cal-filter-meta">${count}</span>`:''}`;b.onclick=()=>{if(type==='subject'){calSubjectFilter=value;calBranchFilter='all'}else calBranchFilter=value;calRender();};return b}
+function calRenderMini(){
+  const grid=document.getElementById('cal-mini-grid'), head=document.getElementById('cal-mini-month'); if(!grid||!head)return;
+  head.textContent=calMiniCursor.toLocaleDateString(currentSystemLanguage==='ar'?'ar-EG':'en-US',{month:'long',year:'numeric'});
+  const y=calMiniCursor.getFullYear(),m=calMiniCursor.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0),offset=(first.getDay()||7)-1;
+  const dows=currentSystemLanguage==='ar'?['ن','ث','ر','خ','ج','س','ح']:['M','T','W','T','F','S','S'];
+  let h=dows.map(x=>`<div class="cal-mini-dow">${x}</div>`).join(''); for(let i=0;i<offset;i++)h+='<div></div>';
+  const scheduledDates=new Set(calTaskEntries().map(x=>x.date));
+  for(let n=1;n<=last.getDate();n++){const d=new Date(y,m,n),iso=calISO(d),sel=iso===calISO(calCursor),has=scheduledDates.has(iso);h+=`<div class="cal-mini-day ${sel?'is-selected':''} ${has?'has-events':''}" onclick="calPickMiniDay(${y},${m},${n})">${n}</div>`}
+  grid.innerHTML=h;
+}
+function calPickMiniDay(y,m,d){calCursor=new Date(y,m,d);calCursor.setHours(0,0,0,0);calMiniCursor=new Date(y,m,1);calSetView('day')}
+function calShiftMiniMonth(n){calMiniCursor.setMonth(calMiniCursor.getMonth()+n);calRenderMini()}
+function calRender(){
+  calUpdateStaticText();calRenderFilters();calRenderMini();
+  document.querySelectorAll('#screen-calendar .cal-view-toggle button').forEach(b=>b.classList.toggle('active',b.id==='cal-view-'+calView));
+  document.getElementById('cal-main-title').textContent=calVisibleTitle(calCursor);
+  document.getElementById('cal-main-subtitle').textContent=calTaskEntries().length+' '+(currentSystemLanguage==='ar'?'مهمة مجدولة':'scheduled tasks');
+  if(calView==='week')calRenderWeek(); else if(calView==='day')calRenderDay(); else calRenderMonth();
+  calRenderTodayCard();calRenderUpcoming();
+}
+function calSetView(v){calView=v;calRender()}
+function calShift(n){if(calView==='week')calCursor.setDate(calCursor.getDate()+n*7);else if(calView==='day')calCursor.setDate(calCursor.getDate()+n);else calCursor.setMonth(calCursor.getMonth()+n);calMiniCursor=new Date(calCursor.getFullYear(),calCursor.getMonth(),1);calRender()}
+function calGoToday(){calCursor=new Date();calCursor.setHours(0,0,0,0);calMiniCursor=new Date(calCursor.getFullYear(),calCursor.getMonth(),1);calRender()}
+function calHourLabel(h){const t=`${calPad(h)}:00`;return calFmtTime(t)}
+function calHoursGrid(cols){let times='<div class="cal-times">';for(let h=0;h<24;h++)times+=`<div class="cal-hour">${calHourLabel(h)}</div>`;times+='</div>';let c='<div class="cal-columns">';for(let i=0;i<cols;i++)c+='<div class="cal-column"></div>';c+='</div>';return {times,c}}
+function calRenderWeek(){
+  const days=calDaysForWeek(calCursor),tasks=calTaskEntries();
+  let h='<div class="cal-week-head"><div class="cal-head-time"></div>'+days.map(d=>`<div class="cal-day-head ${calISO(d)===calISO(new Date())?'is-today':''}"><small>${d.toLocaleDateString(currentSystemLanguage==='ar'?'ar-EG':'en-US',{weekday:'short'})}</small><span>${d.getDate()}</span></div>`).join('')+'</div><div class="cal-time-grid">';
+  let times='<div class="cal-times">';for(let hr=0;hr<24;hr++)times+=`<div class="cal-hour">${calHourLabel(hr)}</div>`;times+='</div>';
+  let cols='<div class="cal-columns">'; days.forEach((d,di)=>{cols+='<div class="cal-column">';tasks.filter(x=>x.date===calISO(d)).forEach((x,j)=>{const top=calMinutes(x.start)/60*48, height=Math.max(26,(calMinutes(x.end)-calMinutes(x.start))/60*48);const idx=(goalsArray||[]).indexOf(x.goal);cols+=`<div class="cal-event ${calColor(idx)} ${x.done?'is-done':''}" style="top:${top}px;height:${height}px" onclick="event.stopPropagation();calOpenEdit('${x.goal.id}','${x.task.id}')"><strong>${escapeGoalHtml(x.title)}</strong><span>${escapeGoalHtml(x.branch)}</span><em>${calFmtTime(x.start)}${x.end&&x.end!==x.start?' – '+calFmtTime(x.end):''}</em></div>`});cols+='</div>'});cols+='</div>';
+  document.getElementById('cal-scroll').innerHTML=h+times+cols;calBindEmptySlotClicks();
+}
+function calRenderDay(){
+  const iso=calISO(calCursor),tasks=calTaskEntries().filter(x=>x.date===iso);
+  let times='<div class="cal-times">';for(let hr=0;hr<24;hr++)times+=`<div class="cal-hour">${calHourLabel(hr)}</div>`;times+='</div>';
+  let col='<div class="cal-day-column">';tasks.forEach((x,j)=>{const top=calMinutes(x.start)/60*48,height=Math.max(30,(calMinutes(x.end)-calMinutes(x.start))/60*48);const idx=(goalsArray||[]).indexOf(x.goal);col+=`<div class="cal-event cal-day-event ${calColor(idx)} ${x.done?'is-done':''}" style="top:${top}px;height:${height}px" onclick="event.stopPropagation();calOpenEdit('${x.goal.id}','${x.task.id}')"><strong>${escapeGoalHtml(x.title)}</strong><span>${escapeGoalHtml(x.branch)}</span><em>${calFmtTime(x.start)}${x.end&&x.end!==x.start?' – '+calFmtTime(x.end):''}</em></div>`});col+='</div>';
+  document.getElementById('cal-scroll').innerHTML=`<div class="cal-week-head" style="grid-template-columns:62px minmax(420px,1fr)"><div class="cal-head-time"></div><div class="cal-day-head ${iso===calISO(new Date())?'is-today':''}"><small>${calFmtDate(calCursor,{weekday:'short'})}</small><span>${calCursor.getDate()}</span></div></div><div class="cal-day-wrap">${times}${col}</div>`;calBindEmptySlotClicks();
+}
+function calRenderMonth(){
+  const y=calCursor.getFullYear(),m=calCursor.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0),offset=(first.getDay()||7)-1,tasks=calTaskEntries();const dows=currentSystemLanguage==='ar'?['الاث','الث','الأر','الخ','الجم','الس','الأحد']:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let h='<div class="cal-month">'+dows.map(x=>`<div class="cal-month-dow">${x}</div>`).join('');for(let i=0;i<offset;i++)h+='<div></div>';for(let n=1;n<=last.getDate();n++){const d=new Date(y,m,n),iso=calISO(d),td=tasks.filter(x=>x.date===iso);h+=`<div class="cal-month-cell ${iso===calISO(new Date())?'is-today':''}" onclick="calPickMiniDay(${y},${m},${n})"><div class="cal-month-num">${n}</div>${td.slice(0,4).map(x=>`<div class="cal-month-event ${x.done?'':'cal-month-pending'}">${escapeGoalHtml(x.title)} · ${calFmtTime(x.start)}</div>`).join('')}${td.length>4?`<div class="cal-month-num">+${td.length-4}</div>`:''}</div>`}h+='</div>';document.getElementById('cal-scroll').innerHTML=h;
+}
+function calBindEmptySlotClicks(){
+  const root=document.getElementById('cal-scroll'); if(!root)return;
+  root.querySelectorAll('.cal-column').forEach((col,di)=>{
+    col.addEventListener('click',e=>{
+      if(e.target.closest('.cal-event'))return;
+      const rect=col.getBoundingClientRect();
+      const scrollTop=root.scrollTop;
+      const y=e.clientY-rect.top+scrollTop;
+      const minutes=Math.max(0,Math.min(1439,Math.round((y/48*60)/30)*30));
+      const hh=Math.floor(minutes/60), mm=minutes%60;
+      const start=`${calPad(hh)}:${calPad(mm)}`;
+      if(calView==='week'){
+        const day=calDaysForWeek(calCursor)[di];
+        calOpenCreate(calISO(day),start);
+      }else if(calView==='day'){
+        calOpenCreate(calISO(calCursor),start);
+      }
+    });
+  });
+}
+function calRenderTodayCard(){const today=calISO(new Date()),rows=calTaskEntries().filter(x=>x.date===today),done=rows.filter(x=>x.done).length,mins=rows.reduce((n,x)=>n+Math.max(0,calMinutes(x.end)-calMinutes(x.start)),0);document.getElementById('cal-today-stats').innerHTML=`<div class="cal-stat-row"><span>${currentSystemLanguage==='ar'?'المهام':'Tasks'}</span><b>${rows.length}</b></div><div class="cal-stat-row"><span>${currentSystemLanguage==='ar'?'المنجز':'Done'}</span><b>${done}/${rows.length}</b></div><div class="cal-stat-row"><span>${currentSystemLanguage==='ar'?'الوقت المخطط':'Planned'}</span><b>${(mins/60).toFixed(1)}h</b></div>`}
+function calRenderUpcoming(){const now=new Date(),startIso=calISO(now),rows=calTaskEntries().filter(x=>!x.done&&x.date>=startIso).sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start)).slice(0,5),el=document.getElementById('cal-upcoming-list');el.innerHTML=rows.length?rows.map(x=>`<div class="cal-up-item" onclick="event.stopPropagation();calOpenEdit('${x.goal.id}','${x.task.id}')"><div class="cal-up-title">${escapeGoalHtml(x.title)}</div><div class="cal-up-time">${calFmtDate(calDateFromISO(x.date))} · ${calFmtTime(x.start)}${x.end&&x.end!==x.start?' – '+calFmtTime(x.end):''}</div></div>`).join(''):`<div class="cal-empty-hint" style="padding:12px 4px">${calT('empty')}</div>`}
+function calPopulateSubjects(selected){const s=document.getElementById('cal-subject-select');s.innerHTML='';(currentTagsList||[]).forEach(tag=>{const o=document.createElement('option');o.value=tag;o.textContent=tag;if(tag===selected)o.selected=true;s.appendChild(o)});if(!s.options.length){const o=document.createElement('option');o.value='';o.textContent='—';s.appendChild(o)}}
+function calPopulateBranches(subject,selected){const b=document.getElementById('cal-branch-select');const gs=calBranchesForSubject(subject);b.innerHTML='';gs.forEach(g=>{const o=document.createElement('option');o.value=g.id;o.textContent=g.title;if(g.id===selected)o.selected=true;b.appendChild(o)});if(!gs.length){const o=document.createElement('option');o.value='';o.textContent=calT('noBranches');b.appendChild(o)}}
+function calOpenCreate(date=null,start=null){
+  calEditingRef=null;document.getElementById('cal-modal-title').textContent=calT('schedule');document.getElementById('cal-delete-btn').style.display='none';document.getElementById('cal-task-title').value='';document.getElementById('cal-date-input').value=calISO(date?calDateFromISO(date):calCursor);document.getElementById('cal-start-input').value=start||'10:00';document.getElementById('cal-end-input').value=start?`${calPad(Math.min(23,parseInt(start.split(':')[0])+1))}:${start.split(':')[1]}`:'11:00';document.getElementById('cal-status-select').value='pending';document.getElementById('cal-notes-input').value='';const subj=(calSubjectFilter!=='all'?calSubjectFilter:(currentTagsList||[])[0]||'');calPopulateSubjects(subj);calPopulateBranches(subj,'');document.getElementById('cal-task-modal').classList.add('open');setTimeout(()=>document.getElementById('cal-task-title').focus(),80);
+}
+function calOpenEdit(goalId,taskId){const goal=goalsArray.find(g=>g.id===goalId),task=goal&&(goal.tasks||[]).find(t=>t.id===taskId);if(!goal||!task)return;const sc=task.schedule||{};calEditingRef={goalId,taskId};document.getElementById('cal-modal-title').textContent=currentSystemLanguage==='ar'?'تعديل الجدولة':'Edit study task';document.getElementById('cal-delete-btn').style.display='inline-block';document.getElementById('cal-task-title').value=task.text||'';document.getElementById('cal-date-input').value=sc.date||calISO(calCursor);document.getElementById('cal-start-input').value=sc.start||'10:00';document.getElementById('cal-end-input').value=sc.end||'11:00';document.getElementById('cal-status-select').value=task.done?'done':'pending';document.getElementById('cal-notes-input').value=sc.notes||'';calPopulateSubjects(goal.linkedTag||'');calPopulateBranches(goal.linkedTag||'',goal.id);document.getElementById('cal-task-modal').classList.add('open')}
+function calCloseModal(){document.getElementById('cal-task-modal').classList.remove('open');calEditingRef=null}
+function calSaveTask(){
+  const title=document.getElementById('cal-task-title').value.trim(),subject=document.getElementById('cal-subject-select').value,goalId=document.getElementById('cal-branch-select').value,date=document.getElementById('cal-date-input').value,start=document.getElementById('cal-start-input').value,end=document.getElementById('cal-end-input').value,status=document.getElementById('cal-status-select').value,notes=document.getElementById('cal-notes-input').value.trim();
+  if(!title||!date||!start||!end||!goalId){showToast('Error',currentSystemLanguage==='ar'?'أكمل الحقول المطلوبة':'Please fill the required fields','error');return}
+  if(calMinutes(end)<=calMinutes(start)){showToast('Error',currentSystemLanguage==='ar'?'وقت النهاية يجب أن يكون بعد البداية':'End time must be after start time','error');return}
+  if(calEditingRef){
+    const goal=goalsArray.find(g=>g.id===calEditingRef.goalId);const task=goal&&(goal.tasks||[]).find(t=>t.id===calEditingRef.taskId);if(!goal||!task)return;
+    task.text=title;task.done=status==='done';task.schedule={date,start,end,notes};
+    if(goal.linkedTag!==subject){const target=goalsArray.find(g=>g.id===goalId);if(target&&target.id!==goal.id){goal.tasks=goal.tasks.filter(t=>t.id!==task.id);if(!Array.isArray(target.tasks))target.tasks=[];target.tasks.push(task)}}
+  }else{
+    const goal=goalsArray.find(g=>g.id===goalId);if(!goal)return;if(!Array.isArray(goal.tasks))goal.tasks=[];goal.tasks.push({id:generateUniqueRecordId(),text:title,done:status==='done',reminders:[],schedule:{date,start,end,notes}});
+  }
+  dbSet('goals',goalsArray);renderGoalsScreen();refreshTimerSidebar();calCloseModal();calCursor=calDateFromISO(date);calMiniCursor=new Date(calCursor.getFullYear(),calCursor.getMonth(),1);calRender();showToast('Calendar',calT('saved'), 'success');
+}
+function calDeleteCurrent(){if(!calEditingRef)return;const goal=goalsArray.find(g=>g.id===calEditingRef.goalId);if(!goal)return;const task=(goal.tasks||[]).find(t=>t.id===calEditingRef.taskId);if(!task)return;if(confirm(currentSystemLanguage==='ar'?'حذف هذه الجدولة من المهمة؟':'Remove this schedule from the task?')){delete task.schedule;dbSet('goals',goalsArray);renderGoalsScreen();refreshTimerSidebar();calCloseModal();calRender();showToast('Calendar',calT('deleted'),'success')}}
+function calBindModal(){const s=document.getElementById('cal-subject-select');if(s)s.addEventListener('change',()=>calPopulateBranches(s.value,''));const ov=document.getElementById('cal-task-modal');if(ov)ov.addEventListener('click',e=>{if(e.target===ov)calCloseModal()})}
+function calInit(){calBindModal();calUpdateStaticText();calRender()}
+</script>
+<script>document.addEventListener('DOMContentLoaded',()=>{try{calInit();}catch(e){console.error('Calendar init failed',e);}});</script></body>
 </html>
