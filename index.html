@@ -831,7 +831,10 @@ button:not(:disabled):active { transform:translateY(1px) scale(.985); }
         html[dir="rtl"] .cal-day-col{border-left:0;border-right:1px solid var(--cal-line)}
         .cal-day-col:hover{background:rgba(217,165,74,.015)}
         .cal-hour-hit{height:56px;border-bottom:1px solid rgba(255,255,255,.035);cursor:crosshair}
-        .cal-event{position:absolute;left:5px;right:5px;border-radius:9px;padding:7px 8px;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--event-color,var(--accent-purple));background:color-mix(in srgb,var(--event-color,var(--accent-purple)) 10%,rgba(255,255,255,.025));cursor:pointer;min-height:34px;box-shadow:0 5px 15px rgba(0,0,0,.16);transition:.18s}
+        .cal-event{position:absolute;left:5px;right:5px;border-radius:9px;padding:7px 8px;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--event-color,var(--accent-purple));background:color-mix(in srgb,var(--event-color,var(--accent-purple)) 10%,rgba(255,255,255,.025));cursor:grab;min-height:34px;box-shadow:0 5px 15px rgba(0,0,0,.16);transition:.18s}
+        .cal-event:active{cursor:grabbing}
+        .cal-event-resize-handle{position:absolute;left:0;right:0;bottom:0;height:7px;cursor:ns-resize}
+        .cal-event-resize-handle:hover{background:color-mix(in srgb,var(--event-color,var(--accent-purple)) 35%,transparent)}
         .cal-event:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16);box-shadow:0 8px 18px rgba(0,0,0,.24)}
         .cal-event.done{opacity:.45}
         .cal-event-title{display:block;font-size:11px;font-weight:800;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -2108,7 +2111,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
 
 /* ===== Calendar desktop alignment / no page-jump ===== */
 @media (min-width: 821px){
-  #screen-calendar{height:calc(100vh - 112px);min-height:620px;overflow:hidden;padding:8px 0 12px;display:block;}
+  #screen-calendar.active-view{height:calc(100vh - 112px);min-height:620px;overflow:hidden;padding:8px 0 12px;}
   #screen-calendar .cal-shell{height:100%;min-height:0;grid-template-columns:280px minmax(0,1fr) 285px;gap:14px;align-items:stretch;}
   #screen-calendar .cal-side,#screen-calendar .cal-main,#screen-calendar .cal-right{height:100%;min-height:0;max-height:none;align-self:stretch;}
   #screen-calendar .cal-side,#screen-calendar .cal-right{position:relative;top:auto;overflow:auto;}
@@ -6366,7 +6369,18 @@ document.addEventListener('keydown', function(e) {
         function calDragLecture(e,goalId,taskId){e.dataTransfer.setData('text/plain',`lecture|${goalId}|${taskId}`);e.dataTransfer.effectAllowed='copy';}
         function calDragBranch(e,goalId){e.dataTransfer.setData('text/plain',`branch|${goalId}`);e.dataTransfer.effectAllowed='copy';}
         function calEditOrScheduleLecture(goalId,taskId){const f=calFind(goalId,taskId);if(!f)return;if(f.task.schedule?.date)calEditTask(encodeURIComponent(`${goalId}|${taskId}`));else calOpenCreateForExistingLecture(goalId,taskId);}
-        function calDropPayload(payload,date,time){const p=payload.split('|');if(p[0]==='lecture')return calOpenCreateForExistingLecture(p[1],p[2],date,time);if(p[0]==='branch')return calScheduleNextLectureAt(p[1],date,time);}
+        function calDropPayload(payload,date,time){
+            const p=payload.split('|');
+            if(p[0]==='lecture')return calOpenCreateForExistingLecture(p[1],p[2],date,time);
+            if(p[0]==='branch')return calScheduleNextLectureAt(p[1],date,time);
+            if(p[0]==='move'){
+                const dur=parseInt(p[3],10)||60;
+                const startMin=calMinutes(time);
+                const endMin=Math.min(24*60,startMin+dur);
+                const end=`${calPad(Math.floor(endMin/60))}:${calPad(endMin%60)}`;
+                return calRescheduleTask(p[1],p[2],date,time,end);
+            }
+        }
         function calSetupDropTargets(){
             document.querySelectorAll('#cal-board .cal-day-col').forEach(col=>{
                 col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('cal-drop-target')});
@@ -6450,9 +6464,55 @@ document.addEventListener('keydown', function(e) {
                 const top=Math.max(0,start*56/60), height=Math.max(34,durationMinutes*56/60);
                 const subject=x.goal.linkedTag||x.goal.title||'General';
                 const c=calColor(subject);
-                const id=encodeURIComponent(`${x.goal.id}|${x.task.id}`);
-                return `<button class="cal-event ${x.task.done?'done':''}" style="top:${top}px;height:${height}px;--event-color:${c}" onclick="calEditTask('${id}')"><span class="cal-event-title">${calEsc(x.task.text)}</span><span class="cal-event-meta">${calFmtTime(x.start)} – ${calFmtTime(x.end||`${calPad(Math.floor(end/60)%24)}:${calPad(end%60)}`)} · ${Math.floor(durationMinutes/60)}h${durationMinutes%60?` ${durationMinutes%60}m`:''}</span><span class="cal-event-tag">#${calEsc(subject)}</span></button>`;
+                const key=`${x.goal.id}|${x.task.id}`;
+                const id=encodeURIComponent(key);
+                return `<div class="cal-event ${x.task.done?'done':''}" data-cal-key="${calEsc(key)}" draggable="true" ondragstart="calEventDragStart(event,'${x.goal.id}','${x.task.id}',${durationMinutes})" style="top:${top}px;height:${height}px;--event-color:${c}" onclick="if(window.__calSkipClick){window.__calSkipClick=false;return;}calEditTask('${id}')"><span class="cal-event-title">${calEsc(x.task.text)}</span><span class="cal-event-meta">${calFmtTime(x.start)} – ${calFmtTime(x.end||`${calPad(Math.floor(end/60)%24)}:${calPad(end%60)}`)} · ${Math.floor(durationMinutes/60)}h${durationMinutes%60?` ${durationMinutes%60}m`:''}</span><span class="cal-event-tag">#${calEsc(subject)}</span><span class="cal-event-resize-handle" onmousedown="calStartResize(event,'${x.goal.id}','${x.task.id}')"></span></div>`;
             }).join('');
+        }
+        function calEventDragStart(e,goalId,taskId,durationMinutes){
+            e.dataTransfer.setData('text/plain',`move|${goalId}|${taskId}|${durationMinutes||60}`);
+            e.dataTransfer.effectAllowed='move';
+        }
+        function calRescheduleTask(goalId,taskId,date,start,end){
+            const f=calFind(goalId,taskId); if(!f) return;
+            f.task.schedule=Object.assign({},f.task.schedule||{},{date,start,end});
+            try { localCacheSet('goals',goalsArray); } catch(e){ console.warn('Local calendar save failed:',e); }
+            try { renderGoalsScreen(); } catch(e){}
+            try { refreshTimerSidebar(); } catch(e){}
+            calRender();
+            Promise.resolve().then(()=>dbSet('goals',goalsArray)).catch(e=>console.warn('Cloud calendar save failed:',e));
+        }
+        let calResizeState=null;
+        function calStartResize(e,goalId,taskId){
+            e.preventDefault(); e.stopPropagation();
+            const f=calFind(goalId,taskId); if(!f||!f.task.schedule) return;
+            const startMin=calMinutes(f.task.schedule.start), origEndMin=calMinutes(f.task.schedule.end);
+            calResizeState={goalId,taskId,startMin,origEndMin,startY:e.clientY,pendingEnd:origEndMin};
+            window.__calSkipClick=true;
+            document.addEventListener('mousemove',calDoResize);
+            document.addEventListener('mouseup',calEndResize);
+        }
+        function calDoResize(e){
+            if(!calResizeState) return;
+            const dy=e.clientY-calResizeState.startY;
+            const deltaMin=Math.round((dy/56*60)/15)*15;
+            let newEnd=Math.max(calResizeState.startMin+15,calResizeState.origEndMin+deltaMin);
+            newEnd=Math.min(24*60,newEnd);
+            calResizeState.pendingEnd=newEnd;
+            const el=document.querySelector(`.cal-event[data-cal-key="${calResizeState.goalId}|${calResizeState.taskId}"]`);
+            if(el) el.style.height=Math.max(34,(newEnd-calResizeState.startMin)*56/60)+'px';
+        }
+        function calEndResize(){
+            document.removeEventListener('mousemove',calDoResize);
+            document.removeEventListener('mouseup',calEndResize);
+            if(!calResizeState) return;
+            const {goalId,taskId,startMin,pendingEnd}=calResizeState;
+            calResizeState=null;
+            const f=calFind(goalId,taskId); if(!f||!f.task.schedule) return;
+            if(pendingEnd===calMinutes(f.task.schedule.end)){ setTimeout(()=>{window.__calSkipClick=false;},0); return; }
+            const end=`${calPad(Math.floor(pendingEnd/60))}:${calPad(pendingEnd%60)}`;
+            calRescheduleTask(goalId,taskId,f.task.schedule.date,f.task.schedule.start,end);
+            setTimeout(()=>{window.__calSkipClick=false;},0);
         }
         function calRenderMonth(root){
             const y=calCurrent.getFullYear(),m=calCurrent.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0);
