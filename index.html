@@ -920,6 +920,7 @@ button:not(:disabled):active { transform:translateY(1px) scale(.985); }
                 .cal-resource-lecture{display:flex;align-items:center;gap:5px;padding:6px 7px;border-radius:8px;color:var(--cal-muted);font-size:10px;cursor:grab;background:transparent;border:1px solid transparent}.cal-resource-lecture:hover{color:var(--cal-ink);background:var(--cal-surface);border-color:var(--cal-line)}.cal-resource-lecture.is-scheduled{color:var(--cal-ink)}.cal-lecture-dot{width:5px;height:5px;border-radius:50%;background:var(--cal-muted);flex:0 0 auto}.cal-resource-lecture.is-scheduled .cal-lecture-dot{background:var(--success)}.cal-resource-schedule{margin-left:auto;border:0;background:transparent;color:var(--cal-muted);cursor:pointer;padding:2px 4px;border-radius:5px}.cal-resource-schedule:hover{color:var(--cal-gold)}
         .cal-branch-toolbar{display:flex;gap:5px;margin:0 7px 4px 26px}.cal-branch-action{border:1px solid var(--cal-line);background:var(--cal-surface-2);color:var(--cal-muted);border-radius:7px;padding:4px 6px;font-size:9px;cursor:pointer}.cal-branch-action:hover{color:var(--cal-ink);border-color:var(--cal-gold)}.cal-drag-hint{font-size:9px;color:var(--cal-muted);padding:7px 9px 2px;line-height:1.5}
         #screen-calendar .cal-day-col.cal-drop-target{background:color-mix(in srgb,var(--cal-gold) 10%,transparent);outline:2px dashed color-mix(in srgb,var(--cal-gold) 55%,transparent);outline-offset:-3px}
+        #screen-calendar .cal-month-cell.cal-drop-target{background:color-mix(in srgb,var(--cal-gold) 10%,transparent);outline:2px dashed color-mix(in srgb,var(--cal-gold) 55%,transparent);outline-offset:-3px}
         @media(max-width:1200px){#screen-calendar .cal-shell{grid-template-columns:220px minmax(0,1fr)}#screen-calendar.cal-sidebar-collapsed .cal-shell{grid-template-columns:0 minmax(0,1fr)}#screen-calendar .cal-right{display:none}} @media(max-width:820px){#screen-calendar .cal-shell,#screen-calendar.cal-sidebar-collapsed .cal-shell{grid-template-columns:1fr}#screen-calendar .cal-side{display:none}}
 </style>
     <style id="modern-day-theme">
@@ -6365,11 +6366,26 @@ document.addEventListener('keydown', function(e) {
         function calDragLecture(e,goalId,taskId){e.dataTransfer.setData('text/plain',`lecture|${goalId}|${taskId}`);e.dataTransfer.effectAllowed='copy';}
         function calDragBranch(e,goalId){e.dataTransfer.setData('text/plain',`branch|${goalId}`);e.dataTransfer.effectAllowed='copy';}
         function calEditOrScheduleLecture(goalId,taskId){const f=calFind(goalId,taskId);if(!f)return;if(f.task.schedule?.date)calEditTask(encodeURIComponent(`${goalId}|${taskId}`));else calOpenCreateForExistingLecture(goalId,taskId);}
-        function calOpenCreateForExistingLecture(goalId,taskId,iso,time){const f=calFind(goalId,taskId);if(!f)return;calEdit=null;calPopulateSelectors(goalId,f.goal.linkedTag||f.goal.title);document.getElementById('cal-modal-title').textContent='Schedule lecture';document.getElementById('cal-task-title').value=f.task.text||'';document.getElementById('cal-task-branch').value=f.task.id;document.getElementById('cal-task-date').value=iso||calISO(calCurrent);document.getElementById('cal-task-start').value=time||'09:00';const eMin=Math.min(23*60+59,calMinutes(time||'09:00')+60);document.getElementById('cal-task-end').value=`${calPad(Math.floor(eMin/60))}:${calPad(eMin%60)}`;document.getElementById('cal-task-priority').value='Normal';document.getElementById('cal-task-notes').value='';document.getElementById('cal-unschedule-btn').style.display='none';document.getElementById('cal-modal').classList.add('open');}
-        function calScheduleNextLecture(goalId){const g=goalsArray.find(x=>String(x.id)===String(goalId));if(!g)return;const t=(g.tasks||[]).find(x=>!x.schedule?.date&&!x.done)||(g.tasks||[]).find(x=>!x.schedule?.date);if(t)calOpenCreateForExistingLecture(goalId,t.id);else showToast('All lectures in this branch are scheduled or completed','','info');}
-        function calScheduleNextLectureAt(goalId,date,time){const g=goalsArray.find(x=>String(x.id)===String(goalId));if(!g)return;const t=(g.tasks||[]).find(x=>!x.schedule?.date&&!x.done)||(g.tasks||[]).find(x=>!x.schedule?.date);if(t)calOpenCreateForExistingLecture(goalId,t.id,date,time);else showToast('No unscheduled lecture is available','','info');}
         function calDropPayload(payload,date,time){const p=payload.split('|');if(p[0]==='lecture')return calOpenCreateForExistingLecture(p[1],p[2],date,time);if(p[0]==='branch')return calScheduleNextLectureAt(p[1],date,time);}
-        function calSetupDropTargets(){document.querySelectorAll('#cal-board .cal-day-col').forEach(col=>{col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('cal-drop-target')});col.addEventListener('dragleave',()=>col.classList.remove('cal-drop-target'));col.addEventListener('drop',e=>{e.preventDefault();col.classList.remove('cal-drop-target');const r=col.getBoundingClientRect(),y=e.clientY-r.top+col.parentElement.scrollTop,mins=Math.max(0,Math.min(23*60+45,Math.round((y/56*60)/15)*15));calDropPayload(e.dataTransfer.getData('text/plain'),col.dataset.calDate,`${calPad(Math.floor(mins/60))}:${calPad(mins%60)}`);});});}
+        function calSetupDropTargets(){
+            document.querySelectorAll('#cal-board .cal-day-col').forEach(col=>{
+                col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('cal-drop-target')});
+                col.addEventListener('dragleave',()=>col.classList.remove('cal-drop-target'));
+                col.addEventListener('drop',e=>{
+                    e.preventDefault();col.classList.remove('cal-drop-target');
+                    const r=col.getBoundingClientRect(),y=e.clientY-r.top+col.parentElement.scrollTop,mins=Math.max(0,Math.min(23*60+45,Math.round((y/56*60)/15)*15));
+                    calDropPayload(e.dataTransfer.getData('text/plain'),col.dataset.calDate,`${calPad(Math.floor(mins/60))}:${calPad(mins%60)}`);
+                });
+            });
+            document.querySelectorAll('#cal-board .cal-month-cell[data-cal-date]').forEach(cell=>{
+                cell.addEventListener('dragover',e=>{e.preventDefault();cell.classList.add('cal-drop-target')});
+                cell.addEventListener('dragleave',()=>cell.classList.remove('cal-drop-target'));
+                cell.addEventListener('drop',e=>{
+                    e.preventDefault();cell.classList.remove('cal-drop-target');
+                    calDropPayload(e.dataTransfer.getData('text/plain'),cell.dataset.calDate,'09:00');
+                });
+            });
+        }
         function calToggleSidebar(){calSidebarCollapsed=!calSidebarCollapsed;const s=document.getElementById('screen-calendar');if(s)s.classList.toggle('cal-sidebar-collapsed',calSidebarCollapsed);try{localStorage.setItem('index_cal_sidebar_collapsed',calSidebarCollapsed?'1':'0')}catch(e){}setTimeout(calRender,40)}
         function calInitSidebar(){try{calSidebarCollapsed=localStorage.getItem('index_cal_sidebar_collapsed')==='1'}catch(e){}const s=document.getElementById('screen-calendar');if(s)s.classList.toggle('cal-sidebar-collapsed',calSidebarCollapsed)}
         function calSetStatus(s){calFilterStatus=s;calRender();calRenderFilters();}
@@ -6450,7 +6466,7 @@ document.addEventListener('keydown', function(e) {
                 else if(dnum>last.getDate()){dt=new Date(y,m,dnum-last.getDate());muted=true}
                 else dt=new Date(y,m,dnum);
                 const iso=calISO(dt), tasks=calFilteredTasks().filter(x=>x.date===iso);
-                h+=`<div class="cal-month-cell ${muted?'muted':''} ${iso===today?'today':''}" ondblclick="calPickDate('${iso}')"><div class="cal-month-num">${dt.getDate()}</div>${tasks.slice(0,5).map(x=>`<button class="cal-month-event" style="--event-color:${calColor(x.goal.linkedTag||x.goal.title)}" onclick="calEditTask('${encodeURIComponent(`${x.goal.id}|${x.task.id}`)}')">${calEsc(x.task.text)}</button>`).join('')}${tasks.length>5?`<div class="cal-note">+${tasks.length-5} more</div>`:''}</div>`;
+                h+=`<div class="cal-month-cell ${muted?'muted':''} ${iso===today?'today':''}" data-cal-date="${iso}" ondblclick="calPickDate('${iso}')"><div class="cal-month-num">${dt.getDate()}</div>${tasks.slice(0,5).map(x=>`<button class="cal-month-event" style="--event-color:${calColor(x.goal.linkedTag||x.goal.title)}" onclick="calEditTask('${encodeURIComponent(`${x.goal.id}|${x.task.id}`)}')">${calEsc(x.task.text)}</button>`).join('')}${tasks.length>5?`<div class="cal-note">+${tasks.length-5} more</div>`:''}</div>`;
             }
             h+='</div></div>';root.innerHTML=h;
         }
