@@ -831,7 +831,10 @@ button:not(:disabled):active { transform:translateY(1px) scale(.985); }
         html[dir="rtl"] .cal-day-col{border-left:0;border-right:1px solid var(--cal-line)}
         .cal-day-col:hover{background:rgba(217,165,74,.015)}
         .cal-hour-hit{height:56px;border-bottom:1px solid rgba(255,255,255,.035);cursor:crosshair}
-        .cal-event{position:absolute;left:5px;right:5px;border-radius:9px;padding:7px 8px;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--event-color,var(--accent-purple));background:color-mix(in srgb,var(--event-color,var(--accent-purple)) 10%,rgba(255,255,255,.025));cursor:pointer;min-height:34px;box-shadow:0 5px 15px rgba(0,0,0,.16);transition:.18s}
+        .cal-event{position:absolute;left:5px;right:5px;border-radius:9px;padding:7px 8px;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--event-color,var(--accent-purple));background:color-mix(in srgb,var(--event-color,var(--accent-purple)) 10%,rgba(255,255,255,.025));cursor:grab;min-height:34px;box-shadow:0 5px 15px rgba(0,0,0,.16);transition:.18s}
+        .cal-event:active{cursor:grabbing}
+        .cal-event-resize-handle{position:absolute;left:0;right:0;bottom:0;height:7px;cursor:ns-resize}
+        .cal-event-resize-handle:hover{background:color-mix(in srgb,var(--event-color,var(--accent-purple)) 35%,transparent)}
         .cal-event:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.16);box-shadow:0 8px 18px rgba(0,0,0,.24)}
         .cal-event.done{opacity:.45}
         .cal-event-title{display:block;font-size:11px;font-weight:800;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -879,6 +882,23 @@ button:not(:disabled):active { transform:translateY(1px) scale(.985); }
         .cal-delete{margin-right:auto;border:1px solid rgba(231,76,60,.24);background:rgba(231,76,60,.08);color:#ff7569;border-radius:9px;padding:9px 12px;cursor:pointer}
         html[dir="rtl"] .cal-delete{margin-right:0;margin-left:auto}
         .cal-note{font-size:10px;color:var(--text-gray);line-height:1.6;margin-top:10px}
+        .cal-agenda{padding:14px 18px;overflow:auto;height:min(670px,calc(100vh - 250px))}
+        .cal-agenda-day{margin-bottom:16px}
+        .cal-agenda-day.today .cal-agenda-date{color:var(--cal-gold)}
+        .cal-agenda-date{font:700 13px 'Source Serif 4',Georgia,serif;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--cal-line)}
+        .cal-agenda-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;cursor:pointer;border-left:3px solid var(--event-color,var(--accent-purple))}
+        html[dir="rtl"] .cal-agenda-item{border-left:0;border-right:3px solid var(--event-color,var(--accent-purple))}
+        .cal-agenda-item:hover{background:rgba(255,255,255,.035)}
+        .cal-agenda-item.done{opacity:.45;text-decoration:line-through}
+        .cal-agenda-time{font-size:10.5px;color:var(--text-gray);min-width:62px}
+        .cal-agenda-text{flex:1;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .cal-agenda-subject{font-size:9.5px;color:var(--event-color,var(--accent-purple));font-weight:800}
+        .cal-pin-btn{background:transparent;border:1px solid var(--cal-line);color:var(--text-gray);border-radius:9px;padding:9px 12px;cursor:pointer;font-size:14px}
+        .cal-pin-btn.is-pinned{color:var(--cal-gold);border-color:rgba(217,165,74,.4)}
+        .cal-duration-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+        .cal-duration-chip{border:1px solid var(--cal-line);background:rgba(255,255,255,.03);color:var(--text-gray);border-radius:99px;padding:5px 10px;font-size:10px;cursor:pointer;font-weight:700}
+        .cal-duration-chip:hover{border-color:rgba(217,165,74,.4);color:var(--text-light)}
+        .cal-upcoming-item.is-pinned{border-color:rgba(217,165,74,.4)}
         @media(max-width:1200px){.cal-shell{grid-template-columns:220px minmax(0,1fr)}.cal-right{display:none}.cal-search{width:140px}}
         @media(max-width:820px){.cal-shell{grid-template-columns:1fr}.cal-side{display:none}.cal-toolbar{padding:10px}.cal-title{min-width:130px}.cal-grid-wrap{height:620px}.cal-week{grid-template-columns:45px repeat(7,105px)}.cal-grid-wrap{grid-template-columns:45px 735px}.cal-days-grid{grid-template-columns:repeat(7,105px)}.cal-form-grid{grid-template-columns:1fr}.cal-field.full{grid-column:auto}.cal-search{width:120px}}
         /* ===== Calendar v3: theme-safe white mode + collapsible resource rail ===== */
@@ -920,6 +940,7 @@ button:not(:disabled):active { transform:translateY(1px) scale(.985); }
                 .cal-resource-lecture{display:flex;align-items:center;gap:5px;padding:6px 7px;border-radius:8px;color:var(--cal-muted);font-size:10px;cursor:grab;background:transparent;border:1px solid transparent}.cal-resource-lecture:hover{color:var(--cal-ink);background:var(--cal-surface);border-color:var(--cal-line)}.cal-resource-lecture.is-scheduled{color:var(--cal-ink)}.cal-lecture-dot{width:5px;height:5px;border-radius:50%;background:var(--cal-muted);flex:0 0 auto}.cal-resource-lecture.is-scheduled .cal-lecture-dot{background:var(--success)}.cal-resource-schedule{margin-left:auto;border:0;background:transparent;color:var(--cal-muted);cursor:pointer;padding:2px 4px;border-radius:5px}.cal-resource-schedule:hover{color:var(--cal-gold)}
         .cal-branch-toolbar{display:flex;gap:5px;margin:0 7px 4px 26px}.cal-branch-action{border:1px solid var(--cal-line);background:var(--cal-surface-2);color:var(--cal-muted);border-radius:7px;padding:4px 6px;font-size:9px;cursor:pointer}.cal-branch-action:hover{color:var(--cal-ink);border-color:var(--cal-gold)}.cal-drag-hint{font-size:9px;color:var(--cal-muted);padding:7px 9px 2px;line-height:1.5}
         #screen-calendar .cal-day-col.cal-drop-target{background:color-mix(in srgb,var(--cal-gold) 10%,transparent);outline:2px dashed color-mix(in srgb,var(--cal-gold) 55%,transparent);outline-offset:-3px}
+        #screen-calendar .cal-month-cell.cal-drop-target{background:color-mix(in srgb,var(--cal-gold) 10%,transparent);outline:2px dashed color-mix(in srgb,var(--cal-gold) 55%,transparent);outline-offset:-3px}
         @media(max-width:1200px){#screen-calendar .cal-shell{grid-template-columns:220px minmax(0,1fr)}#screen-calendar.cal-sidebar-collapsed .cal-shell{grid-template-columns:0 minmax(0,1fr)}#screen-calendar .cal-right{display:none}} @media(max-width:820px){#screen-calendar .cal-shell,#screen-calendar.cal-sidebar-collapsed .cal-shell{grid-template-columns:1fr}#screen-calendar .cal-side{display:none}}
 </style>
     <style id="modern-day-theme">
@@ -2104,32 +2125,21 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
         #screen-calendar .cal-resource-branch.is-open ~ .cal-resource-lecture-list{display:flex;}
         @media(max-width:1200px){#screen-calendar{height:calc(100vh - 110px)}#screen-calendar .cal-shell{grid-template-columns:230px minmax(0,1fr)}#screen-calendar .cal-right{display:none}}
         @media(max-width:820px){#screen-calendar{height:auto;min-height:0;overflow:visible}#screen-calendar .cal-shell{grid-template-columns:1fr}#screen-calendar .cal-side{display:block;height:auto;max-height:55vh}#screen-calendar .cal-main{min-height:680px}}
-</style>
 
-
-<style id="calendar-final-ui-fixes">
-/* Keep every top-level screen isolated: only the selected screen is rendered. */
-.screens-container > .screen-view { display:none !important; }
-.screens-container > .screen-view.active-view { display:block !important; }
-
-/* Calendar stays aligned as one viewport-height workspace; only its internal boards scroll. */
-#screen-calendar { min-height:calc(100vh - 125px); overflow:visible; }
-#screen-calendar .cal-shell { align-items:stretch; min-height:calc(100vh - 165px); }
-#screen-calendar .cal-panel { min-height:calc(100vh - 165px); }
-#screen-calendar .cal-side, #screen-calendar .cal-right { position:sticky; top:92px; max-height:calc(100vh - 120px); overflow:auto; align-self:start; }
-#screen-calendar .cal-main { min-width:0; display:flex; flex-direction:column; }
-#screen-calendar .cal-board { min-height:0; flex:1; display:flex; flex-direction:column; }
-#screen-calendar .cal-grid-wrap { flex:1; min-height:0; }
-
-/* Google-Calendar-like event manipulation */
-#screen-calendar .cal-event { touch-action:none; user-select:none; cursor:grab; }
-#screen-calendar .cal-event.is-dragging { opacity:.72; cursor:grabbing; z-index:50; transform:none; box-shadow:0 14px 30px rgba(0,0,0,.25); }
-#screen-calendar .cal-event.is-resizing { opacity:.85; cursor:ns-resize; z-index:51; transform:none; }
-#screen-calendar .cal-event::after { content:''; position:absolute; left:4px; right:4px; bottom:0; height:7px; cursor:ns-resize; }
-#screen-calendar .cal-event .cal-resize-grip { position:absolute; left:50%; bottom:2px; width:28px; height:3px; transform:translateX(-50%); border-radius:999px; background:currentColor; opacity:.45; pointer-events:none; }
-#screen-calendar .cal-event.is-dragging .cal-resize-grip,
-#screen-calendar .cal-event.is-resizing .cal-resize-grip { opacity:0; }
-#screen-calendar .cal-day-col.cal-drop-target { outline:2px dashed color-mix(in srgb,var(--cal-gold) 55%,transparent); outline-offset:-3px; }
+/* ===== Calendar desktop alignment / no page-jump ===== */
+@media (min-width: 821px){
+  #screen-calendar.active-view{height:calc(100vh - 112px);min-height:620px;overflow:hidden;padding:8px 0 12px;}
+  #screen-calendar .cal-shell{height:100%;min-height:0;grid-template-columns:280px minmax(0,1fr) 285px;gap:14px;align-items:stretch;}
+  #screen-calendar .cal-side,#screen-calendar .cal-main,#screen-calendar .cal-right{height:100%;min-height:0;max-height:none;align-self:stretch;}
+  #screen-calendar .cal-side,#screen-calendar .cal-right{position:relative;top:auto;overflow:auto;}
+  #screen-calendar .cal-main{display:flex;flex-direction:column;overflow:hidden;}
+  #screen-calendar .cal-board{flex:1;min-height:0;overflow:hidden;}
+  #screen-calendar .cal-grid-wrap{height:100%;max-height:none;}
+  #screen-calendar .cal-side{margin-top:0;}
+}
+@media (max-width: 820px){
+  #screen-calendar{height:auto;min-height:0;overflow:visible;}
+}
 </style>
 
 </head>
@@ -2472,6 +2482,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
                         <button class="cal-btn primary" onclick="calOpenCreate()">＋ Add</button>
                     </div>
                     <button class="cal-btn" style="width:100%;margin-bottom:10px;" onclick="calGoToday()">Today</button>
+                    <input type="date" class="cal-btn" id="cal-jump-date" style="width:100%;margin-bottom:10px;color:var(--text-light)" onchange="calJumpToDate(this.value)" title="Jump to date">
                     <div class="cal-mini" id="cal-mini"></div>
                     <div class="cal-filter-title">Subjects & branches</div>
                     <div class="cal-filter-list" id="cal-subject-filters"></div><input id="cal-subject-color-picker" type="color" value="#2e7d5b" aria-hidden="true" tabindex="-1" onchange="calSetSubjectColor(this.dataset.subject,this.value)" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
@@ -2497,13 +2508,12 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
                             <input class="cal-search" id="cal-search" placeholder="Search tasks..." oninput="calRender()">
                             <div class="cal-views">
                                 <button class="cal-view" data-cal-view="day" onclick="calSetView('day')">Day</button>
-                                <button class="cal-view" data-cal-view="3day" onclick="calSetView('3day')">3 Day</button>
                                 <button class="cal-view active" data-cal-view="week" onclick="calSetView('week')">Week</button>
-                                <button class="cal-view" data-cal-view="workweek" onclick="calSetView('workweek')">Work week</button>
                                 <button class="cal-view" data-cal-view="month" onclick="calSetView('month')">Month</button>
                                 <button class="cal-view" data-cal-view="agenda" onclick="calSetView('agenda')">Agenda</button>
-                                <button class="cal-view" data-cal-view="year" onclick="calSetView('year')">Year</button>
                             </div>
+                            <button class="cal-btn" id="cal-notify-btn" onclick="calToggleNotifications()" title="Turn on reminder alerts">🔕</button>
+                            <button class="cal-btn" onclick="calDownloadICS()" title="Export calendar as .ics (Google Calendar, Outlook, Apple Calendar)">⬇ Export</button>
                             <button class="cal-btn primary" onclick="calOpenCreate()">＋ New study task</button>
                         </div>
                     </div>
@@ -2537,6 +2547,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
                             <span class="cal-legend-chip">Click empty slot → schedule</span>
                             <span class="cal-legend-chip">Click task → edit</span>
                             <span class="cal-legend-chip">Done stays synced</span>
+                            <span class="cal-legend-chip">Shortcuts: T today · N new · ←/→ move</span>
                         </div>
                     </div>
                 </aside>
@@ -2578,42 +2589,42 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
                                 <label>End</label>
                                 <input id="cal-task-end" type="time">
                             </div>
+                            <div class="cal-field full" style="margin-top:-6px">
+                                <div class="cal-duration-chips">
+                                    <button type="button" class="cal-duration-chip" onclick="calApplyDurationChip(25)">25 min</button>
+                                    <button type="button" class="cal-duration-chip" onclick="calApplyDurationChip(50)">50 min</button>
+                                    <button type="button" class="cal-duration-chip" onclick="calApplyDurationChip(90)">90 min</button>
+                                    <button type="button" class="cal-duration-chip" onclick="calApplyDurationChip(120)">2 hours</button>
+                                </div>
+                            </div>
                             <div class="cal-field">
                                 <label>Priority</label>
                                 <select id="cal-task-priority">
                                     <option>Normal</option><option>High</option><option>Low</option>
                                 </select>
                             </div>
-                            <div class="cal-field">
-                                <label>All day</label>
-                                <label style="display:flex;align-items:center;gap:8px;padding-top:9px"><input id="cal-task-allday" type="checkbox"> All-day lecture</label>
-                            </div>
-                            <div class="cal-field">
-                                <label>Repeat</label>
-                                <select id="cal-task-repeat">
-                                    <option value="none">Does not repeat</option><option value="daily">Daily</option><option value="weekdays">Every weekday</option><option value="weekly">Weekly</option><option value="biweekly">Every 2 weeks</option><option value="monthly">Monthly</option>
-                                </select>
-                            </div>
-                            <div class="cal-field">
-                                <label>Repeat until</label>
-                                <input id="cal-task-repeat-until" type="date">
-                            </div>
-                            <div class="cal-field">
-                                <label>Reminder</label>
-                                <select id="cal-task-reminder"><option value="none">No reminder</option><option value="0">At start</option><option value="5">5 minutes before</option><option value="10">10 minutes before</option><option value="30">30 minutes before</option><option value="60">1 hour before</option></select>
-                            </div>
-                            <div class="cal-field full">
-                                <label>Location / resource</label>
-                                <input id="cal-task-location" placeholder="Optional room, lecture hall, link, etc.">
-                            </div>
                             <div class="cal-field full">
                                 <label>Notes</label>
                                 <textarea id="cal-task-notes" placeholder="Optional study notes..."></textarea>
+                            </div>
+                            <div class="cal-field" id="cal-repeat-field">
+                                <label>Repeat</label>
+                                <select id="cal-task-repeat">
+                                    <option value="none">Does not repeat</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                </select>
+                            </div>
+                            <div class="cal-field" id="cal-repeat-count-field">
+                                <label>Occurrences</label>
+                                <input id="cal-task-repeat-count" type="number" min="2" max="30" value="4">
                             </div>
                         </div>
                         <div class="cal-note">Existing lectures are reused. Scheduling from Calendar changes only the selected lecture's calendar time. A new lecture may be created only inside an existing Branch. Unscheduling removes only its calendar time; the lecture remains in INDEX.</div>
                     </div>
                     <div class="cal-modal-actions">
+                        <button class="cal-pin-btn" id="cal-pin-btn" onclick="calTogglePinCurrent()" style="display:none" title="Pin to top of Next up">📌</button>
+                        <button class="cal-btn" id="cal-duplicate-btn" onclick="calDuplicateCurrent()" style="display:none">Duplicate</button>
                         <button class="cal-delete" id="cal-unschedule-btn" onclick="calUnschedule()" style="display:none">Unschedule</button>
                         <button class="cal-btn" onclick="calCloseModal()">Cancel</button>
                         <button class="cal-btn primary" onclick="calSaveTask()">Save</button>
@@ -6402,101 +6413,37 @@ document.addEventListener('keydown', function(e) {
         function calDragLecture(e,goalId,taskId){e.dataTransfer.setData('text/plain',`lecture|${goalId}|${taskId}`);e.dataTransfer.effectAllowed='copy';}
         function calDragBranch(e,goalId){e.dataTransfer.setData('text/plain',`branch|${goalId}`);e.dataTransfer.effectAllowed='copy';}
         function calEditOrScheduleLecture(goalId,taskId){const f=calFind(goalId,taskId);if(!f)return;if(f.task.schedule?.date)calEditTask(encodeURIComponent(`${goalId}|${taskId}`));else calOpenCreateForExistingLecture(goalId,taskId);}
-        function calOpenCreateForExistingLecture(goalId,taskId,iso,time){const f=calFind(goalId,taskId);if(!f)return;calEdit=null;calPopulateSelectors(goalId,f.goal.linkedTag||f.goal.title);document.getElementById('cal-modal-title').textContent='Schedule lecture';document.getElementById('cal-task-title').value=f.task.text||'';document.getElementById('cal-task-branch').value=f.task.id;document.getElementById('cal-task-date').value=iso||calISO(calCurrent);document.getElementById('cal-task-start').value=time||'09:00';const eMin=Math.min(23*60+59,calMinutes(time||'09:00')+60);document.getElementById('cal-task-end').value=`${calPad(Math.floor(eMin/60))}:${calPad(eMin%60)}`;document.getElementById('cal-task-priority').value='Normal';document.getElementById('cal-task-notes').value='';document.getElementById('cal-unschedule-btn').style.display='none';document.getElementById('cal-modal').classList.add('open');}
-        function calScheduleNextLecture(goalId){const g=goalsArray.find(x=>String(x.id)===String(goalId));if(!g)return;const t=(g.tasks||[]).find(x=>!x.schedule?.date&&!x.done)||(g.tasks||[]).find(x=>!x.schedule?.date);if(t)calOpenCreateForExistingLecture(goalId,t.id);else showToast('All lectures in this branch are scheduled or completed','','info');}
-        function calScheduleNextLectureAt(goalId,date,time){const g=goalsArray.find(x=>String(x.id)===String(goalId));if(!g)return;const t=(g.tasks||[]).find(x=>!x.schedule?.date&&!x.done)||(g.tasks||[]).find(x=>!x.schedule?.date);if(t)calOpenCreateForExistingLecture(goalId,t.id,date,time);else showToast('No unscheduled lecture is available','','info');}
-        function calDropPayload(payload,date,time){const p=payload.split('|');if(p[0]==='lecture')return calOpenCreateForExistingLecture(p[1],p[2],date,time);if(p[0]==='branch')return calScheduleNextLectureAt(p[1],date,time);}
+        function calDropPayload(payload,date,time){
+            const p=payload.split('|');
+            if(p[0]==='lecture')return calOpenCreateForExistingLecture(p[1],p[2],date,time);
+            if(p[0]==='branch')return calScheduleNextLectureAt(p[1],date,time);
+            if(p[0]==='move'){
+                const dur=parseInt(p[3],10)||60;
+                const startMin=calMinutes(time);
+                const endMin=Math.min(24*60,startMin+dur);
+                const end=`${calPad(Math.floor(endMin/60))}:${calPad(endMin%60)}`;
+                return calRescheduleTask(p[1],p[2],date,time,end);
+            }
+        }
         function calSetupDropTargets(){
             document.querySelectorAll('#cal-board .cal-day-col').forEach(col=>{
-                if(col.dataset.dropBound==='1')return;
-                col.dataset.dropBound='1';
                 col.addEventListener('dragover',e=>{e.preventDefault();col.classList.add('cal-drop-target')});
                 col.addEventListener('dragleave',()=>col.classList.remove('cal-drop-target'));
                 col.addEventListener('drop',e=>{
                     e.preventDefault();col.classList.remove('cal-drop-target');
-                    const mins=calMinutesFromPointer(e.clientY,col);
+                    const r=col.getBoundingClientRect(),y=e.clientY-r.top+col.parentElement.scrollTop,mins=Math.max(0,Math.min(23*60+45,Math.round((y/56*60)/15)*15));
                     calDropPayload(e.dataTransfer.getData('text/plain'),col.dataset.calDate,`${calPad(Math.floor(mins/60))}:${calPad(mins%60)}`);
                 });
             });
-            calBindEventManipulation();
-        }
-
-        function calMinutesFromPointer(clientY,col){
-            const wrap=document.querySelector('#cal-board .cal-grid-wrap');
-            const base=wrap||col.parentElement;
-            const r=base.getBoundingClientRect();
-            const y=clientY-r.top+(base.scrollTop||0);
-            return Math.max(0,Math.min(23*60+45,Math.round((y/56*60)/15)*15));
-        }
-
-        function calDateFromPointer(clientX){
-            const cols=[...document.querySelectorAll('#cal-board .cal-day-col')];
-            return cols.find(c=>{const r=c.getBoundingClientRect();return clientX>=r.left&&clientX<=r.right;})||null;
-        }
-
-        let calPointerOp=null;
-        let calSuppressNextEventClick=false;
-        function calBindEventManipulation(){
-            document.querySelectorAll('#cal-board .cal-event').forEach(ev=>{
-                if(ev.dataset.pointerBound==='1')return;
-                ev.dataset.pointerBound='1';
-                ev.addEventListener('pointerdown',calEventPointerDown);
+            document.querySelectorAll('#cal-board .cal-month-cell[data-cal-date]').forEach(cell=>{
+                cell.addEventListener('dragover',e=>{e.preventDefault();cell.classList.add('cal-drop-target')});
+                cell.addEventListener('dragleave',()=>cell.classList.remove('cal-drop-target'));
+                cell.addEventListener('drop',e=>{
+                    e.preventDefault();cell.classList.remove('cal-drop-target');
+                    calDropPayload(e.dataTransfer.getData('text/plain'),cell.dataset.calDate,'09:00');
+                });
             });
         }
-        function calEventPointerDown(e){
-            if(e.button!==0)return;
-            const ev=e.currentTarget;
-            const eventId=decodeURIComponent(ev.dataset.calEvent||'');
-            const [gid,tid]=eventId.split('|');
-            const f=calFind(gid,tid); if(!f)return;
-            const col=ev.closest('.cal-day-col'); if(!col)return;
-            const rect=ev.getBoundingClientRect();
-            const resizeZone=(e.clientY>=rect.bottom-10);
-            const startMinutes=calMinutes(f.task.schedule?.start||'09:00');
-            const endMinutes=calMinutes(f.task.schedule?.end||'10:00');
-            calPointerOp={ev,gid,tid,mode:resizeZone?'resize':'move',startX:e.clientX,startY:e.clientY,origDate:f.task.schedule?.date||col.dataset.calDate,origStart:startMinutes,origEnd:endMinutes,duration:Math.max(15,endMinutes-startMinutes),moved:false,originCol:col};
-            ev.setPointerCapture?.(e.pointerId);
-            ev.classList.add(resizeZone?'is-resizing':'is-dragging');
-            e.preventDefault();
-        }
-        document.addEventListener('pointermove',e=>{
-            const op=calPointerOp;if(!op)return;
-            const dx=e.clientX-op.startX,dy=e.clientY-op.startY;
-            if(Math.abs(dx)+Math.abs(dy)>4)op.moved=true;
-            const col=calDateFromPointer(e.clientX)||op.originCol;
-            if(op.mode==='move'){
-                const minutes=calMinutesFromPointer(e.clientY,col);
-                const start=Math.max(0,Math.min(23*60,minutes));
-                op.previewDate=col.dataset.calDate; op.previewStart=Math.min(23*60,start); op.previewEnd=Math.min(24*60,op.previewStart+op.duration);
-                op.ev.style.top=(op.previewStart*56/60)+'px';op.ev.style.height=Math.max(34,op.duration*56/60)+'px';
-                const parent=op.ev.parentElement;
-                if(col!==parent)col.appendChild(op.ev);
-            }else{
-                const minutes=calMinutesFromPointer(e.clientY,col);
-                const end=Math.max(op.origStart+15,Math.min(24*60,minutes));
-                op.previewDate=op.origDate;op.previewStart=op.origStart;op.previewEnd=end;
-                op.ev.style.height=Math.max(34,(end-op.origStart)*56/60)+'px';
-            }
-        });
-        document.addEventListener('pointerup',e=>{
-            const op=calPointerOp;if(!op)return;
-            const ev=op.ev;ev.classList.remove('is-dragging','is-resizing');
-            calPointerOp=null;
-            if(!op.moved){return;}
-            calSuppressNextEventClick=true;
-            window.setTimeout(()=>{calSuppressNextEventClick=false},120);
-            const f=calFind(op.gid,op.tid);if(!f){calRender();return;}
-            const date=op.previewDate||op.origDate;
-            let start=op.previewStart??op.origStart;
-            let end=op.previewEnd??op.origEnd;
-            if(op.mode==='move') end=Math.min(24*60,start+op.duration);
-            start=Math.max(0,Math.min(23*60,start)); end=Math.max(start+15,Math.min(24*60,end));
-            f.task.schedule=Object.assign({},f.task.schedule||{}, {date,start:`${calPad(Math.floor(start/60))}:${calPad(start%60)}`,end:`${calPad(Math.floor(end/60)%24)}:${calPad(end%60)}`});
-            dbSet('goals',goalsArray); renderGoalsScreen(); refreshTimerSidebar(); calRender(); showToast(op.mode==='move'?'Lecture moved':'Lecture duration updated','','success');
-        });
-        document.addEventListener('click',e=>{
-            if(calSuppressNextEventClick && e.target.closest('#screen-calendar .cal-event')){e.preventDefault();e.stopPropagation();}
-        },true);
         function calToggleSidebar(){calSidebarCollapsed=!calSidebarCollapsed;const s=document.getElementById('screen-calendar');if(s)s.classList.toggle('cal-sidebar-collapsed',calSidebarCollapsed);try{localStorage.setItem('index_cal_sidebar_collapsed',calSidebarCollapsed?'1':'0')}catch(e){}setTimeout(calRender,40)}
         function calInitSidebar(){try{calSidebarCollapsed=localStorage.getItem('index_cal_sidebar_collapsed')==='1'}catch(e){}const s=document.getElementById('screen-calendar');if(s)s.classList.toggle('cal-sidebar-collapsed',calSidebarCollapsed)}
         function calSetStatus(s){calFilterStatus=s;calRender();calRenderFilters();}
@@ -6513,6 +6460,7 @@ document.addEventListener('keydown', function(e) {
             document.querySelectorAll('.cal-view').forEach(b=>b.classList.toggle('active',b.dataset.calView===calView));
             calRenderFilters(); calRenderMini(); calRenderStats();
             if(calView==='month') calRenderMonth(root);
+            else if(calView==='agenda') calRenderAgenda(root);
             else calRenderTimeGrid(root);
             calSetupDropTargets();
             document.getElementById('cal-title').textContent=calHeaderTitle();
@@ -6521,6 +6469,7 @@ document.addEventListener('keydown', function(e) {
         function calHeaderTitle(){
             if(calView==='day') return calCurrent.toLocaleDateString(currentSystemLanguage==='ar'?'ar-EG':'en-US',{weekday:'long',month:'long',day:'numeric'});
             if(calView==='month') return calCurrent.toLocaleDateString(currentSystemLanguage==='ar'?'ar-EG':'en-US',{month:'long',year:'numeric'});
+            if(calView==='agenda') return 'Agenda';
             const a=calStartWeek(calCurrent),b=calEndWeek(calCurrent);
             const loc=currentSystemLanguage==='ar'?'ar-EG':'en-US';
             if(a.getMonth()===b.getMonth()) return a.toLocaleDateString(loc,{month:'long',year:'numeric'});
@@ -6545,6 +6494,201 @@ document.addEventListener('keydown', function(e) {
         }
         function calMiniShift(n){calCurrent.setMonth(calCurrent.getMonth()+n);calRender();}
         function calPickDate(iso){const [y,m,d]=iso.split('-').map(Number);calCurrent=new Date(y,m-1,d);calRender();}
+        function calJumpToDate(iso){
+            if(!iso) return;
+            const [y,m,d]=iso.split('-').map(Number);
+            calCurrent=new Date(y,m-1,d);
+            calRender();
+        }
+
+        // ---------------------------------------------------------------
+        //  ⏱ Quick duration chips (Notion-style one-click time blocks)
+        // ---------------------------------------------------------------
+        function calApplyDurationChip(mins){
+            const startInput=document.getElementById('cal-task-start');
+            const endInput=document.getElementById('cal-task-end');
+            if(!startInput||!endInput) return;
+            const startMin=calMinutes(startInput.value||'09:00');
+            const endMin=Math.min(23*60+59, startMin+mins);
+            endInput.value=`${calPad(Math.floor(endMin/60))}:${calPad(endMin%60)}`;
+        }
+
+        // ---------------------------------------------------------------
+        //  📌 Pin a task so it always stays on top of "Next up" (Notion-style pin)
+        // ---------------------------------------------------------------
+        function calTogglePinCurrent(){
+            if(!calEdit) return;
+            const f=calFind(calEdit.gid,calEdit.tid); if(!f) return;
+            f.task.pinned=!f.task.pinned;
+            document.getElementById('cal-pin-btn').classList.toggle('is-pinned', !!f.task.pinned);
+            try { localCacheSet('goals',goalsArray); } catch(e){}
+            Promise.resolve().then(()=>dbSet('goals',goalsArray)).catch(()=>{});
+            calRenderStats();
+            showToast(f.task.pinned?'Pinned':'Unpinned', f.task.pinned?'This task will stay on top of Next up.':'', 'info');
+        }
+
+        // ---------------------------------------------------------------
+        //  🗂 Duplicate a scheduled task to tomorrow (Notion-style duplicate)
+        // ---------------------------------------------------------------
+        function calDuplicateCurrent(){
+            if(!calEdit) return;
+            const f=calFind(calEdit.gid,calEdit.tid); if(!f) return;
+            const {goal,task}=f, s=task.schedule||{};
+            const [y,m,d]=(s.date||calISO(new Date())).split('-').map(Number);
+            const nd=new Date(y,m-1,d+1);
+            const clone={id:generateUniqueRecordId(),text:task.text,done:false,reminders:[],studyCount:0,videoWatched:false,needsRevision:false};
+            clone.schedule={date:calISO(nd),start:s.start||'09:00',end:s.end||'10:00',priority:s.priority||'Normal',notes:s.notes||''};
+            goal.tasks.push(clone);
+            try { localCacheSet('goals',goalsArray); } catch(e){}
+            try { renderGoalsScreen(); } catch(e){}
+            calCloseModal();
+            calRender();
+            Promise.resolve().then(()=>dbSet('goals',goalsArray)).catch(()=>{});
+            showToast('Duplicated', 'A copy was scheduled for the next day.', 'success');
+        }
+
+        // ---------------------------------------------------------------
+        //  📋 Agenda / List view (Notion Calendar's chronological list)
+        // ---------------------------------------------------------------
+        function calRenderAgenda(root){
+            const tasks=calFilteredTasks().slice().sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start));
+            if(!tasks.length){ root.innerHTML='<div class="cal-empty">No scheduled tasks match your filters.</div>'; return; }
+            const groups={};
+            tasks.forEach(x=>{ (groups[x.date]=groups[x.date]||[]).push(x); });
+            const loc=currentSystemLanguage==='ar'?'ar-EG':'en-US';
+            const today=calISO(new Date());
+            let html='<div class="cal-agenda">';
+            Object.keys(groups).forEach(date=>{
+                const dt=new Date(date+'T00:00:00');
+                const label=dt.toLocaleDateString(loc,{weekday:'long',month:'long',day:'numeric'});
+                html+=`<div class="cal-agenda-day ${date===today?'today':''}"><div class="cal-agenda-date">${calEsc(label)}</div>`;
+                groups[date].forEach(x=>{
+                    const subject=x.goal.linkedTag||x.goal.title||'General';
+                    html+=`<div class="cal-agenda-item ${x.task.done?'done':''}" style="--event-color:${calColor(subject)}" onclick="calEditTask('${encodeURIComponent(x.goal.id+'|'+x.task.id)}')">
+                        <span class="cal-agenda-time">${calFmtTime(x.start)}</span>
+                        <span class="cal-agenda-text">${x.task.pinned?'📌 ':''}${calEsc(x.task.text)}</span>
+                        <span class="cal-agenda-subject">${calEsc(subject)}</span>
+                    </div>`;
+                });
+                html+='</div>';
+            });
+            html+='</div>';
+            root.innerHTML=html;
+        }
+
+        // ---------------------------------------------------------------
+        //  🔔 Reminder notifications (Google Calendar-style pop-up alerts)
+        //  Notifies 10 minutes before a scheduled task's start time.
+        // ---------------------------------------------------------------
+        let calNotifiedKeys = (() => { try { return new Set(JSON.parse(localStorage.getItem('index_cal_notified') || '[]')); } catch(e) { return new Set(); } })();
+        let calNotifyEnabled = localStorage.getItem('index_cal_notify_enabled') === '1';
+        function calSaveNotified(){ try{ localStorage.setItem('index_cal_notified', JSON.stringify([...calNotifiedKeys].slice(-500))); }catch(e){} }
+        function calUpdateNotifyBtn(){
+            const btn=document.getElementById('cal-notify-btn'); if(!btn) return;
+            const granted = typeof Notification!=='undefined' && Notification.permission==='granted';
+            const on = calNotifyEnabled && granted;
+            btn.classList.toggle('primary', on);
+            btn.title = on ? 'Reminder alerts are on — click to turn off' : 'Turn on reminder alerts (10 min before each task)';
+            btn.textContent = on ? '🔔' : '🔕';
+        }
+        async function calToggleNotifications(){
+            if (typeof Notification === 'undefined') { showToast('Not supported', 'Notifications are not supported in this browser.', 'info'); return; }
+            if (!calNotifyEnabled) {
+                let perm = Notification.permission;
+                if (perm === 'default') perm = await Notification.requestPermission();
+                if (perm !== 'granted') { showToast('Permission needed', 'Please allow notifications in your browser to get reminders.', 'info'); calUpdateNotifyBtn(); return; }
+                calNotifyEnabled = true;
+                showToast('Reminders on', "You'll be notified 10 minutes before each scheduled task.", 'success');
+            } else {
+                calNotifyEnabled = false;
+                showToast('Reminders off', 'Reminder alerts are turned off.', 'info');
+            }
+            try { localStorage.setItem('index_cal_notify_enabled', calNotifyEnabled ? '1' : '0'); } catch(e){}
+            calUpdateNotifyBtn();
+        }
+        function calCheckReminders(){
+            if (!calNotifyEnabled || typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+            const now = new Date();
+            const nowIso = calISO(now);
+            const nowMin = now.getHours()*60 + now.getMinutes();
+            let changed = false;
+            calAllTasks().forEach(x=>{
+                if (x.task.done || x.date !== nowIso) return;
+                const diff = calMinutes(x.start) - nowMin;
+                if (diff < 0 || diff > 10) return;
+                const key = x.goal.id+'|'+x.task.id+'|'+x.date+'|'+x.start;
+                if (calNotifiedKeys.has(key)) return;
+                calNotifiedKeys.add(key); changed = true;
+                const subject = x.goal.linkedTag || x.goal.title || 'General';
+                try {
+                    const n = new Notification('📅 ' + x.task.text, { body: subject + ' · starts at ' + calFmtTime(x.start), tag: key });
+                    n.onclick = () => { window.focus(); n.close(); };
+                } catch(e){}
+                showToast('Upcoming task', x.task.text + ' starts at ' + calFmtTime(x.start), 'info', 6000);
+            });
+            if (changed) calSaveNotified();
+        }
+        setInterval(calCheckReminders, 30000);
+
+        // ---------------------------------------------------------------
+        //  ⌨️ Keyboard shortcuts (only while the Calendar tab is open and
+        //     you're not typing in a field) — same spirit as Google Calendar.
+        //     T = today · N = new task · ←/→ = previous/next · Esc = close
+        // ---------------------------------------------------------------
+        document.addEventListener('keydown', (e) => {
+            const tag = (document.activeElement && document.activeElement.tagName || '').toLowerCase();
+            const typing = tag === 'input' || tag === 'textarea' || tag === 'select';
+            if (e.key === 'Escape') { calCloseModal(); return; }
+            if (typing) return;
+            const calScreen = document.getElementById('screen-calendar');
+            if (!calScreen || !calScreen.classList.contains('active-view')) return;
+            if (e.key === 't' || e.key === 'T') { calGoToday(); }
+            else if (e.key === 'n' || e.key === 'N') { calOpenCreate(); }
+            else if (e.key === 'ArrowLeft') { calShift(-1); }
+            else if (e.key === 'ArrowRight') { calShift(1); }
+        });
+
+        // ---------------------------------------------------------------
+        //  ⬇ Export to .ics — works with Google Calendar, Outlook, Apple
+        //     Calendar and any other app that reads the standard format.
+        // ---------------------------------------------------------------
+        function calIcsEscape(str){
+            return String(str||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+        }
+        function calDownloadICS(){
+            const tasks = calAllTasks();
+            if (!tasks.length) { showToast('Nothing to export', 'Schedule a task first, then export your calendar.', 'info'); return; }
+            const pad = n => String(n).padStart(2,'0');
+            const fmt = dt => dt.getFullYear()+pad(dt.getMonth()+1)+pad(dt.getDate())+'T'+pad(dt.getHours())+pad(dt.getMinutes())+'00';
+            const dtstamp = new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+            let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//INDEX//Study Calendar//EN\r\nCALSCALE:GREGORIAN\r\n';
+            tasks.forEach(x=>{
+                const [y,m,d] = x.date.split('-').map(Number);
+                const [sh,sm] = (x.start||'09:00').split(':').map(Number);
+                const startDate = new Date(y, m-1, d, sh, sm);
+                let endDate;
+                if (x.end) { const [eh,em] = x.end.split(':').map(Number); endDate = new Date(y, m-1, d, eh, em); }
+                else { endDate = new Date(startDate.getTime() + 30*60000); }
+                const subject = x.goal.linkedTag || x.goal.title || 'General';
+                ics += 'BEGIN:VEVENT\r\n';
+                ics += 'UID:' + x.goal.id + '-' + x.task.id + '@index-calendar\r\n';
+                ics += 'DTSTAMP:' + dtstamp + '\r\n';
+                ics += 'DTSTART:' + fmt(startDate) + '\r\n';
+                ics += 'DTEND:' + fmt(endDate) + '\r\n';
+                ics += 'SUMMARY:' + calIcsEscape(x.task.text || 'Study task') + '\r\n';
+                ics += 'DESCRIPTION:' + calIcsEscape(subject + (x.notes ? (' - ' + x.notes) : '')) + '\r\n';
+                ics += 'STATUS:' + (x.task.done ? 'COMPLETED' : 'CONFIRMED') + '\r\n';
+                ics += 'END:VEVENT\r\n';
+            });
+            ics += 'END:VCALENDAR\r\n';
+            const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'index-calendar.ics';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Exported', 'Saved as .ics — import it into Google Calendar, Outlook, or Apple Calendar.', 'success');
+        }
         function calRenderTimeGrid(root){
             const days=calView==='day'?[new Date(calCurrent)]:[...Array(7)].map((_,i)=>{const d=calStartWeek(calCurrent);d.setDate(d.getDate()+i);return d});
             const loc=currentSystemLanguage==='ar'?'ar-EG':'en-US';
@@ -6561,9 +6705,55 @@ document.addEventListener('keydown', function(e) {
                 const top=Math.max(0,start*56/60), height=Math.max(34,durationMinutes*56/60);
                 const subject=x.goal.linkedTag||x.goal.title||'General';
                 const c=calColor(subject);
-                const id=encodeURIComponent(`${x.goal.id}|${x.task.id}`);
-                return `<button class="cal-event ${x.task.done?'done':''}" data-cal-event="${id}" style="top:${top}px;height:${height}px;--event-color:${c}" onclick="calEditTask('${id}')"><span class="cal-event-title">${calEsc(x.task.text)}</span><span class="cal-event-meta">${calFmtTime(x.start)} – ${calFmtTime(x.end||`${calPad(Math.floor(end/60)%24)}:${calPad(end%60)}`)} · ${Math.floor(durationMinutes/60)}h${durationMinutes%60?` ${durationMinutes%60}m`:''}</span><span class="cal-event-tag">#${calEsc(subject)}</span><span class="cal-resize-grip" aria-hidden="true"></span></button>`;
+                const key=`${x.goal.id}|${x.task.id}`;
+                const id=encodeURIComponent(key);
+                return `<div class="cal-event ${x.task.done?'done':''}" data-cal-key="${calEsc(key)}" draggable="true" ondragstart="calEventDragStart(event,'${x.goal.id}','${x.task.id}',${durationMinutes})" style="top:${top}px;height:${height}px;--event-color:${c}" onclick="if(window.__calSkipClick){window.__calSkipClick=false;return;}calEditTask('${id}')"><span class="cal-event-title">${calEsc(x.task.text)}</span><span class="cal-event-meta">${calFmtTime(x.start)} – ${calFmtTime(x.end||`${calPad(Math.floor(end/60)%24)}:${calPad(end%60)}`)} · ${Math.floor(durationMinutes/60)}h${durationMinutes%60?` ${durationMinutes%60}m`:''}</span><span class="cal-event-tag">#${calEsc(subject)}</span><span class="cal-event-resize-handle" onmousedown="calStartResize(event,'${x.goal.id}','${x.task.id}')"></span></div>`;
             }).join('');
+        }
+        function calEventDragStart(e,goalId,taskId,durationMinutes){
+            e.dataTransfer.setData('text/plain',`move|${goalId}|${taskId}|${durationMinutes||60}`);
+            e.dataTransfer.effectAllowed='move';
+        }
+        function calRescheduleTask(goalId,taskId,date,start,end){
+            const f=calFind(goalId,taskId); if(!f) return;
+            f.task.schedule=Object.assign({},f.task.schedule||{},{date,start,end});
+            try { localCacheSet('goals',goalsArray); } catch(e){ console.warn('Local calendar save failed:',e); }
+            try { renderGoalsScreen(); } catch(e){}
+            try { refreshTimerSidebar(); } catch(e){}
+            calRender();
+            Promise.resolve().then(()=>dbSet('goals',goalsArray)).catch(e=>console.warn('Cloud calendar save failed:',e));
+        }
+        let calResizeState=null;
+        function calStartResize(e,goalId,taskId){
+            e.preventDefault(); e.stopPropagation();
+            const f=calFind(goalId,taskId); if(!f||!f.task.schedule) return;
+            const startMin=calMinutes(f.task.schedule.start), origEndMin=calMinutes(f.task.schedule.end);
+            calResizeState={goalId,taskId,startMin,origEndMin,startY:e.clientY,pendingEnd:origEndMin};
+            window.__calSkipClick=true;
+            document.addEventListener('mousemove',calDoResize);
+            document.addEventListener('mouseup',calEndResize);
+        }
+        function calDoResize(e){
+            if(!calResizeState) return;
+            const dy=e.clientY-calResizeState.startY;
+            const deltaMin=Math.round((dy/56*60)/15)*15;
+            let newEnd=Math.max(calResizeState.startMin+15,calResizeState.origEndMin+deltaMin);
+            newEnd=Math.min(24*60,newEnd);
+            calResizeState.pendingEnd=newEnd;
+            const el=document.querySelector(`.cal-event[data-cal-key="${calResizeState.goalId}|${calResizeState.taskId}"]`);
+            if(el) el.style.height=Math.max(34,(newEnd-calResizeState.startMin)*56/60)+'px';
+        }
+        function calEndResize(){
+            document.removeEventListener('mousemove',calDoResize);
+            document.removeEventListener('mouseup',calEndResize);
+            if(!calResizeState) return;
+            const {goalId,taskId,startMin,pendingEnd}=calResizeState;
+            calResizeState=null;
+            const f=calFind(goalId,taskId); if(!f||!f.task.schedule) return;
+            if(pendingEnd===calMinutes(f.task.schedule.end)){ setTimeout(()=>{window.__calSkipClick=false;},0); return; }
+            const end=`${calPad(Math.floor(pendingEnd/60))}:${calPad(pendingEnd%60)}`;
+            calRescheduleTask(goalId,taskId,f.task.schedule.date,f.task.schedule.start,end);
+            setTimeout(()=>{window.__calSkipClick=false;},0);
         }
         function calRenderMonth(root){
             const y=calCurrent.getFullYear(),m=calCurrent.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0);
@@ -6577,7 +6767,7 @@ document.addEventListener('keydown', function(e) {
                 else if(dnum>last.getDate()){dt=new Date(y,m,dnum-last.getDate());muted=true}
                 else dt=new Date(y,m,dnum);
                 const iso=calISO(dt), tasks=calFilteredTasks().filter(x=>x.date===iso);
-                h+=`<div class="cal-month-cell ${muted?'muted':''} ${iso===today?'today':''}" ondblclick="calPickDate('${iso}')"><div class="cal-month-num">${dt.getDate()}</div>${tasks.slice(0,5).map(x=>`<button class="cal-month-event" style="--event-color:${calColor(x.goal.linkedTag||x.goal.title)}" onclick="calEditTask('${encodeURIComponent(`${x.goal.id}|${x.task.id}`)}')">${calEsc(x.task.text)}</button>`).join('')}${tasks.length>5?`<div class="cal-note">+${tasks.length-5} more</div>`:''}</div>`;
+                h+=`<div class="cal-month-cell ${muted?'muted':''} ${iso===today?'today':''}" data-cal-date="${iso}" ondblclick="calPickDate('${iso}')"><div class="cal-month-num">${dt.getDate()}</div>${tasks.slice(0,5).map(x=>`<button class="cal-month-event" style="--event-color:${calColor(x.goal.linkedTag||x.goal.title)}" onclick="calEditTask('${encodeURIComponent(`${x.goal.id}|${x.task.id}`)}')">${calEsc(x.task.text)}</button>`).join('')}${tasks.length>5?`<div class="cal-note">+${tasks.length-5} more</div>`:''}</div>`;
             }
             h+='</div></div>';root.innerHTML=h;
         }
@@ -6595,8 +6785,12 @@ document.addEventListener('keydown', function(e) {
             document.getElementById('cal-week-sub').textContent=(weekItems.length?Math.round(done/weekItems.length*100):0)+'% complete · '+weekItems.length+' tasks';
             document.getElementById('cal-completion').textContent=completion+'%';
             const up=document.getElementById('cal-upcoming');
-            const now=new Date(); const upcoming=all.filter(x=>!x.task.done && x.date>=calISO(now)).sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start)).slice(0,5);
-            up.innerHTML=upcoming.length?upcoming.map(x=>`<div class="cal-upcoming-item" onclick="calEditTask('${encodeURIComponent(`${x.goal.id}|${x.task.id}`)}')"><b>${calEsc(x.task.text)}</b><span>${calEsc(x.goal.linkedTag||x.goal.title)} · ${calEsc(x.date)} · ${calFmtTime(x.start)}</span></div>`).join(''):'<div class="cal-empty" style="min-height:120px;padding:10px">Nothing scheduled next.</div>';
+            const now=new Date(); const upcoming=all.filter(x=>!x.task.done && x.date>=calISO(now)).sort((a,b)=>{
+                const pa=a.task.pinned?0:1, pb=b.task.pinned?0:1;
+                if(pa!==pb) return pa-pb;
+                return (a.date+a.start).localeCompare(b.date+b.start);
+            }).slice(0,5);
+            up.innerHTML=upcoming.length?upcoming.map(x=>`<div class="cal-upcoming-item ${x.task.pinned?'is-pinned':''}" onclick="calEditTask('${encodeURIComponent(`${x.goal.id}|${x.task.id}`)}')"><b>${x.task.pinned?'📌 ':''}${calEsc(x.task.text)}</b><span>${calEsc(x.goal.linkedTag||x.goal.title)} · ${calEsc(x.date)} · ${calFmtTime(x.start)}</span></div>`).join(''):'<div class="cal-empty" style="min-height:120px;padding:10px">Nothing scheduled next.</div>';
         }
         function calFind(goalId,taskId){
             const goal=goalsArray.find(g=>String(g.id)===String(goalId)); if(!goal)return null;
@@ -6647,6 +6841,10 @@ document.addEventListener('keydown', function(e) {
             document.getElementById('cal-task-priority').value=f.task.schedule?.priority||'Normal';
             document.getElementById('cal-task-notes').value=f.task.schedule?.notes||'';
             document.getElementById('cal-unschedule-btn').style.display='block';
+            document.getElementById('cal-repeat-field').style.display='none';
+            document.getElementById('cal-repeat-count-field').style.display='none';
+            document.getElementById('cal-pin-btn').style.display='none';
+            document.getElementById('cal-duplicate-btn').style.display='none';
             document.getElementById('cal-modal').classList.add('open');
         }
         function calScheduleNextLecture(goalId){
@@ -6672,6 +6870,12 @@ document.addEventListener('keydown', function(e) {
             document.getElementById('cal-task-priority').value='Normal';
             document.getElementById('cal-task-notes').value='';
             document.getElementById('cal-unschedule-btn').style.display='none';
+            document.getElementById('cal-task-repeat').value='none';
+            document.getElementById('cal-task-repeat-count').value='4';
+            document.getElementById('cal-repeat-field').style.display='';
+            document.getElementById('cal-repeat-count-field').style.display='';
+            document.getElementById('cal-pin-btn').style.display='none';
+            document.getElementById('cal-duplicate-btn').style.display='none';
             document.getElementById('cal-modal').classList.add('open');
         }
         function calEditTask(encoded){
@@ -6688,39 +6892,87 @@ document.addEventListener('keydown', function(e) {
             document.getElementById('cal-task-priority').value=s.priority||'Normal';
             document.getElementById('cal-task-notes').value=s.notes||'';
             document.getElementById('cal-unschedule-btn').style.display='block';
+            document.getElementById('cal-repeat-field').style.display='none';
+            document.getElementById('cal-repeat-count-field').style.display='none';
+            const pinBtn=document.getElementById('cal-pin-btn');
+            pinBtn.style.display='block';
+            pinBtn.classList.toggle('is-pinned', !!task.pinned);
+            document.getElementById('cal-duplicate-btn').style.display='block';
             document.getElementById('cal-modal').classList.add('open');
         }
+        function calCloseModal(){
+            const modal=document.getElementById('cal-modal');
+            if(modal) modal.classList.remove('open');
+            calEdit=null;
+        }
+
         function calSaveTask(){
-            const title=document.getElementById('cal-task-title').value.trim();
-            const subject=document.getElementById('cal-task-subject').value;
-            const branchId=document.getElementById('cal-task-branch').value;
-            const lectureId=document.getElementById('cal-task-lecture').value;
-            const date=document.getElementById('cal-task-date').value;
-            const startTime=document.getElementById('cal-task-start').value;
-            const endTime=document.getElementById('cal-task-end').value;
-            const duration=Math.max(0,calMinutes(endTime)-calMinutes(startTime));
-            if(!date||!startTime||!endTime||!title||duration<=0){showToast('Check the lecture title and time range.','','warning');return;}
-            let goal,task;
+            const title=document.getElementById('cal-task-title')?.value.trim()||'';
+            const subject=document.getElementById('cal-task-subject')?.value||'';
+            const branchId=document.getElementById('cal-task-branch')?.value||'';
+            const lectureId=document.getElementById('cal-task-lecture')?.value||'';
+            const date=document.getElementById('cal-task-date')?.value||'';
+            const startTime=document.getElementById('cal-task-start')?.value||'';
+            const endTime=document.getElementById('cal-task-end')?.value||'';
+            const startMin=calMinutes(startTime), endMin=calMinutes(endTime);
+            const duration=Math.max(0,endMin-startMin);
+            if(!date||!startTime||!endTime||!title||startMin===null||endMin===null||duration<=0){
+                showToast('Check the lecture title and time range.','','warning'); return;
+            }
+            let goal=null,task=null;
             if(calEdit){
-                const f=calFind(calEdit.gid,calEdit.tid);goal=f?.goal;task=f?.task;
+                const f=calFind(calEdit.gid,calEdit.tid);
+                goal=f?.goal||null; task=f?.task||null;
             }else{
-                goal=(goalsArray||[]).find(g=>String(g.id)===String(branchId) && (g.linkedTag||g.title||'General')===subject);
+                goal=(goalsArray||[]).find(g=>String(g.id)===String(branchId) && (g.linkedTag||g.title||'General')===subject) || null;
                 if(!goal){showToast('Select an existing branch first.','','warning');return;}
-                task=(goal.tasks||[]).find(t=>String(t.id)===String(lectureId));
-                if(!task){
-                    task={id:generateUniqueRecordId(),text:title,done:false,reminders:[],studyCount:0,videoWatched:false,needsRevision:false};
-                    goal.tasks=goal.tasks||[];goal.tasks.push(task);
+                task=(goal.tasks||[]).find(t=>String(t.id)===String(lectureId))||null;
+                if(!task){showToast('Select an existing lecture first.','','warning');return;}
+            }
+            if(!goal||!task){showToast('The selected lecture could not be found.','','error');return;}
+
+            task.schedule={date,start:startTime,end:endTime,priority:document.getElementById('cal-task-priority')?.value||'Normal',notes:document.getElementById('cal-task-notes')?.value.trim()||''};
+
+            // Repeat (daily/weekly): clone this lecture into new tasks on future dates.
+            if (!calEdit) {
+                const repeat = document.getElementById('cal-task-repeat')?.value || 'none';
+                const count = Math.max(1, Math.min(30, parseInt(document.getElementById('cal-task-repeat-count')?.value, 10) || 1));
+                if (repeat !== 'none' && count > 1) {
+                    const stepDays = repeat === 'weekly' ? 7 : 1;
+                    const [y0,m0,d0] = date.split('-').map(Number);
+                    for (let i = 1; i < count; i++) {
+                        const nd = new Date(y0, m0-1, d0 + i*stepDays);
+                        const niso = calISO(nd);
+                        const clone = { id: generateUniqueRecordId(), text: task.text, done: false, reminders: [], studyCount: 0, videoWatched: false, needsRevision: false };
+                        clone.schedule = { date: niso, start: startTime, end: endTime, priority: task.schedule.priority, notes: task.schedule.notes };
+                        goal.tasks.push(clone);
+                    }
                 }
             }
-            task.text=title;
-            task.schedule={date,start:startTime,end:endTime,priority:document.getElementById('cal-task-priority').value,notes:document.getElementById('cal-task-notes').value.trim()};
-            dbSet('goals',goalsArray);
-            renderGoalsScreen();refreshTimerSidebar();calCloseModal();calRender();
+
+            // Persist locally and update the UI immediately so Save never appears stuck.
+            try { localCacheSet('goals',goalsArray); } catch(e) { console.warn('Local calendar save failed:',e); }
+            try { renderGoalsScreen(); } catch(e) { console.warn('Goals refresh failed:',e); }
+            try { refreshTimerSidebar(); } catch(e) { console.warn('Timer refresh failed:',e); }
+            calCloseModal();
+            calRender();
             showToast('Lecture schedule saved','','success');
+
+            // Cloud sync is deliberately non-blocking.
+            Promise.resolve().then(()=>dbSet('goals',goalsArray)).catch(e=>console.warn('Cloud calendar save failed:',e));
         }
         function calUnschedule(){
-            if(!calEdit)return; const f=calFind(calEdit.gid,calEdit.tid); if(!f)return;
-            delete f.task.schedule; dbSet('goals',goalsArray); renderGoalsScreen(); refreshTimerSidebar(); calCloseModal(); calRender(); showToast('Task unscheduled','','success');
+            if(!calEdit)return;
+            const f=calFind(calEdit.gid,calEdit.tid);
+            if(!f)return;
+            delete f.task.schedule;
+            try { localCacheSet('goals',goalsArray); } catch(e) { console.warn('Local unschedule save failed:',e); }
+            try { renderGoalsScreen(); } catch(e) {}
+            try { refreshTimerSidebar(); } catch(e) {}
+            calCloseModal();
+            calRender();
+            showToast('Lecture unscheduled','','success');
+            Promise.resolve().then(()=>dbSet('goals',goalsArray)).catch(e=>console.warn('Cloud unschedule failed:',e));
         }
         document.addEventListener('DOMContentLoaded',()=>calInitSidebar());
         document.addEventListener('keydown',e=>{
@@ -6746,7 +6998,7 @@ document.addEventListener('keydown', function(e) {
                 recalculateAndRenderDashboard, renderHistoryGridWithPagination,
                 renderGoalsScreen, refreshTimerSidebar, renderHabitsScreen,
                 syncLanguageInterfaceStrings, updateQuickStats, updateDailyCountdownWidget,
-                renderWeeklySegmentedChart, renderStudyTrendChart, renderProductivityHeatTimeline
+                renderWeeklySegmentedChart, renderStudyTrendChart, renderProductivityHeatTimeline, calUpdateNotifyBtn
             ];
             for (const step of steps) {
                 try { step(); } catch (err) { console.error('bootApp step failed:', err); }
@@ -6793,172 +7045,5 @@ document.addEventListener('keydown', function(e) {
             deferredInstallPrompt = null;
         });
     </script>
-<style id="calendar-google-like-upgrade">
-#screen-calendar .cal-views{max-width:100%;overflow:auto;scrollbar-width:none}
-#screen-calendar .cal-views::-webkit-scrollbar{display:none}
-#screen-calendar .cal-all-day-row{display:grid;grid-template-columns:58px minmax(0,1fr);border-bottom:1px solid var(--cal-line);background:var(--cal-surface-2)}
-#screen-calendar .cal-all-day-label{font-size:9px;color:var(--cal-muted);padding:9px 6px;text-align:center}
-#screen-calendar .cal-all-day-grid{display:grid;min-height:36px}
-#screen-calendar .cal-all-day-cell{border-left:1px solid var(--cal-line);padding:4px 5px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
-#screen-calendar .cal-all-day-event{font-size:9px;padding:4px 6px;border-radius:6px;border:1px solid var(--cal-line);border-left:3px solid var(--event-color);background:color-mix(in srgb,var(--event-color) 13%,var(--cal-surface));color:var(--cal-ink);cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#screen-calendar .cal-agenda{padding:10px;max-height:calc(100vh - 260px);overflow:auto}
-#screen-calendar .cal-agenda-day{border:1px solid var(--cal-line);border-radius:12px;overflow:hidden;margin-bottom:10px}
-#screen-calendar .cal-agenda-head{padding:9px 12px;background:var(--cal-surface-2);font-weight:800;font-size:12px}
-#screen-calendar .cal-agenda-item{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px 12px;border-top:1px solid var(--cal-line);cursor:pointer}
-#screen-calendar .cal-agenda-item:hover{background:color-mix(in srgb,var(--cal-gold) 6%,transparent)}
-#screen-calendar .cal-agenda-time{font-size:10px;color:var(--cal-muted)}
-#screen-calendar .cal-agenda-title{font-size:11px;font-weight:800}
-#screen-calendar .cal-agenda-meta{font-size:9px;color:var(--cal-muted);margin-top:3px}
-#screen-calendar .cal-year{padding:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-height:calc(100vh - 260px);overflow:auto}
-#screen-calendar .cal-year-month{border:1px solid var(--cal-line);border-radius:12px;padding:8px;background:var(--cal-surface-2);cursor:pointer}
-#screen-calendar .cal-year-title{font-weight:800;font-size:12px;margin-bottom:6px}
-#screen-calendar .cal-year-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:8px}
-#screen-calendar .cal-year-day{height:18px;display:grid;place-items:center;border-radius:4px;color:var(--cal-muted)}
-#screen-calendar .cal-year-day.has-event{background:color-mix(in srgb,var(--cal-gold) 35%,transparent);color:var(--cal-ink);font-weight:800}
-#screen-calendar .cal-drag-select{position:absolute;left:3px;right:3px;border:2px dashed color-mix(in srgb,var(--cal-gold) 70%,transparent);background:color-mix(in srgb,var(--cal-gold) 10%,transparent);border-radius:7px;pointer-events:none;z-index:10}
-@media(max-width:1000px){#screen-calendar .cal-year{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:700px){#screen-calendar .cal-year{grid-template-columns:1fr}}
-</style>
-<script>
-(function(){
-  const oldSetView=window.calSetView;
-  const oldHeaderTitle=window.calHeaderTitle;
-  function pad(n){return String(n).padStart(2,'0')}
-  function mins(v){return typeof window.calMinutes==='function'?window.calMinutes(v):((Number(v?.split(':')[0])||0)*60+(Number(v?.split(':')[1])||0));}
-  function iso(d){return typeof window.calISO==='function'?window.calISO(d):`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
-  function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
-  function recurrenceDates(baseDate,rule,until){
-    if(!rule||rule==='none')return [baseDate];
-    const end=until?new Date(until+'T23:59:59'):addDays(new Date(baseDate+'T00:00:00'),56);
-    const out=[]; let d=new Date(baseDate+'T00:00:00'); let guard=0;
-    while(d<=end && out.length<180 && guard++<400){
-      const day=d.getDay();
-      if(rule==='weekdays'){if(day!==0&&day!==6)out.push(iso(d));}
-      else out.push(iso(d));
-      if(rule==='daily'||rule==='weekdays')d.setDate(d.getDate()+1);
-      else if(rule==='weekly')d.setDate(d.getDate()+7);
-      else if(rule==='biweekly')d.setDate(d.getDate()+14);
-      else if(rule==='monthly')d.setMonth(d.getMonth()+1);
-      else break;
-    }
-    return out;
-  }
-  function expandedTasks(){
-    const out=[]; (window.goalsArray||[]).forEach(goal=>(goal.tasks||[]).forEach(task=>{
-      const sc=task.schedule||{}; if(!sc.date)return;
-      const dates=recurrenceDates(sc.date,sc.repeat||'none',sc.repeatUntil);
-      dates.forEach((date,i)=>out.push({goal,task,date,start:sc.allDay?'00:00':(sc.start||'09:00'),end:sc.allDay?'23:59':(sc.end||'10:00'),priority:sc.priority||'Normal',notes:sc.notes||'',occurrenceIndex:i}));
-    }));
-    return out;
-  }
-  window.calAllTasks=expandedTasks;
-  function localSave(){try{window.dbSet('goals',window.goalsArray)}catch(e){} try{window.renderGoalsScreen();window.refreshTimerSidebar()}catch(e){}}
-  function injectRecurringFields(){
-    const r=document.getElementById('cal-task-repeat'); if(!r)return;
-    r.addEventListener('change',()=>{const u=document.getElementById('cal-task-repeat-until'); if(u)u.disabled=r.value==='none';});
-  }
-  function fillExtra(sc){
-    const ids=['cal-task-allday','cal-task-repeat','cal-task-repeat-until','cal-task-reminder','cal-task-location'];
-    if(!document.getElementById('cal-task-allday'))return;
-    document.getElementById('cal-task-allday').checked=!!sc?.allDay;
-    document.getElementById('cal-task-repeat').value=sc?.repeat||'none';
-    document.getElementById('cal-task-repeat-until').value=sc?.repeatUntil||'';
-    document.getElementById('cal-task-reminder').value=sc?.reminder==null?'none':String(sc.reminder);
-    document.getElementById('cal-task-location').value=sc?.location||'';
-    document.getElementById('cal-task-repeat-until').disabled=(sc?.repeat||'none')==='none';
-  }
-  const origOpen=window.calOpenCreate;
-  window.calOpenCreate=function(date,time){origOpen(date,time);fillExtra(null);injectRecurringFields();};
-  const origOpenExisting=window.calOpenCreateForExistingLecture;
-  window.calOpenCreateForExistingLecture=function(gid,tid,date,time){origOpenExisting(gid,tid,date,time);const f=window.calFind(gid,tid);fillExtra(f?.task?.schedule||{});injectRecurringFields();};
-  const origEdit=window.calEditTask;
-  window.calEditTask=function(enc){origEdit(enc);const [gid,tid]=decodeURIComponent(enc).split('|');const f=window.calFind(gid,tid);fillExtra(f?.task?.schedule||{});injectRecurringFields();};
-  const origSave=window.calSaveTask;
-  window.calSaveTask=function(){
-    const edit=window.calEdit?{gid:String(window.calEdit.gid),tid:String(window.calEdit.tid)}:null;
-    const branchId=String(document.getElementById('cal-task-branch')?.value||'');
-    const lectureId=String(document.getElementById('cal-task-lecture')?.value||'');
-    origSave();
-    try{
-      const gid=edit?.gid||branchId, tid=edit?.tid||lectureId;
-      const f=gid&&tid?window.calFind(gid,tid):null;
-      const task=f?.task;
-      if(task?.schedule){
-        task.schedule.allDay=!!document.getElementById('cal-task-allday')?.checked;
-        task.schedule.repeat=document.getElementById('cal-task-repeat')?.value||'none';
-        task.schedule.repeatUntil=document.getElementById('cal-task-repeat-until')?.value||'';
-        task.schedule.reminder=document.getElementById('cal-task-reminder')?.value||'none';
-        task.schedule.location=document.getElementById('cal-task-location')?.value?.trim()||'';
-        if(task.schedule.allDay){task.schedule.start='00:00';task.schedule.end='23:59';}
-        localSave();
-      }
-      window.calRender();
-      if((document.getElementById('cal-task-reminder')?.value||'none')!=='none' && window.Notification && Notification.permission==='default') Notification.requestPermission().catch(()=>{});
-    }catch(e){console.warn('calendar extras save',e)}
-  };
-  // duplicate current lecture
-  window.calDuplicateTask=function(){
-    if(!window.calEdit)return; const f=window.calFind(window.calEdit.gid,window.calEdit.tid); if(!f)return;
-    const clone=JSON.parse(JSON.stringify(f.task)); clone.id=window.generateUniqueRecordId(); clone.text=(clone.text||'Lecture')+' (Copy)'; delete clone.done; clone.done=false; f.goal.tasks.push(clone); localSave(); window.calRender(); window.showToast?.('Lecture duplicated','','success');
-  };
-  // view rendering
-  window.calSetView=function(v){window.calView=v;window.calRender();};
-  function daysForView(){
-    const base=new Date(window.calCurrent); const v=window.calView; if(v==='day')return [base]; if(v==='3day')return [0,1,2].map(i=>addDays(base,i)); if(v==='workweek')return [0,1,2,3,4].map(i=>{const d=window.calStartWeek(base);d.setDate(d.getDate()+i);return d}); return [0,1,2,3,4,5,6].map(i=>{const d=window.calStartWeek(base);d.setDate(d.getDate()+i);return d});
-  }
-  window.calHeaderTitle=function(){
-    const v=window.calView,loc=(window.currentSystemLanguage==='ar'?'ar-EG':'en-US');
-    if(v==='agenda')return 'Agenda'; if(v==='year')return String(window.calCurrent.getFullYear()); if(v==='day')return window.calCurrent.toLocaleDateString(loc,{weekday:'long',month:'long',day:'numeric'});
-    if(v==='3day'||v==='workweek'||v==='week'){const ds=daysForView(),a=ds[0],b=ds[ds.length-1];return a.getMonth()===b.getMonth()?a.toLocaleDateString(loc,{month:'long',year:'numeric'}):`${a.toLocaleDateString(loc,{month:'short',day:'numeric'})} – ${b.toLocaleDateString(loc,{month:'short',day:'numeric',year:'numeric'})}`}
-    return window.oldHeaderTitle?window.oldHeaderTitle():'';
-  };
-  function agenda(root){
-    const all=window.calFilteredTasks().sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start)); const grouped={}; all.forEach(x=>(grouped[x.date]||(grouped[x.date]=[])).push(x));
-    let h='<div class="cal-agenda">'; Object.keys(grouped).forEach(d=>{const label=new Date(d+'T00:00:00').toLocaleDateString(window.currentSystemLanguage==='ar'?'ar-EG':'en-US',{weekday:'long',month:'long',day:'numeric'});h+=`<div class="cal-agenda-day"><div class="cal-agenda-head">${label}</div>`;grouped[d].forEach(x=>{const id=encodeURIComponent(`${x.goal.id}|${x.task.id}`);const duration=Math.max(0,mins(x.end)-mins(x.start));h+=`<div class="cal-agenda-item" onclick="calEditTask('${id}')"><div class="cal-agenda-time">${x.start==='00:00'&&x.end==='23:59'?'All day':window.calFmtTime(x.start)+' – '+window.calFmtTime(x.end)}</div><div><div class="cal-agenda-title">${window.calEsc(x.task.text)}</div><div class="cal-agenda-meta">${window.calEsc(x.goal.linkedTag||x.goal.title)} · ${Math.floor(duration/60)}h${duration%60?` ${duration%60}m`:''}${x.notes?' · '+window.calEsc(x.notes):''}${x.location?' · '+window.calEsc(x.location):''}</div></div><div style="width:8px;height:8px;border-radius:50%;background:${window.calColor(x.goal.linkedTag||x.goal.title)}"></div></div>`});h+='</div>'}); h+='</div>';root.innerHTML=h;
-  }
-  function year(root){const y=window.calCurrent.getFullYear();let h='<div class="cal-year">';for(let m=0;m<12;m++){const first=new Date(y,m,1),last=new Date(y,m+1,0),tasks=window.calFilteredTasks();let cells='';for(let d=1;d<=last.getDate();d++){const dt=new Date(y,m,d),has=tasks.some(x=>x.date===iso(dt));cells+=`<div class="cal-year-day ${has?'has-event':''}" onclick="calPickDate('${iso(dt)}');calSetView('day')">${d}</div>`;}h+=`<div class="cal-year-month"><div class="cal-year-title">${first.toLocaleDateString(window.currentSystemLanguage==='ar'?'ar-EG':'en-US',{month:'long'})}</div><div class="cal-year-grid">${['M','T','W','T','F','S','S'].map(x=>`<b style="font-size:8px;color:var(--cal-muted);text-align:center">${x}</b>`).join('')}${cells}</div></div>`}h+='</div>';root.innerHTML=h;}
-  const baseRender=window.calRender;
-  window.calRender=function(){
-    const root=document.getElementById('cal-board'); if(!root)return;
-    document.querySelectorAll('.cal-view').forEach(b=>b.classList.toggle('active',b.dataset.calView===window.calView));
-    window.calRenderFilters();window.calRenderMini();window.calRenderStats();
-    if(window.calView==='agenda')agenda(root); else if(window.calView==='year')year(root); else baseRender();
-    if(window.calView==='agenda'||window.calView==='year')return;
-  };
-  // Google-like compact time grids for day / 3-day / work-week / week
-  const baseTimeGrid=window.calRenderTimeGrid;
-  window.calRenderTimeGrid=function(root){
-    const v=window.calView,days=daysForView(),loc=window.currentSystemLanguage==='ar'?'ar-EG':'en-US';
-    if(v==='week' && days.length===7) return baseTimeGrid(root);
-    const hours=[...Array(24)].map((_,i)=>i);
-    root.innerHTML=`<div class="cal-week" style="grid-template-columns:58px repeat(${days.length},minmax(86px,1fr))"><div></div>${days.map(d=>`<div class="cal-day-head ${iso(d)===iso(new Date())?'today':''}"><span class="dow">${d.toLocaleDateString(loc,{weekday:'short'})}</span><span class="dom">${d.getDate()}</span></div>`).join('')}</div><div class="cal-grid-wrap"><div class="cal-times">${hours.map(h=>`<div class="cal-time">${pad(h)}:00</div>`).join('')}</div><div class="cal-days-grid" style="grid-template-columns:repeat(${days.length},minmax(86px,1fr))">${days.map(d=>`<div class="cal-day-col" data-cal-date="${iso(d)}">${hours.map(h=>`<div class="cal-hour-hit" onclick="calOpenCreate('${iso(d)}','${pad(h)}:00')"></div>`).join('')}${window.calEventsForDate(iso(d))}</div>`).join('')}</div></div>`;
-  };
-  const oldShift=window.calShift;
-  window.calShift=function(n){
-    if(window.calView==='month'||window.calView==='year')window.calCurrent.setMonth(window.calCurrent.getMonth()+n);
-    else if(window.calView==='day')window.calCurrent.setDate(window.calCurrent.getDate()+n);
-    else if(window.calView==='3day')window.calCurrent.setDate(window.calCurrent.getDate()+3*n);
-    else if(window.calView==='workweek')window.calCurrent.setDate(window.calCurrent.getDate()+5*n);
-    else window.calCurrent.setDate(window.calCurrent.getDate()+7*n);
-    window.calRender();
-  };
-  window.calRenderTimeGrid.__googleLike=true;
-  // selection drag on empty time grid for quick range creation
-  let sel=null;
-  document.addEventListener('pointerdown',e=>{
-    const hit=e.target.closest('#screen-calendar .cal-hour-hit'); if(!hit||window.calView==='month'||window.calView==='agenda'||window.calView==='year')return;
-    const col=hit.closest('.cal-day-col'); if(!col)return;
-    const r=col.getBoundingClientRect(),startY=e.clientY-r.top+col.parentElement.scrollTop; const start=Math.max(0,Math.min(1439,Math.round((startY/56*60)/15)*15));
-    const ghost=document.createElement('div');ghost.className='cal-drag-select';ghost.style.top=(start*56/60)+'px';ghost.style.height='15px';col.appendChild(ghost);sel={col,start,ghost};
-  });
-  document.addEventListener('pointermove',e=>{if(!sel)return;const r=sel.col.getBoundingClientRect(),y=e.clientY-r.top+sel.col.parentElement.scrollTop;const end=Math.max(sel.start+15,Math.min(1440,Math.round((y/56*60)/15)*15));sel.ghost.style.height=((end-sel.start)*56/60)+'px';sel.end=end;});
-  document.addEventListener('pointerup',e=>{if(!sel)return;const x=sel;sel=null;x.ghost.remove();const end=x.end||x.start+15;window.calOpenCreate(window.calISO(new Date(x.col.dataset.calDate+'T00:00:00')),`${pad(Math.floor(x.start/60))}:${pad(x.start%60)}`);document.getElementById('cal-task-end').value=`${pad(Math.floor(Math.min(1439,end)/60))}:${pad(Math.min(1439,end)%60)}`;});
-  // reminder scanner
-  setInterval(()=>{try{const now=new Date(),today=iso(now),cur=now.getHours()*60+now.getMinutes();window.calAllTasks().forEach(x=>{if(x.date!==today||x.task.done||x.priority==='none')return;const rem=Number(x.task.schedule?.reminder);if(!Number.isFinite(rem))return;const start=mins(x.start);if(start-rem===cur){if(window.Notification&&Notification.permission==='granted')new Notification(x.task.text,{body:'INDEX Calendar reminder'});else if(window.showToast)showToast('Reminder: '+x.task.text,'','info');}})}catch(e){}},60000);
-  // keyboard shortcuts close to Google Calendar
-  document.addEventListener('keydown',e=>{if(!document.getElementById('screen-calendar')?.classList.contains('active-view'))return;if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;const k=e.key.toLowerCase();if(k==='t')window.calGoToday();else if(k==='c')window.calOpenCreate();else if(k==='1'||k==='d')window.calSetView('day');else if(k==='2'||k==='w')window.calSetView('week');else if(k==='3')window.calSetView('month');else if(k==='5'||k==='a')window.calSetView('agenda');else if(k==='6'||k==='y')window.calSetView('year');else if(k==='j'||k==='n')window.calShift(1);else if(k==='k')window.calShift(-1);},true);
-  document.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>{const u=document.getElementById('cal-task-repeat');if(u)u.dispatchEvent(new Event('change'))},200);});
-})();
-</script>
 </body>
 </html>
