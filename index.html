@@ -2514,6 +2514,7 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
                             </div>
                             <button class="cal-btn" id="cal-notify-btn" onclick="calToggleNotifications()" title="Turn on reminder alerts">🔕</button>
                             <button class="cal-btn" onclick="calDownloadICS()" title="Export calendar as .ics (Google Calendar, Outlook, Apple Calendar)">⬇ Export</button>
+                            <button class="cal-btn" id="cal-ai-btn" onclick="calAiOrganize()" title="AI-powered task prioritization">✨ AI Organize</button>
                             <button class="cal-btn primary" onclick="calOpenCreate()">＋ New study task</button>
                         </div>
                     </div>
@@ -2629,6 +2630,20 @@ html[data-theme="light"] ::-webkit-scrollbar-thumb:hover{background:#aeb7b0 !imp
                         <button class="cal-btn" onclick="calCloseModal()">Cancel</button>
                         <button class="cal-btn primary" onclick="calSaveTask()">Save</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cal-modal-backdrop" id="cal-ai-modal">
+            <div class="cal-modal">
+                <div class="cal-modal-head">
+                    <h3>✨ AI suggested priorities</h3>
+                    <button class="cal-icon-btn" onclick="calCloseAiModal()">×</button>
+                </div>
+                <div class="cal-modal-body" id="cal-ai-modal-body" style="max-height:50vh;overflow:auto"></div>
+                <div class="cal-modal-actions">
+                    <button class="cal-btn" onclick="calCloseAiModal()">Cancel</button>
+                    <button class="cal-btn primary" onclick="calApplyAiSuggestions()">Apply suggestions</button>
                 </div>
             </div>
         </div>
@@ -6688,6 +6703,80 @@ document.addEventListener('keydown', function(e) {
             document.body.appendChild(a); a.click(); document.body.removeChild(a);
             URL.revokeObjectURL(url);
             showToast('Exported', 'Saved as .ics — import it into Google Calendar, Outlook, or Apple Calendar.', 'success');
+        }
+
+        // ---------------------------------------------------------------
+        //  ✨ AI Organize — uses Google Gemini to suggest task priorities.
+        //     Personal-use key embedded client-side (see chat warning).
+        // ---------------------------------------------------------------
+        const GEMINI_API_KEY = 'AQ.Ab8RN6I3E-ttPXlwmQZgyDVAyyepuoFgL8Z2YQjzN8xa85PGAg';
+        const GEMINI_MODEL = 'gemini-2.0-flash';
+        let calAiSuggestions = [];
+        function calCloseAiModal(){
+            const m = document.getElementById('cal-ai-modal');
+            if (m) m.classList.remove('open');
+        }
+        async function calAiOrganize(){
+            const pending = calAllTasks().filter(x => !x.task.done).slice(0, 40);
+            if (!pending.length) { showToast('Nothing to organize', 'No pending scheduled tasks found.', 'info'); return; }
+            const btn = document.getElementById('cal-ai-btn');
+            if (btn) { btn.disabled = true; btn.textContent = '✨ Thinking…'; }
+            const list = pending.map((x,i) => `${i+1}. id="${x.goal.id}|${x.task.id}" subject="${x.goal.linkedTag||x.goal.title||'General'}" text="${x.task.text}" date="${x.date}" start="${x.start}" currentPriority="${x.priority}"`).join('\n');
+            const prompt = `You are helping a student prioritize study tasks. Given this list of scheduled, not-yet-done study tasks:\n${list}\n\nReturn ONLY valid JSON (no markdown fences, no extra text): an array where each item is {"id": "<the id exactly as given>", "priority": "High"|"Normal"|"Low", "reason": "<max 12 words explaining why, in the same language as the task text>"}. Base priority mainly on how close the date/time is and any exam-related keywords, and keep some variety (not everything High).`;
+            try {
+                const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                if (!resp.ok) {
+                    const errText = await resp.text().catch(() => '');
+                    throw new Error('HTTP ' + resp.status + ' — ' + errText.slice(0, 220));
+                }
+                const data = await resp.json();
+                let text = (data?.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
+                text = text.trim().replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
+                const parsed = JSON.parse(text);
+                if (!Array.isArray(parsed)) throw new Error('Unexpected response shape');
+                calAiSuggestions = parsed.filter(x => x && x.id);
+                calRenderAiModal(pending);
+            } catch (e) {
+                console.error('AI organize failed:', e);
+                showToast('AI request failed', 'Check that your API key is valid (Google AI Studio keys start with "AIzaSy"). ' + (e.message || ''), 'error', 7000);
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = '✨ AI Organize'; }
+            }
+        }
+        function calRenderAiModal(pending){
+            const body = document.getElementById('cal-ai-modal-body');
+            if (!body) return;
+            const byId = {}; pending.forEach(x => byId[x.goal.id+'|'+x.task.id] = x);
+            body.innerHTML = calAiSuggestions.map(s => {
+                const x = byId[s.id]; if (!x) return '';
+                return `<div style="padding:9px 0;border-bottom:1px solid var(--cal-line)">
+                    <b style="font-size:12px">${calEsc(x.task.text)}</b>
+                    <div style="font-size:10px;color:var(--text-gray);margin-top:3px">${calEsc(x.date)} · ${calFmtTime(x.start)} → suggested: <b style="color:var(--cal-gold)">${calEsc(s.priority||'Normal')}</b></div>
+                    <div style="font-size:10px;color:var(--text-gray);margin-top:2px">${calEsc(s.reason||'')}</div>
+                </div>`;
+            }).join('') || '<div class="cal-empty">No suggestions returned.</div>';
+            document.getElementById('cal-ai-modal').classList.add('open');
+        }
+        function calApplyAiSuggestions(){
+            let count = 0;
+            calAiSuggestions.forEach(s => {
+                const [gid,tid] = String(s.id).split('|');
+                const f = calFind(gid,tid);
+                if (f && f.task.schedule && ['High','Normal','Low'].includes(s.priority)) {
+                    f.task.schedule.priority = s.priority;
+                    count++;
+                }
+            });
+            try { localCacheSet('goals',goalsArray); } catch(e){}
+            Promise.resolve().then(()=>dbSet('goals',goalsArray)).catch(()=>{});
+            try { renderGoalsScreen(); } catch(e){}
+            calCloseAiModal();
+            calRender();
+            showToast('Applied', count + ' task priorities updated by AI.', 'success');
         }
         function calRenderTimeGrid(root){
             const days=calView==='day'?[new Date(calCurrent)]:[...Array(7)].map((_,i)=>{const d=calStartWeek(calCurrent);d.setDate(d.getDate()+i);return d});
