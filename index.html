@@ -6710,7 +6710,7 @@ document.addEventListener('keydown', function(e) {
         //     Personal-use key embedded client-side (see chat warning).
         // ---------------------------------------------------------------
         const GEMINI_API_KEY = 'AQ.Ab8RN6I3E-ttPXlwmQZgyDVAyyepuoFgL8Z2YQjzN8xa85PGAg';
-        const GEMINI_MODEL = 'gemini-2.0-flash';
+        const GEMINI_MODEL = 'gemini-3.5-flash';
         let calAiSuggestions = [];
         function calCloseAiModal(){
             const m = document.getElementById('cal-ai-modal');
@@ -6722,19 +6722,32 @@ document.addEventListener('keydown', function(e) {
             const btn = document.getElementById('cal-ai-btn');
             if (btn) { btn.disabled = true; btn.textContent = '✨ Thinking…'; }
             const list = pending.map((x,i) => `${i+1}. id="${x.goal.id}|${x.task.id}" subject="${x.goal.linkedTag||x.goal.title||'General'}" text="${x.task.text}" date="${x.date}" start="${x.start}" currentPriority="${x.priority}"`).join('\n');
-            const prompt = `You are helping a student prioritize study tasks. Given this list of scheduled, not-yet-done study tasks:\n${list}\n\nReturn ONLY valid JSON (no markdown fences, no extra text): an array where each item is {"id": "<the id exactly as given>", "priority": "High"|"Normal"|"Low", "reason": "<max 12 words explaining why, in the same language as the task text>"}. Base priority mainly on how close the date/time is and any exam-related keywords, and keep some variety (not everything High).`;
+            const prompt = `You are helping a student prioritize study tasks. Given this list of scheduled, not-yet-done study tasks:\n${list}\n\nReturn ONLY a valid JSON array (no markdown fences, no extra text): each item is {"id": "<the id exactly as given>", "priority": "High"|"Normal"|"Low", "reason": "<max 12 words explaining why, in the same language as the task text>"}. Base priority mainly on how close the date/time is and any exam-related keywords, and keep some variety (not everything High).`;
             try {
-                const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+                const resp = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': GEMINI_API_KEY,
+                        'Api-Revision': '2026-05-20'
+                    },
+                    body: JSON.stringify({
+                        model: GEMINI_MODEL,
+                        input: prompt,
+                        response_format: { type: 'text', mime_type: 'application/json' }
+                    })
                 });
                 if (!resp.ok) {
                     const errText = await resp.text().catch(() => '');
                     throw new Error('HTTP ' + resp.status + ' — ' + errText.slice(0, 220));
                 }
                 const data = await resp.json();
-                let text = (data?.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
+                let text = data.output_text || '';
+                if (!text) {
+                    (data.steps || []).forEach(step => {
+                        (step.content || []).forEach(c => { if (c.type === 'text' && c.text) text += c.text; });
+                    });
+                }
                 text = text.trim().replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
                 const parsed = JSON.parse(text);
                 if (!Array.isArray(parsed)) throw new Error('Unexpected response shape');
@@ -6742,7 +6755,7 @@ document.addEventListener('keydown', function(e) {
                 calRenderAiModal(pending);
             } catch (e) {
                 console.error('AI organize failed:', e);
-                showToast('AI request failed', 'Check that your API key is valid (Google AI Studio keys start with "AIzaSy"). ' + (e.message || ''), 'error', 7000);
+                showToast('AI request failed', (e.message || 'Unknown error'), 'error', 7000);
             } finally {
                 if (btn) { btn.disabled = false; btn.textContent = '✨ AI Organize'; }
             }
