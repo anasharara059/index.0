@@ -6,7 +6,7 @@ import { URL } from 'node:url';
 const PORT = Number(process.env.PORT || 8787);
 const API_KEY = process.env.GEMINI_API_KEY || '';
 const MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
-const HTML = path.resolve(process.env.INDEX_HTML || './INDEX_Calendar_GoogleLike_AI.html');
+const HTML = path.resolve(process.env.INDEX_HTML || './index.html');
 
 function send(res,status,data,type='application/json'){
   res.writeHead(status,{'Content-Type':type,'Cache-Control':'no-store','Access-Control-Allow-Origin':'*'});

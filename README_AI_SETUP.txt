@@ -1,11 +1,13 @@
-INDEX AI Coach
+INDEX AI Coach — Vercel setup
 
-1) Create a NEW Gemini API key in Google AI Studio. Do not reuse or paste the exposed key from chat.
-2) On Windows PowerShell:
-   $env:GEMINI_API_KEY="YOUR_NEW_KEY"
-   $env:GEMINI_MODEL="gemini-3.6-flash"
-   node server.mjs
-3) Open http://localhost:8787/ in your browser.
+1) Put index.html at the repository root.
+2) Put api/ai.js in a folder named api at the repository root.
+3) Keep package.json and .env.example at the root.
+4) On Vercel add Environment Variable:
+   GEMINI_API_KEY = your NEW Gemini API key
+   Environment: Production (you can also enable Preview/Development)
+5) Redeploy.
 
-The API key stays on the Node server and is never placed inside the HTML file.
-The AI panel can inspect the current Subject -> Branch -> Lecture hierarchy and scheduled calendar items and can analyze/prioritize/plan them.
+Do NOT upload a real .env file or the API key to GitHub.
+
+The browser calls /api/ai. Vercel deploys api/ai.js as a Function and serves index.html at /. 
