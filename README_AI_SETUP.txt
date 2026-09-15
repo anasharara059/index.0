@@ -1,15 +1,12 @@
-INDEX AI + Vercel (clean static + function setup)
+INDEX AI on Vercel
 
 Files:
 - index.html
-- api/ai.mjs
-- .env.example
+- api/ai.js
 
-Do NOT upload a real .env file or API key to GitHub.
-
-Vercel automatically serves index.html and deploys api/ai.mjs as /api/ai.
-In Vercel Environment Variables set:
+In Vercel Environment Variables, add:
 GEMINI_API_KEY = your new Gemini API key
 GEMINI_MODEL = gemini-3.6-flash
 
-The frontend calls POST /api/ai.
+Do not upload a real .env file or API key to GitHub.
+The browser calls POST /api/ai.
