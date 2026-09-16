@@ -2793,9 +2793,6 @@ html[data-theme="light"] .month-selector-dropdown {
         <div class="header-actions">
             <button class="lang-button" id="pwa-install-btn" onclick="triggerPwaInstall()" title="Install INDEX as an app" style="display:none; background: var(--accent-orange); color:#000; font-weight:800; width:auto; padding:0 14px; gap:6px; font-size:12px;">⬇ <span id="pwa-install-btn-txt">Install App</span></button>
             <button class="lang-button" onclick="toggleAppTheme()" id="theme-toggle-btn" title="Toggle light/dark theme">🌙</button>
-            <button class="focus-mode-icon" onclick="toggleDeepFocusMode()" id="deep-focus-toggle" title="Enter Focus Mode" aria-label="Enter Focus Mode">
-                <span class="focus-mode-icon-glyph">◉</span><span class="focus-mode-icon-label" id="deep-focus-label">Focus</span>
-            </button>
             <button class="export-btn" onclick="openGoalsSettingsModal()" id="btn-goals-settings" title="Study Goals">🎯 Goals</button>
             <div class="user-badge" id="user-badge" style="display:none;" onclick="toggleAccountMenu(event)" title="Account Options">
                 <img id="user-badge-photo" src="" alt="">
@@ -3063,21 +3060,13 @@ html[data-theme="light"] .month-selector-dropdown {
         </div>
                 <!-- ================= SCREEN: GOOGLE CALENDAR (AUTHENTIC MATERIAL UX) ================= -->
         <div class="screen-view glass-card" id="screen-calendar">
-            <!-- Floating Navigation Handle (Reveals INDEX Navigation on Hover/Click) -->
-            <div class="gcal-nav-handle" id="gcal-nav-handle" onclick="gcalRevealHeader()" title="Hover top to show INDEX navigation">
-                <span class="gcal-handle-dot"></span>
-                <span class="gcal-handle-text">INDEX Menu ▾</span>
-                <span class="gcal-handle-bar"></span>
-            </div>
-
             <!-- Google Calendar Top Bar -->
             <header class="gcal-topbar">
                 <div class="gcal-topbar-left">
                     <button class="gcal-menu-toggle" onclick="gcalToggleSidebar()" title="Main menu">☰</button>
-                    <div class="gcal-brand-title" onclick="gcalRevealHeader()" style="cursor:pointer;" title="Click to show INDEX navigation">
+                    <div class="gcal-brand-title">
                         <span class="gcal-brand-icon">📅</span>
                         <span>Calendar</span>
-                        <span style="font-size:11px; opacity:0.6; margin-left:3px;">▾</span>
                     </div>
                     <button class="gcal-today-btn" onclick="gcalGoToday()">Today</button>
                     <div class="gcal-nav-arrows">
@@ -3317,7 +3306,12 @@ html[data-theme="light"] .month-selector-dropdown {
                         <button class="add-item-pill-btn" onclick="goBackToSubjectsOverview()" id="goals-back-btn" style="display:none; background: rgba(255,255,255,0.08); color: var(--text-light, #eee); box-shadow:none;">← <span id="goals-back-btn-txt">Back</span></button>
                         <span id="goals-header-title">Subjects</span>
                     </div>
-                    <button class="add-item-pill-btn" onclick="openGoalModal()" id="goals-add-btn">+ <span id="goals-add-btn-txt">New Subject</span></button>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button class="add-item-pill-btn" onclick="openManageHiddenTagsModal()" id="goals-hidden-btn" title="Manage Hidden Subjects" style="display:none; background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-gray); font-size:13px; font-weight:600; padding:6px 14px; border-radius:20px; cursor:pointer;">
+                            <span>ðŸ‘ï¸</span> <span id="goals-hidden-btn-txt">Hidden</span> (<span id="goals-hidden-count-badge">0</span>)
+                        </button>
+                        <button class="add-item-pill-btn" onclick="openGoalModal()" id="goals-add-btn">+ <span id="goals-add-btn-txt">New Subject</span></button>
+                    </div>
                 </div>
                 <div class="goals-cards-grid" id="goals-grid-wrapper"></div>
                 <div class="empty-state-box" id="goals-empty-state" style="display:none;">No goals yet — add your first one!</div>
@@ -3447,14 +3441,17 @@ html[data-theme="light"] .month-selector-dropdown {
     <!-- Tag Context Menu (Right Click) -->
 
     <!-- Manage Hidden Tags Modal -->
-    <div class="modal-overlay" id="manage-hidden-tags-modal">
-        <div class="modal-box" style="max-width:480px; width:90%;">
-            <h3 id="manage-hidden-heading">Manage Hidden Subjects</h3>
-            <div id="manage-hidden-tags-list" style="margin:16px 0; max-height:260px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+    <div class="modal-overlay" id="manage-hidden-tags-modal" onclick="if (event.target === this) closeManageHiddenTagsModal();">
+        <div class="modal-box" style="max-width:460px; width:90%; border-radius:18px; text-align:start;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 id="manage-hidden-heading" style="margin-bottom:0; font-size:18px; font-weight:800; color:var(--accent-orange);">Manage Hidden Subjects</h3>
+                <button type="button" onclick="closeManageHiddenTagsModal()" style="background:none; border:none; color:var(--text-gray); font-size:18px; cursor:pointer; padding:4px 8px;">âœ•</button>
+            </div>
+            <div id="manage-hidden-tags-list" style="margin:16px 0; max-height:280px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
                 <!-- Hidden tags rendered here -->
             </div>
-            <div class="modal-buttons">
-                <button class="modal-btn confirm" onclick="closeManageHiddenTagsModal()" id="manage-hidden-close">Done</button>
+            <div class="modal-buttons" style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+                <button class="modal-btn confirm" onclick="closeManageHiddenTagsModal()" id="manage-hidden-close" style="padding:8px 18px; border-radius:8px; font-size:13px; font-weight:700;">Done</button>
             </div>
         </div>
     </div>
@@ -3787,6 +3784,7 @@ html[data-theme="light"] .month-selector-dropdown {
         let sessionTimeSegments = []; // closed "start - end" segments for the in-progress session (one per run between pauses)
         let currentTagsList = ["Medicine", "Surgery", "Anatomy", "Obstetrics", "Pediatrics"];
         let hiddenTags = [];
+        let customTagColors = {};
         let currentlySelectedTag = "Medicine";
         let archivedSessionsArray = [];
         let paginationCurrentPage = 1;
@@ -4958,23 +4956,21 @@ html[data-theme="light"] .month-selector-dropdown {
             const paletteColors = [
                 '#3498db','#e67e22','#1abc9c','#e84393','#2ecc71','#9b59b6',
                 '#e74c3c','#f1c40f','#16a085','#d35400','#8e44ad','#2c3e50',
-                '#d9a54a','#3e5c8a','#00d26a','#3498db','#e74c3c','#f39c12'
+                '#d9a54a','#3e5c8a','#00d26a','#00cec9','#0984e3','#6c5ce7'
             ];
 
+            const safeTagName = (tagName || '').replace(/"/g, '&quot;');
+
             modal.innerHTML = `
-                <div class="modal-box" style="max-width:380px; width:90%; padding:20px; border-radius:14px; background:rgba(20,23,33,0.96); backdrop-filter:blur(20px); border:1px solid var(--border-soft); box-shadow:0 20px 50px rgba(0,0,0,0.6);">
+                <div class="modal-box" style="max-width:380px; width:90%; padding:20px; border-radius:16px; background:rgba(20,23,33,0.96); backdrop-filter:blur(20px); border:1px solid var(--border-soft); box-shadow:0 20px 50px rgba(0,0,0,0.6); text-align:start;">
                     <!-- Top: Subject Name & Hide Button -->
-                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
-                        <input type="text" id="tag-edit-name-input" value="${escapeGoalHtml(tagName)}" 
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                        <input type="text" id="tag-edit-name-input" value="${safeTagName}" 
                                placeholder="${isAr ? '\u0627\u0633\u0645 \u0627\u0644\u0645\u0627\u062F\u0629' : 'Subject Name'}"
-                               style="flex:1; height:40px; padding:0 12px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); font-size:14px; font-weight:700; outline:none; transition:border-color 0.2s;"
-                               onfocus="this.style.borderColor='var(--accent-orange)';" 
-                               onblur="this.style.borderColor='var(--border-soft)';" />
+                               style="flex:1; height:40px; padding:0 12px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); font-size:14px; font-weight:700; outline:none; margin-bottom:0; text-align:start; transition:border-color 0.2s;" />
                         <button type="button" id="tag-hide-btn" title="${isAr ? '\u0625\u062E\u0641\u0627\u0621 \u0627\u0644\u0645\u0627\u062F\u0629' : 'Hide Subject'}"
-                                style="height:40px; padding:0 12px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;"
-                                onmouseover="this.style.background='rgba(255,255,255,0.12)';"
-                                onmouseout="this.style.background='rgba(255,255,255,0.06)';">
-                            <span style="font-size:15px;">👁️</span>
+                                style="height:40px; padding:0 12px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; flex-shrink:0; transition:all 0.2s;">
+                            <span style="font-size:14px;">&#128065;&#65039;</span>
                             <span>${isAr ? '\u0625\u062E\u0641\u0627\u0621' : 'Hide'}</span>
                         </button>
                     </div>
@@ -4993,17 +4989,17 @@ html[data-theme="light"] .month-selector-dropdown {
                             `).join('')}
                         </div>
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <label style="font-size:12px; color:var(--text-gray);">${isAr ? '\u0644\u0648\u0646 \u0645\u062E\u0635\u0635:' : 'Custom:'}</label>
-                            <input type="color" id="tag-custom-color-input" value="${currentColor}" 
-                                   style="width:36px; height:32px; border-radius:6px; border:none; cursor:pointer; background:transparent; padding:0;"
+                            <label style="font-size:12px; color:var(--text-gray); margin-bottom:0;">${isAr ? '\u0644\u0648\u0646 \u0645\u062E\u0635\u0635:' : 'Custom:'}</label>
+                            <input type="color" id="tag-custom-color-input" value="${currentColor.startsWith('#') ? currentColor : '#3498db'}" 
+                                   style="width:36px; height:32px; border-radius:6px; border:none; cursor:pointer; background:transparent; padding:0; margin-bottom:0;"
                                    onchange="onTagCustomColorChange(this.value)" />
                             <span id="tag-chosen-color-preview" style="display:inline-block; width:16px; height:16px; border-radius:50%; background:${currentColor};"></span>
                         </div>
                     </div>
 
                     <!-- Bottom: Action Buttons -->
-                    <div class="modal-buttons" style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
-                        <button type="button" class="modal-btn cancel" onclick="document.getElementById('tag-subject-modal').remove();" style="padding:8px 16px; border-radius:8px; font-size:13px;">
+                    <div class="modal-buttons" style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
+                        <button type="button" class="modal-btn cancel" id="tag-modal-cancel-btn" style="padding:8px 16px; border-radius:8px; font-size:13px;">
                             ${isAr ? '\u0625\u0644\u063A\u0627\u0621' : 'Cancel'}
                         </button>
                         <button type="button" class="modal-btn confirm" id="tag-subject-save-btn" style="padding:8px 18px; border-radius:8px; font-size:13px; font-weight:700;">
@@ -5037,70 +5033,260 @@ html[data-theme="light"] .month-selector-dropdown {
                 if (prevEl) prevEl.style.backgroundColor = color;
             };
 
+            // Dismiss handlers (Cancel, click outside, Escape)
+            const closeModal = () => {
+                document.removeEventListener('keydown', onEscKey);
+                modal.remove();
+            };
+            const onEscKey = (e) => {
+                if (e.key === 'Escape') closeModal();
+            };
+            document.addEventListener('keydown', onEscKey);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            const cancelBtn = document.getElementById('tag-modal-cancel-btn');
+            if (cancelBtn) cancelBtn.onclick = closeModal;
+
+            // Name input Enter key
+            const nameInp = document.getElementById('tag-edit-name-input');
+            if (nameInp) {
+                nameInp.focus();
+                nameInp.select();
+                nameInp.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const saveBtn = document.getElementById('tag-subject-save-btn');
+                        if (saveBtn) saveBtn.click();
+                    }
+                });
+            }
+
+            // Hide button
             document.getElementById('tag-hide-btn').onclick = () => {
-                hideTagFromSystem(tagName);
-                modal.remove();
+                try {
+                    hideTagFromSystem(tagName);
+                } finally {
+                    closeModal();
+                }
             };
 
+            // Save button
             document.getElementById('tag-subject-save-btn').onclick = () => {
-                const newName = (document.getElementById('tag-edit-name-input').value || '').trim();
-                if (!newName) {
-                    modal.remove();
-                    return;
-                }
-
-                // 1. Color update
-                customTagColors[newName] = selectedColor;
-                tagPaletteColors[newName] = selectedColor;
-                if (newName !== tagName) {
-                    delete customTagColors[tagName];
-                    delete tagPaletteColors[tagName];
-                }
-                dbSet('customTagColors', customTagColors);
-
-                // 2. Rename across system if name changed
-                if (newName !== tagName) {
-                    const idx = currentTagsList.indexOf(tagName);
-                    if (idx !== -1) currentTagsList[idx] = newName;
-                    else currentTagsList.push(newName);
-
-                    const hIdx = hiddenTags.indexOf(tagName);
-                    if (hIdx !== -1) hiddenTags[hIdx] = newName;
-
-                    if (tagColors[tagName]) {
-                        tagColors[newName] = selectedColor || tagColors[tagName];
-                        delete tagColors[tagName];
-                        dbSet('tagColors', tagColors);
+                try {
+                    const newName = (document.getElementById('tag-edit-name-input').value || '').trim();
+                    if (!newName) {
+                        closeModal();
+                        return;
                     }
 
-                    if (currentlySelectedTag === tagName) {
-                        currentlySelectedTag = newName;
-                        dbSet('selectedTag', currentlySelectedTag);
+                    const trimmedOld = (tagName || '').trim();
+                    const trimmedNew = newName.trim();
+
+                    // 1. Update colors
+                    customTagColors[trimmedNew] = selectedColor;
+                    tagPaletteColors[trimmedNew] = selectedColor;
+                    if (trimmedNew !== trimmedOld) {
+                        delete customTagColors[trimmedOld];
+                        delete tagPaletteColors[trimmedOld];
+                    }
+                    dbSet('customTagColors', customTagColors);
+
+                    // 2. Rename across system if name changed
+                    if (trimmedNew !== trimmedOld) {
+                        // In-place replacement to prevent duplicate tags
+                        const idx = currentTagsList.findIndex(t => t.trim().toLowerCase() === trimmedOld.toLowerCase());
+                        if (idx !== -1) {
+                            currentTagsList[idx] = trimmedNew;
+                        } else {
+                            currentTagsList.push(trimmedNew);
+                        }
+                        currentTagsList = [...new Set(currentTagsList)];
+
+                        // Update hiddenTags if present
+                        const hIdx = hiddenTags.findIndex(t => t.trim().toLowerCase() === trimmedOld.toLowerCase());
+                        if (hIdx !== -1) {
+                            hiddenTags[hIdx] = trimmedNew;
+                            hiddenTags = [...new Set(hiddenTags)];
+                        }
+
+                        // Update currentlySelectedTag
+                        if (currentlySelectedTag && currentlySelectedTag.trim().toLowerCase() === trimmedOld.toLowerCase()) {
+                            currentlySelectedTag = trimmedNew;
+                            dbSet('selectedTag', currentlySelectedTag);
+                        }
+
+                        // Update currentOpenSubjectGroupTag if currently in this subject's branches
+                        if (typeof currentOpenSubjectGroupTag !== 'undefined' && currentOpenSubjectGroupTag && currentOpenSubjectGroupTag.trim().toLowerCase() === trimmedOld.toLowerCase()) {
+                            currentOpenSubjectGroupTag = trimmedNew;
+                        }
+
+                        // Update branch remembrance map
+                        if (typeof timerSelectedBranchByTagMap !== 'undefined' && timerSelectedBranchByTagMap && timerSelectedBranchByTagMap[trimmedOld]) {
+                            timerSelectedBranchByTagMap[trimmedNew] = timerSelectedBranchByTagMap[trimmedOld];
+                            delete timerSelectedBranchByTagMap[trimmedOld];
+                            try { localStorage.setItem('index_lastBranchByTag', JSON.stringify(timerSelectedBranchByTagMap)); } catch (e) {}
+                        }
+
+                        // Update goals / branches
+                        let goalsChanged = false;
+                        goalsArray.forEach(g => {
+                            if (g.linkedTag && g.linkedTag.trim().toLowerCase() === trimmedOld.toLowerCase()) {
+                                g.linkedTag = trimmedNew;
+                                goalsChanged = true;
+                            }
+                        });
+                        if (goalsChanged) dbSet('goals', goalsArray);
+
+                        // Update past sessions history
+                        let sessionsChanged = false;
+                        archivedSessionsArray.forEach(s => {
+                            if (s.tag && s.tag.trim().toLowerCase() === trimmedOld.toLowerCase()) {
+                                s.tag = trimmedNew;
+                                sessionsChanged = true;
+                            }
+                        });
+                        if (sessionsChanged) dbSet('sessions', archivedSessionsArray);
+
+                        // Update calendar visible subjects filter if exists
+                        if (typeof gcalVisibleSubjects !== 'undefined' && Array.isArray(gcalVisibleSubjects)) {
+                            const gIdx = gcalVisibleSubjects.findIndex(t => t.trim().toLowerCase() === trimmedOld.toLowerCase());
+                            if (gIdx !== -1) {
+                                gcalVisibleSubjects[gIdx] = trimmedNew;
+                                dbSet('gcalVisibleSubjects', gcalVisibleSubjects);
+                            }
+                        }
+
+                        // Persist lists
+                        dbSet('tags', currentTagsList);
+                        dbSet('hiddenTags', hiddenTags);
                     }
 
-                    let sessionsChanged = false;
-                    archivedSessionsArray.forEach(s => {
-                        if (s.tag === tagName) { s.tag = newName; sessionsChanged = true; }
-                    });
-                    if (sessionsChanged) dbSet('sessions', archivedSessionsArray);
+                    if (currentlySelectedTag === trimmedNew) {
+                        applySubjectTint();
+                    }
 
-                    let goalsChanged = false;
-                    goalsArray.forEach(g => {
-                        if (g.linkedTag === tagName) { g.linkedTag = newName; goalsChanged = true; }
-                    });
-                    if (goalsChanged) dbSet('goals', goalsArray);
+                    renderTagsChips();
+                    renderGoalsScreen();
+                    if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
+                    recalculateAndRenderDashboard();
+                    renderHistoryGridWithPagination();
+                    if (typeof renderWeeklySegmentedChart === 'function') renderWeeklySegmentedChart();
+                    if (typeof gcalRenderCurrentView === 'function') gcalRenderCurrentView();
 
-                    dbSet('tags', currentTagsList);
-                    dbSet('hiddenTags', hiddenTags);
+                    showToast(isAr ? '\u062A\u0645 \u062D\u0641\u0638 \u0627\u0644\u062A\u0639\u062F\u064A\u0644\u0627\u062A' : 'Subject updated successfully', trimmedNew, 'success');
+                } catch (err) {
+                    console.error('Error in subject modal save:', err);
+                } finally {
+                    closeModal();
                 }
-
-                modal.remove();
-                renderTagsChips();
-                recalculateAndRenderDashboard();
-                renderGoalsScreen();
-                if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
-                showToast(isAr ? '\u062A\u0645 \u062D\u0641\u0638 \u0627\u0644\u062A\u0639\u062F\u064A\u0644\u0627\u062A' : 'Subject updated successfully', newName, 'success');
             };
+        }
+
+        function hideTagFromSystem(tag) {
+            if (!tag) return;
+            const trimmed = tag.trim();
+            if (!hiddenTags.some(t => t.trim().toLowerCase() === trimmed.toLowerCase())) {
+                hiddenTags.push(trimmed);
+                dbSet('hiddenTags', hiddenTags);
+            }
+
+            const visibleTags = currentTagsList.filter(t => !hiddenTags.includes(t));
+            if (currentlySelectedTag && currentlySelectedTag.trim().toLowerCase() === trimmed.toLowerCase()) {
+                if (visibleTags.length > 0) {
+                    currentlySelectedTag = visibleTags[0];
+                    dbSet('selectedTag', currentlySelectedTag);
+                    applySubjectTint();
+                }
+            }
+
+            renderTagsChips();
+            renderGoalsScreen();
+            if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
+
+            const isAr = currentSystemLanguage === 'ar';
+            showToast(isAr ? '\u062A\u0645 \u0625\u062E\u0641\u0627\u0621 \u0627\u0644\u0645\u0627\u062F\u0629' : 'Subject hidden', trimmed, 'info');
+        }
+
+        function unhideTag(tag) {
+            if (!tag) return;
+            const trimmed = tag.trim();
+            hiddenTags = hiddenTags.filter(t => t.trim().toLowerCase() !== trimmed.toLowerCase());
+            dbSet('hiddenTags', hiddenTags);
+
+            if (!currentTagsList.some(t => t.trim().toLowerCase() === trimmed.toLowerCase())) {
+                currentTagsList.push(trimmed);
+                dbSet('tags', currentTagsList);
+            }
+
+            renderTagsChips();
+            renderGoalsScreen();
+            if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
+            renderManageHiddenTagsList();
+
+            const isAr = currentSystemLanguage === 'ar';
+            showToast(isAr ? '\u062A\u0645 \u0625\u0638\u0647\u0627\u0631 \u0627\u0644\u0645\u0627\u062F\u0629' : 'Subject unhidden', trimmed, 'success');
+        }
+
+        function openManageHiddenTagsModal() {
+            const modal = document.getElementById('manage-hidden-tags-modal');
+            if (!modal) return;
+            const heading = document.getElementById('manage-hidden-heading');
+            const closeBtn = document.getElementById('manage-hidden-close');
+            const isAr = currentSystemLanguage === 'ar';
+            if (heading) heading.innerText = isAr ? '\u0625\u062F\u0627\u0631\u0629 \u0627\u0644\u0645\u0648\u0627\u062F \u0627\u0644\u0645\u062E\u0641\u064A\u0629' : 'Manage Hidden Subjects';
+            if (closeBtn) closeBtn.innerText = isAr ? '\u062A\u0645' : 'Done';
+
+            renderManageHiddenTagsList();
+            modal.classList.add('modal-open');
+        }
+
+        function closeManageHiddenTagsModal() {
+            const modal = document.getElementById('manage-hidden-tags-modal');
+            if (modal) modal.classList.remove('modal-open');
+        }
+
+        function renderManageHiddenTagsList() {
+            const listContainer = document.getElementById('manage-hidden-tags-list');
+            if (!listContainer) return;
+            listContainer.innerHTML = '';
+            const isAr = currentSystemLanguage === 'ar';
+
+            if (hiddenTags.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align:center; padding:24px 12px; color:var(--text-gray); font-size:13px;">
+                        ${isAr ? '\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0648\u0627\u062F \u0645\u062E\u0641\u064A\u0629 \u062D\u0627\u0644\u064A\u0627\u064B.' : 'No hidden subjects currently.'}
+                    </div>
+                `;
+                return;
+            }
+
+            hiddenTags.forEach(tag => {
+                const item = document.createElement('div');
+                item.style.display = 'flex';
+                item.style.alignItems = 'center';
+                item.style.justifyContent = 'space-between';
+                item.style.padding = '10px 14px';
+                item.style.background = 'rgba(255,255,255,0.04)';
+                item.style.borderRadius = '8px';
+                item.style.border = '1px solid var(--border-soft)';
+
+                const tagColor = getTagColor(tag);
+                const safeTag = (tag || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                item.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="width:12px; height:12px; border-radius:50%; background:${tagColor}; display:inline-block; flex-shrink:0;"></span>
+                        <span style="font-weight:600; font-size:14px; color:var(--text-light);">${safeTag}</span>
+                    </div>
+                    <button type="button" class="modal-btn confirm" style="padding:6px 14px; font-size:12px; border-radius:6px; font-weight:700;" onclick="unhideTag('${safeTag}')">
+                        &#128065;&#65039; ${isAr ? '\u0625\u0638\u0647\u0627\u0631' : 'Unhide'}
+                    </button>
+                `;
+                listContainer.appendChild(item);
+            });
         }
 
         function openTagContextMenu(e, tag) { openTagSubjectModal(tag, e); }
@@ -5111,14 +5297,27 @@ html[data-theme="light"] .month-selector-dropdown {
         function onTagContextMenuRename() {}
         function onTagContextMenuHide() {}
 
-        function selectActiveTag(tag) { currentlySelectedTag = tag; dbSet('selectedTag', currentlySelectedTag); renderTagsChips(); refreshTimerSidebar(); loadTimerNotesForCurrentTag(); applySubjectTint(); }
+        function selectActiveTag(tag) {
+            currentlySelectedTag = tag;
+            dbSet('selectedTag', currentlySelectedTag);
+            renderTagsChips();
+            refreshTimerSidebar();
+            loadTimerNotesForCurrentTag();
+            applySubjectTint();
+        }
+
         function deleteTagFromSystem(tag) {
             currentTagsList = currentTagsList.filter(t => t !== tag);
             hiddenTags = hiddenTags.filter(t => t !== tag);
             const visibleTags = currentTagsList.filter(t => !hiddenTags.includes(t));
             if (currentlySelectedTag === tag && visibleTags.length > 0) currentlySelectedTag = visibleTags[0];
-            dbSet('tags', currentTagsList); dbSet('hiddenTags', hiddenTags); dbSet('selectedTag', currentlySelectedTag);
-            renderTagsChips(); recalculateAndRenderDashboard();
+            dbSet('tags', currentTagsList);
+            dbSet('hiddenTags', hiddenTags);
+            dbSet('selectedTag', currentlySelectedTag);
+            renderTagsChips();
+            recalculateAndRenderDashboard();
+            renderGoalsScreen();
+            if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
         }
 
         function updateQuickStats() {
@@ -5900,6 +6099,20 @@ html[data-theme="light"] .month-selector-dropdown {
                 currentOpenSubjectGroupTag = null;
             }
 
+            const goalsHiddenBtn = document.getElementById('goals-hidden-btn');
+            const goalsHiddenCount = document.getElementById('goals-hidden-count-badge');
+            const goalsHiddenTxt = document.getElementById('goals-hidden-btn-txt');
+            if (goalsHiddenBtn && goalsHiddenCount) {
+                const isAr = currentSystemLanguage === 'ar';
+                if (goalsHiddenTxt) goalsHiddenTxt.innerText = isAr ? '\u0627\u0644\u0645\u0648\u0627\u062F \u0627\u0644\u0645\u062E\u0641\u064A\u0629' : 'Hidden';
+                if (!currentOpenSubjectGroupTag && hiddenTags.length > 0) {
+                    goalsHiddenBtn.style.display = 'inline-flex';
+                    goalsHiddenCount.innerText = hiddenTags.length;
+                } else {
+                    goalsHiddenBtn.style.display = 'none';
+                }
+            }
+
             if (!currentOpenSubjectGroupTag) {
                 // ---------- OVERVIEW MODE: one card per Subject (tag) ----------
                 if (backBtn) backBtn.style.display = 'none';
@@ -5907,15 +6120,16 @@ html[data-theme="light"] .month-selector-dropdown {
                 if (addBtnTxtEl) addBtnTxtEl.innerText = d.goalsAddBtnTxt || 'New Subject';
                 if (addBtn) addBtn.onclick = () => openTagModal();
 
+                const visibleTags = currentTagsList.filter(t => !hiddenTags.includes(t));
                 const groups = {};
-                currentTagsList.forEach(tag => { groups[tag] = []; });
+                visibleTags.forEach(tag => { groups[tag] = []; });
                 goalsArray.forEach(g => {
-                    const key = (g.linkedTag && currentTagsList.includes(g.linkedTag)) ? g.linkedTag : UNASSIGNED_SUBJECT_KEY;
+                    const key = (g.linkedTag && visibleTags.includes(g.linkedTag)) ? g.linkedTag : UNASSIGNED_SUBJECT_KEY;
                     if (!groups[key]) groups[key] = [];
                     groups[key].push(g);
                 });
 
-                const tagKeysToRender = [...currentTagsList];
+                const tagKeysToRender = [...visibleTags];
                 if (groups[UNASSIGNED_SUBJECT_KEY] && groups[UNASSIGNED_SUBJECT_KEY].length) tagKeysToRender.push(UNASSIGNED_SUBJECT_KEY);
 
                 if (tagKeysToRender.length === 0) { emptyState.innerText = d.goalsEmptyState; emptyState.style.display = 'block'; return; }
@@ -5955,6 +6169,13 @@ html[data-theme="light"] .month-selector-dropdown {
                         if (e.target.closest('.subject-drag-handle') || e.target.closest('[data-role="delete-subject-tag"]')) return;
                         openSubjectGroup(tagKey);
                     });
+                    if (!isUnassigned) {
+                        card.oncontextmenu = (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openTagSubjectModal(tagKey, e);
+                        };
+                    }
                     const delBtn = card.querySelector('[data-role="delete-subject-tag"]');
                     if (delBtn) {
                         delBtn.addEventListener('click', (e) => {
@@ -6866,7 +7087,7 @@ html[data-theme="light"] .month-selector-dropdown {
 
         function openTagColorModal(tagName) { openTagSubjectModal(tagName); }
 
-        let customTagColors = {};
+        // customTagColors initialized globally
 
         function setTagColor(tag, color) {
             customTagColors[tag] = color;
@@ -8669,50 +8890,16 @@ document.addEventListener('keydown', function(e) {
         let gcalHeaderHideTimeout = null;
 
         function gcalRevealHeader() {
-            clearTimeout(gcalHeaderHideTimeout);
-            const header = document.querySelector('.header-navigation');
-            const handle = document.getElementById('gcal-nav-handle');
-            if (header) header.classList.add('revealed');
-            if (handle) handle.classList.add('hidden');
+            document.body.classList.remove('index-header-collapsed');
+            const btn = document.getElementById('gcal-header-toggle-btn');
+            if (btn) btn.innerHTML = currentSystemLanguage === 'ar' ? '⤢ تكبير الشاشة' : '⤢ Full Canvas';
         }
 
-        function gcalHideHeader(delay = 320) {
-            clearTimeout(gcalHeaderHideTimeout);
-            gcalHeaderHideTimeout = setTimeout(() => {
-                const accMenu = document.getElementById('account-dropdown-menu');
-                if (accMenu && accMenu.classList.contains('show')) return;
-                const header = document.querySelector('.header-navigation');
-                const handle = document.getElementById('gcal-nav-handle');
-                if (header) header.classList.remove('revealed');
-                if (handle) handle.classList.remove('hidden');
-            }, delay);
+        function gcalHideHeader() {
+            document.body.classList.add('index-header-collapsed');
+            const btn = document.getElementById('gcal-header-toggle-btn');
+            if (btn) btn.innerHTML = currentSystemLanguage === 'ar' ? '⤡ إظهار الشريط العلوي' : '⤡ Show Header';
         }
-
-        document.addEventListener('mousemove', (e) => {
-            if (!document.body.classList.contains('gcal-immersive-mode')) return;
-            const header = document.querySelector('.header-navigation');
-            if (e.clientY <= 24) {
-                gcalRevealHeader();
-            } else if (header && e.clientY > header.offsetHeight + 25) {
-                gcalHideHeader();
-            }
-        });
-
-        setTimeout(() => {
-            const header = document.querySelector('.header-navigation');
-            if (header) {
-                header.addEventListener('mouseenter', () => {
-                    if (document.body.classList.contains('gcal-immersive-mode')) {
-                        gcalRevealHeader();
-                    }
-                });
-                header.addEventListener('mouseleave', () => {
-                    if (document.body.classList.contains('gcal-immersive-mode')) {
-                        gcalHideHeader(280);
-                    }
-                });
-            }
-        }, 50);
 
 let appHasBooted = false;
         enhanceEmptyStates();
