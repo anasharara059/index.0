@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
@@ -2299,6 +2299,653 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
     border-radius: 50%;
     background: #00d26a;
 }
+
+/* ====================================================================
+   INDEX ENHANCEMENTS: WHITE MODE, MONTH SELECTOR, HEATMAP, GCAL TOGGLE
+   ==================================================================== */
+
+/* --- 1. Account Dropdown Sizing & Light Theme Contrast --- */
+.account-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0 !important;
+    left: auto !important;
+    min-width: 230px !important;
+    width: max-content !important;
+    max-width: 320px !important;
+    border-radius: 16px !important;
+    padding: 8px 0 !important;
+}
+html[dir="rtl"] .account-dropdown-menu {
+    right: auto !important;
+    left: 0 !important;
+}
+html[data-theme="light"] .account-dropdown-menu {
+    background: #ffffff !important;
+    border: 1px solid #dadce0 !important;
+    box-shadow: 0 12px 36px rgba(60, 64, 67, 0.16) !important;
+}
+html[data-theme="light"] .account-dropdown-menu::before {
+    background: var(--day-green, #26734a) !important;
+}
+html[data-theme="light"] .account-menu-item {
+    color: #202124 !important;
+}
+html[data-theme="light"] .account-menu-item:hover {
+    background: #f1f3f4 !important;
+    color: #1a73e8 !important;
+}
+html[data-theme="light"] .account-menu-item.danger {
+    color: #c5221f !important;
+}
+html[data-theme="light"] .account-menu-item.danger:hover {
+    background: #fce8e6 !important;
+    color: #b31412 !important;
+}
+html[data-theme="light"] .account-menu-divider {
+    background: #e8eaed !important;
+}
+
+/* Auth Card in Light Mode */
+html[data-theme="light"] .auth-real-panel {
+    background: linear-gradient(180deg, #f2ede3 0%, #e6dccb 100%) !important;
+}
+html[data-theme="light"] .auth-real-card {
+    background: #ffffff !important;
+    border-color: #dadce0 !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] .auth-real-title {
+    color: #202124 !important;
+}
+html[data-theme="light"] .auth-real-subtitle {
+    color: #5f6368 !important;
+}
+html[data-theme="light"] .auth-real-brand-name {
+    color: #202124 !important;
+}
+html[data-theme="light"] .auth-feature {
+    color: #5f6368 !important;
+}
+html[data-theme="light"] .auth-real-footer {
+    color: #80868b !important;
+}
+
+/* --- 2. Calendar White Mode Contrast & Readability --- */
+[data-theme="light"] .gcal-event-card {
+    color: #1f2328 !important;
+    background: color-mix(in srgb, var(--event-color, #1a73e8) 18%, #ffffff) !important;
+    border: 1px solid color-mix(in srgb, var(--event-color, #1a73e8) 45%, #dadce0) !important;
+    border-left: 4px solid var(--event-color, #1a73e8) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+}
+[data-theme="light"] html[dir="rtl"] .gcal-event-card {
+    border-left: 1px solid color-mix(in srgb, var(--event-color, #1a73e8) 45%, #dadce0) !important;
+    border-right: 4px solid var(--event-color, #1a73e8) !important;
+}
+[data-theme="light"] .gcal-event-title {
+    color: #1f2328 !important;
+    font-weight: 700 !important;
+}
+[data-theme="light"] .gcal-event-time {
+    color: #444d56 !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+}
+[data-theme="light"] .gcal-event-meta-icons {
+    color: #57606a !important;
+    font-weight: 600 !important;
+}
+[data-theme="light"] .gcal-gutter-hour {
+    color: #57606a !important;
+    font-weight: 700 !important;
+}
+[data-theme="light"] .gcal-day-name {
+    color: #57606a !important;
+    font-weight: 700 !important;
+}
+[data-theme="light"] .gcal-day-number {
+    color: #1f2328 !important;
+    font-weight: 700 !important;
+}
+[data-theme="light"] .gcal-day-col {
+    border-right-color: #e1e4e8 !important;
+    background-image: repeating-linear-gradient(to bottom, transparent, transparent 59px, #e8eaed 60px) !important;
+}
+[data-theme="light"] .gcal-month-cell {
+    border-color: #dadce0 !important;
+}
+[data-theme="light"] .gcal-month-dow {
+    background: #f8fafd !important;
+    color: #5f6368 !important;
+    border-color: #dadce0 !important;
+}
+[data-theme="light"] .gcal-month-num {
+    color: #202124 !important;
+}
+[data-theme="light"] .gcal-agenda-day-header {
+    background: #f1f3f4 !important;
+    color: #1a73e8 !important;
+    border-color: #dadce0 !important;
+}
+[data-theme="light"] .gcal-agenda-item-row {
+    border-color: #e8eaed !important;
+}
+
+/* --- 3. Calendar Top Bar Header Toggle & Canvas Expansion --- */
+.gcal-header-toggle-btn {
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 18px;
+    border: 1px solid var(--gcal-line);
+    background: transparent;
+    color: var(--gcal-text);
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    user-select: none;
+}
+.gcal-header-toggle-btn:hover {
+    background: var(--gcal-surface-hover);
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
+    transform: translateY(-1px);
+}
+.header-navigation {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s, margin-top 0.3s !important;
+}
+body.index-header-collapsed .header-navigation {
+    transform: translateY(-100%) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    margin-top: -70px !important;
+}
+body.index-header-collapsed #screen-calendar {
+    height: calc(100vh - 24px) !important;
+    min-height: calc(100vh - 24px) !important;
+}
+body.index-header-collapsed .screens-container {
+    margin-top: 12px !important;
+    max-width: 100% !important;
+    padding: 0 16px !important;
+}
+
+/* --- 4. Tag Context Menu & Hidden Tags System --- */
+.tag-context-menu {
+    position: fixed;
+    z-index: 100005;
+    background: #141622;
+    border: 1px solid rgba(217, 165, 74, 0.3);
+    border-radius: 14px;
+    padding: 6px 0;
+    min-width: 180px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.15s ease-out;
+}
+html[data-theme="light"] .tag-context-menu {
+    background: #ffffff;
+    border-color: #dadce0;
+    box-shadow: 0 10px 30px rgba(60, 64, 67, 0.18);
+}
+.tag-context-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.tag-context-item:hover {
+    background: rgba(217, 165, 74, 0.12);
+    color: var(--accent-orange);
+}
+html[data-theme="light"] .tag-context-item {
+    color: #202124;
+}
+html[data-theme="light"] .tag-context-item:hover {
+    background: #f1f3f4;
+    color: var(--day-green-deep, #1d5b3a);
+}
+.tag-context-divider {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 4px 10px;
+}
+.mini-tag-hidden-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px dashed var(--border-soft);
+    background: transparent;
+    color: var(--text-gray);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    margin-inline-start: 4px;
+}
+.mini-tag-hidden-btn:hover {
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
+    transform: scale(1.1);
+}
+.mini-tag-hidden-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--accent-orange);
+    color: #000;
+    font-size: 9px;
+    font-weight: 800;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- 5. Analysis Month Selector & 4-Tier Stats Row --- */
+.analysis-month-selector-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(217, 165, 74, 0.07), rgba(62, 92, 138, 0.05));
+    border: 1px solid rgba(217, 165, 74, 0.2);
+    border-radius: 16px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+html[data-theme="light"] .analysis-month-selector-bar {
+    background: linear-gradient(135deg, rgba(244, 236, 223, 0.96), rgba(232, 221, 206, 0.92));
+    border-color: rgba(73, 62, 50, 0.16);
+}
+.month-selector-nav-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.month-nav-arrow-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(217, 165, 74, 0.3);
+    background: rgba(217, 165, 74, 0.1);
+    color: var(--accent-orange);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+.month-nav-arrow-btn:hover {
+    background: var(--accent-orange);
+    color: #000;
+    transform: scale(1.08);
+}
+.month-selector-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.month-selector-dropdown {
+    height: 34px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+.month-selector-dropdown:focus {
+    border-color: var(--accent-orange);
+}
+html[data-theme="light"] .month-selector-dropdown {
+    background: #ffffff !important;
+    border-color: #dadce0 !important;
+    color: #202124 !important;
+}
+.month-current-quick-btn {
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 210, 106, 0.3);
+    background: rgba(0, 210, 106, 0.08);
+    color: var(--success);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.month-current-quick-btn:hover {
+    background: var(--success);
+    color: #000;
+}
+
+/* 4-Tier Totals Row */
+.analysis-4tier-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+}
+@media (max-width: 860px) {
+    .analysis-4tier-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+    .analysis-4tier-stats { grid-template-columns: 1fr; }
+}
+.tier-stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-soft);
+    border-radius: 16px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.tier-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+html[data-theme="light"] .tier-stat-card {
+    background: #ffffff;
+    border-color: rgba(73, 62, 50, 0.12);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+.tier-stat-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-gray);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.tier-stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-light);
+    letter-spacing: -0.5px;
+}
+html[data-theme="light"] .tier-stat-value {
+    color: #202124;
+}
+.tier-stat-sub {
+    font-size: 11px;
+    color: var(--text-gray);
+    font-weight: 500;
+}
+
+/* --- 6. Monthly Heat Map Grid (Strictly Day 1 to End of Month) --- */
+.monthly-heatmap-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-soft);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 22px;
+}
+html[data-theme="light"] .monthly-heatmap-section {
+    background: #ffffff;
+    border-color: rgba(73, 62, 50, 0.12);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+.monthly-heatmap-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.monthly-heatmap-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+html[data-theme="light"] .monthly-heatmap-title {
+    color: #202124;
+}
+.monthly-heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-gray);
+}
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+.monthly-heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+    gap: 8px;
+}
+.monthly-day-cell {
+    border-radius: 10px;
+    padding: 10px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: 1px solid var(--border-soft);
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+    position: relative;
+    user-select: none;
+}
+.monthly-day-cell:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-orange);
+    z-index: 5;
+}
+.monthly-day-cell.is-today {
+    border: 2px solid var(--accent-orange) !important;
+}
+.monthly-day-num {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-light);
+}
+html[data-theme="light"] .monthly-day-num {
+    color: #202124;
+}
+.monthly-day-name {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--text-gray);
+    text-transform: uppercase;
+}
+.monthly-day-time {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-orange);
+    margin-top: 2px;
+}
+
+/* Heatmap Intensity Colors */
+.heatmap-lvl-0 {
+    background: rgba(255, 255, 255, 0.02);
+}
+html[data-theme="light"] .heatmap-lvl-0 {
+    background: #f8f9fa;
+}
+.heatmap-lvl-1 {
+    background: rgba(217, 165, 74, 0.18);
+    border-color: rgba(217, 165, 74, 0.3);
+}
+html[data-theme="light"] .heatmap-lvl-1 {
+    background: rgba(38, 115, 74, 0.15);
+    border-color: rgba(38, 115, 74, 0.3);
+}
+.heatmap-lvl-2 {
+    background: rgba(217, 165, 74, 0.38);
+    border-color: rgba(217, 165, 74, 0.5);
+}
+html[data-theme="light"] .heatmap-lvl-2 {
+    background: rgba(38, 115, 74, 0.32);
+    border-color: rgba(38, 115, 74, 0.5);
+}
+.heatmap-lvl-3 {
+    background: rgba(217, 165, 74, 0.62);
+    border-color: rgba(217, 165, 74, 0.75);
+}
+html[data-theme="light"] .heatmap-lvl-3 {
+    background: rgba(38, 115, 74, 0.55);
+    border-color: rgba(38, 115, 74, 0.7);
+}
+.heatmap-lvl-4 {
+    background: rgba(217, 165, 74, 0.92);
+    border-color: var(--accent-orange);
+    box-shadow: 0 0 10px rgba(217, 165, 74, 0.35);
+}
+html[data-theme="light"] .heatmap-lvl-4 {
+    background: rgba(38, 115, 74, 0.85);
+    border-color: var(--day-green-deep, #1d5b3a);
+    box-shadow: 0 0 10px rgba(38, 115, 74, 0.25);
+}
+.heatmap-lvl-4 .monthly-day-num,
+.heatmap-lvl-4 .monthly-day-name,
+.heatmap-lvl-4 .monthly-day-time {
+    color: #000 !important;
+}
+html[data-theme="light"] .heatmap-lvl-4 .monthly-day-num,
+html[data-theme="light"] .heatmap-lvl-4 .monthly-day-name,
+html[data-theme="light"] .heatmap-lvl-4 .monthly-day-time {
+    color: #fff !important;
+}
+
+/* Monthly Average Card Highlight */
+.monthly-average-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, rgba(62, 92, 138, 0.12), rgba(217, 165, 74, 0.08));
+    border: 1px solid rgba(62, 92, 138, 0.25);
+    border-radius: 14px;
+    padding: 12px 18px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+html[data-theme="light"] .monthly-average-highlight {
+    background: #f8fafd;
+    border-color: #dadce0;
+}
+.monthly-avg-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-light);
+}
+html[data-theme="light"] .monthly-avg-title {
+    color: #202124;
+}
+.monthly-avg-value {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--accent-orange);
+}
+html[data-theme="light"] .monthly-avg-value {
+    color: var(--day-green-deep, #1d5b3a);
+}
+
+/* --- 7. Subject & Branch Drag & Drop Handles --- */
+.subject-drag-handle,
+.branch-drag-handle {
+    cursor: grab;
+    padding: 2px 6px;
+    border-radius: 6px;
+    color: var(--text-gray);
+    font-size: 15px;
+    line-height: 1;
+    user-select: none;
+    transition: color 0.15s, background 0.15s;
+}
+.subject-drag-handle:hover,
+.branch-drag-handle:hover {
+    color: var(--accent-orange);
+    background: rgba(255, 255, 255, 0.05);
+}
+.goal-card.is-dragging,
+.subject-group-card.is-dragging {
+    opacity: 0.35 !important;
+    transform: scale(0.98) !important;
+}
+.goal-card.drop-hover,
+.subject-group-card.drop-hover {
+    border-color: var(--accent-orange) !important;
+    box-shadow: 0 0 16px rgba(217, 165, 74, 0.35) !important;
+}
+
+/* --- 8. Admin User Activity Status Pill --- */
+.admin-user-activity-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    margin-top: 4px;
+}
+.admin-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.admin-status-pill.online {
+    background: rgba(0, 210, 106, 0.15);
+    color: #00d26a;
+    border: 1px solid rgba(0, 210, 106, 0.35);
+}
+.admin-status-pill.offline {
+    background: rgba(122, 127, 145, 0.12);
+    color: var(--text-gray);
+    border: 1px solid rgba(122, 127, 145, 0.25);
+}
+.status-pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00d26a;
+    box-shadow: 0 0 6px #00d26a;
+    animation: ringPulse 2s infinite;
+}
+.admin-last-active-txt {
+    color: var(--text-gray);
+    font-size: 11px;
+}
     </style>
 </head>
 <body>
@@ -2446,7 +3093,10 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                         </div>
                         <button class="linked-goal-empty-cta" id="linked-goal-empty-cta" onclick="openGoalModal(currentlySelectedTag)" style="display:none;">+ Link a goal to this subject</button>
                         <div class="tags-management-section" style="border-top:none; padding-top:2px;">
-                            <div class="tags-label" id="tags-section-header">Subjects & Preparations (Click to select):</div>
+                            <div class="tags-label" id="tags-section-header" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                                <span>Subjects & Preparations (Click to select):</span>
+                                <button class="manage-hidden-tags-btn" id="manage-hidden-tags-btn" onclick="openManageHiddenTagsModal()" title="Manage Hidden Subjects" style="display:none; background:none; border:1px solid var(--border-soft); border-radius:12px; cursor:pointer; font-size:12px; color:var(--text-gray); padding:2px 8px;">👁️ <span id="hidden-tags-count-badge">0</span></button>
+                            </div>
                             <div class="tags-list" id="tags-box-wrapper"></div>
                         </div>
                     </div>
@@ -2518,6 +3168,91 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
         <div class="screen-view glass-card analysis-screen-layout" id="screen-analysis">
             <div class="dashboard-scaled-panel">
                 <div class="dash-section-header" id="dash-header-title">Analytics & Progress Rates</div>
+
+                <!-- 📅 Top Month Selector Bar -->
+                <div class="analysis-month-selector-bar">
+                    <div class="month-nav-controls">
+                        <button class="month-nav-btn" onclick="navAnalysisMonth(-1)" title="Previous Month">❮</button>
+                        <div class="month-picker-dropdown-wrapper">
+                            <button class="month-picker-btn" id="analysis-month-picker-btn" onclick="toggleAnalysisMonthDropdown(event)">
+                                <span id="analysis-month-display">September 2026</span> ▾
+                            </button>
+                            <div class="month-picker-dropdown" id="analysis-month-dropdown" style="display:none;">
+                                <!-- Months Jan-Dec rendered here -->
+                            </div>
+                        </div>
+                        <button class="month-nav-btn" onclick="navAnalysisMonth(1)" title="Next Month">❯</button>
+                    </div>
+                    <div class="month-metrics-summary">
+                        <div class="month-metric-chip">
+                            <span class="chip-label">Month Total:</span>
+                            <span class="chip-val" id="selected-month-total-time">0h 0m</span>
+                        </div>
+                        <div class="month-metric-chip highlight">
+                            <span class="chip-label">Daily Avg:</span>
+                            <span class="chip-val" id="selected-month-daily-avg">0h 0m / day</span>
+                        </div>
+                        <div class="month-metric-chip">
+                            <span class="chip-label">Active Days:</span>
+                            <span class="chip-val" id="selected-month-active-days">0 / 30</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⏱️ 4-Tier Time Totals Breakdown -->
+                <div class="analysis-4tier-stats">
+                    <div class="tier-stat-card">
+                        <div class="tier-icon">📅</div>
+                        <div class="tier-info">
+                            <div class="tier-label">Today</div>
+                            <div class="tier-value" id="tier-today-val">0h 0m</div>
+                            <div class="tier-sub" id="tier-today-sub">Active sessions</div>
+                        </div>
+                    </div>
+                    <div class="tier-stat-card">
+                        <div class="tier-icon">🗓️</div>
+                        <div class="tier-info">
+                            <div class="tier-label">This Week</div>
+                            <div class="tier-value" id="tier-week-val">0h 0m</div>
+                            <div class="tier-sub">Sat → Fri</div>
+                        </div>
+                    </div>
+                    <div class="tier-stat-card">
+                        <div class="tier-icon">📊</div>
+                        <div class="tier-info">
+                            <div class="tier-label">This Month</div>
+                            <div class="tier-value" id="tier-month-val">0h 0m</div>
+                            <div class="tier-sub" id="tier-month-days-sub">Day 1 to Last Day</div>
+                        </div>
+                    </div>
+                    <div class="tier-stat-card">
+                        <div class="tier-icon">🏆</div>
+                        <div class="tier-info">
+                            <div class="tier-label">This Year</div>
+                            <div class="tier-value" id="tier-year-val">0h 0m</div>
+                            <div class="tier-sub" id="tier-year-sub">All Year Total</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🗓️ Monthly Activity Heatmap (Strictly Day 1 to Last Day of Month) -->
+                <div class="charts-container-box" style="margin-top:12px; margin-bottom:14px;">
+                    <div class="charts-box-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span id="monthly-heatmap-title">🗓️ Monthly Activity Heatmap (<span id="heatmap-month-title">September 2026</span>)</span>
+                        <div class="heatmap-legend" style="display:flex; gap:6px; align-items:center; font-size:11px; color:var(--text-gray);">
+                            <span>Less</span>
+                            <div class="monthly-day-cell lvl-0" style="width:14px; height:14px; border:none; display:inline-block;"></div>
+                            <div class="monthly-day-cell lvl-1" style="width:14px; height:14px; border:none; display:inline-block;"></div>
+                            <div class="monthly-day-cell lvl-2" style="width:14px; height:14px; border:none; display:inline-block;"></div>
+                            <div class="monthly-day-cell lvl-3" style="width:14px; height:14px; border:none; display:inline-block;"></div>
+                            <div class="monthly-day-cell lvl-4" style="width:14px; height:14px; border:none; display:inline-block;"></div>
+                            <span>More</span>
+                        </div>
+                    </div>
+                    <div id="monthly-activity-heatmap-container" style="padding:10px 0;">
+                        <!-- Days 1 to 28/29/30/31 rendered here -->
+                    </div>
+                </div>
                 <div class="metrics-cards-grid">
                     <div class="metric-card-box">
                         <div class="metric-text-group">
@@ -2656,6 +3391,7 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                         <button class="gcal-arrow-btn" onclick="gcalShift(1)" title="Next">›</button>
                     </div>
                     <div class="gcal-date-label" id="gcal-date-label">September 2026</div>
+                    <button class="gcal-header-toggle-btn" id="gcal-header-toggle-btn" onclick="toggleIndexHeaderCollapse()" title="Toggle full canvas">⤢ Full Canvas</button>
                 </div>
 
                 <div class="gcal-topbar-center">
@@ -3016,6 +3752,48 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
             </div>
         </div>
     </div>
+
+    <!-- Tag Context Menu (Right Click) -->
+    <div id="tag-context-menu" class="tag-context-menu" style="display:none;">
+        <div class="tag-context-menu-item" onclick="onTagContextMenuColor()">
+            <span>🎨</span>
+            <span id="ctx-menu-color-txt">Change Color</span>
+        </div>
+        <div class="tag-context-menu-item" onclick="onTagContextMenuRename()">
+            <span>✏️</span>
+            <span id="ctx-menu-rename-txt">Rename Subject</span>
+        </div>
+        <div class="tag-context-menu-item" onclick="onTagContextMenuHide()">
+            <span>👁️</span>
+            <span id="ctx-menu-hide-txt">Hide Subject</span>
+        </div>
+    </div>
+
+    <!-- Rename Tag Modal -->
+    <div class="modal-overlay" id="tag-rename-modal">
+        <div class="modal-box">
+            <h3 id="tag-rename-heading">Rename Subject</h3>
+            <input type="text" id="tag-rename-input" placeholder="New subject name...">
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeTagRenameModal()" id="tag-rename-cancel">Cancel</button>
+                <button class="modal-btn confirm" onclick="saveTagRenameFromModal()" id="tag-rename-save">Rename</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Hidden Tags Modal -->
+    <div class="modal-overlay" id="manage-hidden-tags-modal">
+        <div class="modal-box" style="max-width:480px; width:90%;">
+            <h3 id="manage-hidden-heading">Manage Hidden Subjects</h3>
+            <div id="manage-hidden-tags-list" style="margin:16px 0; max-height:260px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+                <!-- Hidden tags rendered here -->
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn confirm" onclick="closeManageHiddenTagsModal()" id="manage-hidden-close">Done</button>
+            </div>
+        </div>
+    </div>
+
 <!-- Floating mini timer -->
     <div id="mini-floating-timer" aria-live="polite" title="Drag to move">
         <span class="mini-timer-status"></span>
@@ -3343,10 +4121,16 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
         let currentSegmentStartTimeStamp = null; // start time of the currently-running (since last resume) segment
         let sessionTimeSegments = []; // closed "start - end" segments for the in-progress session (one per run between pauses)
         let currentTagsList = ["Medicine", "Surgery", "Anatomy", "Obstetrics", "Pediatrics"];
+        let hiddenTags = [];
         let currentlySelectedTag = "Medicine";
         let archivedSessionsArray = [];
         let paginationCurrentPage = 1;
-        const paginationMaxItemsPerPage = 10;
+        const paginationMaxItemsPerPage = 5;
+        let analysisSelectedYear = new Date().getFullYear();
+        let analysisSelectedMonth = new Date().getMonth();
+        let tagContextMenuTarget = null;
+        let userStatusCache = {};
+        let lastAdminAccessSnap = null;
         let goalsArray = [];
         let timerSelectedBranchId = null;
         // Remembers which branch/lecture was last picked, per subject, so
@@ -3544,6 +4328,33 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
             document.getElementById('user-badge-photo').src = user.photoURL || '';
             document.getElementById('nav-btn-admin').style.display = isAdmin ? 'inline-block' : 'none';
 
+            // Setup Firebase RTDB presence for active status
+            try {
+                const userStatusRef = rtdb.ref('indexStudyAssistant/presence/' + user.uid);
+                const connectedRef = rtdb.ref('.info/connected');
+                connectedRef.on('value', (snap) => {
+                    if (snap.val() === true) {
+                        userStatusRef.onDisconnect().set({
+                            state: 'offline',
+                            lastActive: firebase.database.ServerValue.TIMESTAMP
+                        }).then(() => {
+                            userStatusRef.set({
+                                state: 'online',
+                                lastActive: firebase.database.ServerValue.TIMESTAMP
+                            });
+                        });
+                    }
+                });
+                setInterval(() => {
+                    if (auth.currentUser) {
+                        userStatusRef.update({
+                            state: 'online',
+                            lastActive: firebase.database.ServerValue.TIMESTAMP
+                        });
+                    }
+                }, 45000);
+            } catch (e) { console.warn('Presence init error:', e); }
+
             const myAccessRef = ACCESS_REF.child(user.uid);
 
             if (isAdmin) {
@@ -3551,7 +4362,14 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                     email: user.email || '', displayName: user.displayName || '', photoURL: user.photoURL || '',
                     status: 'approved', isAdmin: true, requestedAt: Date.now(), respondedAt: Date.now()
                 });
-                ACCESS_REF.on('value', renderAdminAccessList);
+                ACCESS_REF.on('value', snap => {
+                    lastAdminAccessSnap = snap;
+                    renderAdminAccessList(snap);
+                });
+                rtdb.ref('indexStudyAssistant/presence').on('value', snap => {
+                    userStatusCache = snap.val() || {};
+                    if (lastAdminAccessSnap) renderAdminAccessList(lastAdminAccessSnap);
+                });
                 try { await bootApp(); }
                 catch (err) { console.error('bootApp failed:', err); }
                 finally { hideAllAuthOverlays(); }
@@ -3570,12 +4388,6 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                     return;
                 }
                 if (record.status === 'approved') {
-                    // Keep the loading spinner up while data is fetched so the
-                    // screen doesn't briefly flash empty/default content before
-                    // your real sessions, goals, and habits are rendered in.
-                    // The try/finally guarantees the overlay is always removed,
-                    // even if something in bootApp throws, so a bad session or
-                    // edge case can never leave the login screen stuck.
                     try { await bootApp(); }
                     catch (err) { console.error('bootApp failed:', err); }
                     finally { hideAllAuthOverlays(); }
@@ -3596,6 +4408,7 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
         }
 
         function renderAdminAccessList(snap) {
+            lastAdminAccessSnap = snap;
             const data = snap.val() || {};
             const listEl = document.getElementById('admin-access-list');
             const emptyEl = document.getElementById('admin-empty-state');
@@ -3609,6 +4422,15 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
             listEl.innerHTML = entries.map(([uid, rec]) => {
                 const statusColor = rec.status === 'approved' ? 'var(--success)' : rec.status === 'banned' ? 'var(--danger)' : 'var(--warning)';
                 const requestedDate = rec.requestedAt ? new Date(rec.requestedAt).toLocaleString() : '';
+                
+                // Real-time Presence info
+                const pres = (userStatusCache && userStatusCache[uid]) || {};
+                const isOnline = pres.state === 'online' && (Date.now() - (pres.lastActive || 0) < 120000);
+                const lastActiveTime = pres.lastActive ? new Date(pres.lastActive).toLocaleString() : (rec.requestedAt ? new Date(rec.requestedAt).toLocaleString() : 'Never');
+                const presencePill = isOnline
+                    ? `<span class="admin-status-pill online">● Active Now</span>`
+                    : `<span class="admin-status-pill offline">○ Offline</span>`;
+
                 let actions = '';
                 if (rec.status === 'pending') {
                     actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">Approve</button>
@@ -3624,7 +4446,10 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                         <div>
                             <div style="font-size:13px; color:var(--text-light); font-weight:600;">${rec.displayName || '(no name)'}</div>
                             <div style="font-size:11px; color:var(--text-gray);">${rec.email || ''}</div>
-                            <div style="font-size:10px; color:var(--text-gray);">Requested: ${requestedDate}</div>
+                            <div style="display:flex; align-items:center; gap:8px; margin-top:4px; flex-wrap:wrap;">
+                                ${presencePill}
+                                <span style="font-size:11px; color:var(--text-gray);">Last Active: ${lastActiveTime}</span>
+                            </div>
                         </div>
                     </div>
                     <div style="display:flex; align-items:center; gap:10px;">
@@ -3688,13 +4513,15 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                 const [
                     savedSessions, savedTags, savedGoals, savedHabits,
                     savedStudyGoals, savedSelectedTag, savedQuickNotes,
-                    savedTheme, savedLanguage
+                    savedTheme, savedLanguage, savedHiddenTags
                 ] = await Promise.all([
                     dbGet('sessions'), dbGet('tags'), dbGet('goals'), dbGet('habits'),
                     dbGet('studyGoals'), dbGet('selectedTag'), dbGet('timerQuickNotes'),
-                    dbGet('appTheme'), dbGet('language')
+                    dbGet('appTheme'), dbGet('language'), dbGet('hiddenTags')
                 ]);
 
+                if (Array.isArray(savedHiddenTags)) hiddenTags = savedHiddenTags;
+                else dbSet('hiddenTags', hiddenTags);
                 if (savedSessions !== undefined) archivedSessionsArray = savedSessions;
                 else dbSet('sessions', archivedSessionsArray);
                 if (savedTags !== undefined) currentTagsList = savedTags;
@@ -4357,18 +5184,46 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
         }
         document.getElementById('modal-tag-input').addEventListener('keypress', function (e) { if (e.key === 'Enter') saveTagFromModal(); });
 
+        function getWeekStartSaturday(referenceDate = new Date()) {
+            const d = new Date(referenceDate);
+            d.setHours(0, 0, 0, 0);
+            const day = d.getDay(); // 0: Sun, 1: Mon, ..., 6: Sat
+            const diff = day === 6 ? 0 : day + 1; // Sat: 0, Sun: 1, ..., Fri: 6
+            d.setDate(d.getDate() - diff);
+            return d;
+        }
+
         function renderTagsChips() {
             const wrapper = document.getElementById('tags-box-wrapper');
+            if (!wrapper) return;
             wrapper.innerHTML = '';
-            currentTagsList.forEach(tag => {
+            const visibleTags = currentTagsList.filter(t => !hiddenTags.includes(t));
+            
+            // Update hidden tags manager button in header
+            const manageBtn = document.getElementById('manage-hidden-tags-btn');
+            const badge = document.getElementById('hidden-tags-count-badge');
+            if (manageBtn && badge) {
+                if (hiddenTags.length > 0) {
+                    manageBtn.style.display = 'inline-flex';
+                    badge.innerText = hiddenTags.length;
+                } else {
+                    manageBtn.style.display = 'none';
+                }
+            }
+
+            visibleTags.forEach(tag => {
                 const chip = document.createElement('div');
                 chip.className = `mini-tag-chip ${tag === currentlySelectedTag ? 'selected' : ''}`;
-                chip.title = currentSystemLanguage === 'ar' ? 'انقر لتختار · انقر بزر الماوس الأيمن لتغيير اللون' : 'Click to select · Right-click to change color';
+                chip.title = currentSystemLanguage === 'ar' ? 'انقر لتختار · انقر بزر الماوس الأيمن للخيارات' : 'Click to select · Right-click for options';
                 chip.onclick = () => selectActiveTag(tag);
-                chip.oncontextmenu = (e) => { e.preventDefault(); openTagColorModal(tag); };
+                chip.oncontextmenu = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openTagContextMenu(e, tag);
+                };
                 let pressTimer;
                 chip.addEventListener('touchstart', (e) => {
-                    pressTimer = setTimeout(() => { e.preventDefault(); openTagColorModal(tag); }, 600);
+                    pressTimer = setTimeout(() => { e.preventDefault(); openTagContextMenu(e, tag); }, 600);
                 });
                 chip.addEventListener('touchend', () => clearTimeout(pressTimer));
                 chip.addEventListener('touchmove', () => clearTimeout(pressTimer));
@@ -4381,6 +5236,7 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                 const removeBtn = document.createElement('span');
                 removeBtn.className = 'remove-icon';
                 removeBtn.innerText = '✕';
+                removeBtn.title = currentSystemLanguage === 'ar' ? 'حذف' : 'Delete';
                 removeBtn.onclick = (e) => { e.stopPropagation(); deleteTagFromSystem(tag); };
                 chip.appendChild(colorDot);
                 chip.appendChild(spanName);
@@ -4390,23 +5246,192 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
             const addBtnCircle = document.createElement('div');
             addBtnCircle.className = 'mini-tag-add-btn';
             addBtnCircle.innerHTML = '+';
+            addBtnCircle.title = currentSystemLanguage === 'ar' ? 'إضافة مادة' : 'Add Subject';
             addBtnCircle.onclick = () => openTagModal();
             wrapper.appendChild(addBtnCircle);
+        }
+
+        function openTagContextMenu(e, tag) {
+            tagContextMenuTarget = tag;
+            const menu = document.getElementById('tag-context-menu');
+            if (!menu) return;
+            menu.style.display = 'block';
+            
+            let x = e.clientX || 100;
+            let y = e.clientY || 100;
+            if (x + 190 > window.innerWidth) x = window.innerWidth - 200;
+            if (y + 150 > window.innerHeight) y = window.innerHeight - 160;
+            
+            menu.style.left = x + 'px';
+            menu.style.top = y + 'px';
+        }
+
+        function closeTagContextMenu() {
+            const menu = document.getElementById('tag-context-menu');
+            if (menu) menu.style.display = 'none';
+        }
+
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('#tag-context-menu')) closeTagContextMenu();
+            if (!e.target.closest('.month-picker-dropdown-wrapper')) {
+                const drop = document.getElementById('analysis-month-dropdown');
+                if (drop) drop.style.display = 'none';
+            }
+        });
+
+        function onTagContextMenuColor() {
+            const tag = tagContextMenuTarget;
+            closeTagContextMenu();
+            if (tag) openTagColorModal(tag);
+        }
+
+        function onTagContextMenuRename() {
+            const tag = tagContextMenuTarget;
+            closeTagContextMenu();
+            if (tag) openTagRenameModal(tag);
+        }
+
+        function onTagContextMenuHide() {
+            const tag = tagContextMenuTarget;
+            closeTagContextMenu();
+            if (tag) hideTagFromSystem(tag);
+        }
+
+        function hideTagFromSystem(tag) {
+            if (!hiddenTags.includes(tag)) {
+                hiddenTags.push(tag);
+                dbSet('hiddenTags', hiddenTags);
+            }
+            const visibleTags = currentTagsList.filter(t => !hiddenTags.includes(t));
+            if (currentlySelectedTag === tag && visibleTags.length > 0) {
+                currentlySelectedTag = visibleTags[0];
+                dbSet('selectedTag', currentlySelectedTag);
+            }
+            renderTagsChips();
+            recalculateAndRenderDashboard();
+            renderGoalsScreen();
+            showToast('Subject hidden from view', tag, 'info');
+        }
+
+        function openManageHiddenTagsModal() {
+            const modal = document.getElementById('manage-hidden-tags-modal');
+            const list = document.getElementById('manage-hidden-tags-list');
+            if (!modal || !list) return;
+            list.innerHTML = '';
+            if (hiddenTags.length === 0) {
+                list.innerHTML = `<div style="text-align:center; color:var(--text-gray); padding:16px;">${currentSystemLanguage === 'ar' ? 'لا توجد مواد مخفية' : 'No hidden subjects'}</div>`;
+            } else {
+                hiddenTags.forEach(tag => {
+                    const item = document.createElement('div');
+                    item.style.cssText = 'display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:rgba(255,255,255,0.04); border-radius:8px; border:1px solid var(--border-soft);';
+                    item.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="width:10px; height:10px; border-radius:50%; background:${getTagColor(tag)}; display:inline-block;"></span>
+                            <span style="font-size:13px; font-weight:600; color:var(--text-light);">${tag}</span>
+                        </div>
+                        <button class="modal-btn confirm" style="padding:4px 12px; font-size:12px;" onclick="unhideTag('${tag}')">${currentSystemLanguage === 'ar' ? 'إظهار' : 'Unhide'}</button>
+                    `;
+                    list.appendChild(item);
+                });
+            }
+            modal.classList.add('is-active');
+        }
+
+        function closeManageHiddenTagsModal() {
+            const modal = document.getElementById('manage-hidden-tags-modal');
+            if (modal) modal.classList.remove('is-active');
+        }
+
+        function unhideTag(tag) {
+            hiddenTags = hiddenTags.filter(t => t !== tag);
+            dbSet('hiddenTags', hiddenTags);
+            openManageHiddenTagsModal();
+            renderTagsChips();
+            recalculateAndRenderDashboard();
+            renderGoalsScreen();
+            showToast('Subject restored to view', tag, 'success');
+        }
+
+        function openTagRenameModal(tag) {
+            tagContextMenuTarget = tag;
+            const modal = document.getElementById('tag-rename-modal');
+            const input = document.getElementById('tag-rename-input');
+            if (!modal || !input) return;
+            input.value = tag;
+            modal.classList.add('is-active');
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function closeTagRenameModal() {
+            const modal = document.getElementById('tag-rename-modal');
+            if (modal) modal.classList.remove('is-active');
+        }
+
+        function saveTagRenameFromModal() {
+            const oldName = tagContextMenuTarget;
+            const input = document.getElementById('tag-rename-input');
+            if (!oldName || !input) return;
+            const newName = input.value.trim();
+            if (!newName || newName === oldName) {
+                closeTagRenameModal();
+                return;
+            }
+            const idx = currentTagsList.indexOf(oldName);
+            if (idx !== -1) currentTagsList[idx] = newName;
+            else currentTagsList.push(newName);
+
+            const hIdx = hiddenTags.indexOf(oldName);
+            if (hIdx !== -1) hiddenTags[hIdx] = newName;
+
+            if (tagColors[oldName]) {
+                tagColors[newName] = tagColors[oldName];
+                delete tagColors[oldName];
+                dbSet('tagColors', tagColors);
+            }
+            
+            if (currentlySelectedTag === oldName) {
+                currentlySelectedTag = newName;
+                dbSet('selectedTag', currentlySelectedTag);
+            }
+
+            let sessionsChanged = false;
+            archivedSessionsArray.forEach(s => {
+                if (s.tag === oldName) { s.tag = newName; sessionsChanged = true; }
+            });
+            if (sessionsChanged) dbSet('sessions', archivedSessionsArray);
+
+            let goalsChanged = false;
+            goalsArray.forEach(g => {
+                if (g.linkedTag === oldName) { g.linkedTag = newName; goalsChanged = true; }
+            });
+            if (goalsChanged) dbSet('goals', goalsArray);
+
+            dbSet('tags', currentTagsList);
+            dbSet('hiddenTags', hiddenTags);
+
+            closeTagRenameModal();
+            renderTagsChips();
+            recalculateAndRenderDashboard();
+            renderGoalsScreen();
+            if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
+            showToast('Subject renamed successfully', newName, 'success');
         }
 
         function selectActiveTag(tag) { currentlySelectedTag = tag; dbSet('selectedTag', currentlySelectedTag); renderTagsChips(); refreshTimerSidebar(); loadTimerNotesForCurrentTag(); applySubjectTint(); }
         function deleteTagFromSystem(tag) {
             currentTagsList = currentTagsList.filter(t => t !== tag);
-            if (currentlySelectedTag === tag && currentTagsList.length > 0) currentlySelectedTag = currentTagsList[0];
-            dbSet('tags', currentTagsList); dbSet('selectedTag', currentlySelectedTag);
+            hiddenTags = hiddenTags.filter(t => t !== tag);
+            const visibleTags = currentTagsList.filter(t => !hiddenTags.includes(t));
+            if (currentlySelectedTag === tag && visibleTags.length > 0) currentlySelectedTag = visibleTags[0];
+            dbSet('tags', currentTagsList); dbSet('hiddenTags', hiddenTags); dbSet('selectedTag', currentlySelectedTag);
             renderTagsChips(); recalculateAndRenderDashboard();
         }
 
         function updateQuickStats() {
             let today = getLocalISODate(new Date());
             let todayMinutes = archivedSessionsArray.filter(s => s.date === today).reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
-            let weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-            let weekMinutes = archivedSessionsArray.filter(s => new Date(s.date) >= weekStart).reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
+            let weekStart = getWeekStartSaturday();
+            let weekMinutes = archivedSessionsArray.filter(s => new Date(s.date + 'T00:00:00') >= weekStart).reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
             let streak = 0;
             let cursor = new Date(); cursor.setHours(0, 0, 0, 0);
             while (true) {
@@ -4476,28 +5501,166 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
         // Ticks every second on its own clock, regardless of the Timer/Analysis/Goals state.
         setInterval(updateDailyCountdownWidget, 1000);
 
+        const MONTH_NAMES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const MONTH_NAMES_AR = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+        function navAnalysisMonth(direction) {
+            analysisSelectedMonth += direction;
+            if (analysisSelectedMonth < 0) {
+                analysisSelectedMonth = 11;
+                analysisSelectedYear -= 1;
+            } else if (analysisSelectedMonth > 11) {
+                analysisSelectedMonth = 0;
+                analysisSelectedYear += 1;
+            }
+            renderMonthlyAnalysisAndHeatmap();
+        }
+
+        function selectAnalysisMonth(monthIdx, yearVal) {
+            analysisSelectedMonth = monthIdx;
+            if (yearVal !== undefined) analysisSelectedYear = yearVal;
+            const drop = document.getElementById('analysis-month-dropdown');
+            if (drop) drop.style.display = 'none';
+            renderMonthlyAnalysisAndHeatmap();
+        }
+
+        function toggleAnalysisMonthDropdown(e) {
+            if (e) e.stopPropagation();
+            const drop = document.getElementById('analysis-month-dropdown');
+            if (!drop) return;
+            if (drop.style.display === 'block') {
+                drop.style.display = 'none';
+                return;
+            }
+            drop.innerHTML = '';
+            const isAr = currentSystemLanguage === 'ar';
+            const monthNames = isAr ? MONTH_NAMES_AR : MONTH_NAMES_EN;
+            monthNames.forEach((name, idx) => {
+                const item = document.createElement('div');
+                item.className = `month-picker-item ${idx === analysisSelectedMonth ? 'selected' : ''}`;
+                item.innerText = `${name} ${analysisSelectedYear}`;
+                item.onclick = () => selectAnalysisMonth(idx, analysisSelectedYear);
+                drop.appendChild(item);
+            });
+            drop.style.display = 'block';
+        }
+
+        function renderMonthlyAnalysisAndHeatmap() {
+            const isAr = currentSystemLanguage === 'ar';
+            const monthNames = isAr ? MONTH_NAMES_AR : MONTH_NAMES_EN;
+            const monthName = monthNames[analysisSelectedMonth];
+            const monthTitleStr = `${monthName} ${analysisSelectedYear}`;
+            
+            // Update display labels
+            const displayEl = document.getElementById('analysis-month-display');
+            if (displayEl) displayEl.innerText = monthTitleStr;
+            const hmTitle = document.getElementById('heatmap-month-title');
+            if (hmTitle) hmTitle.innerText = monthTitleStr;
+
+            // Strictly Day 1 to the actual last day of the selected month (28/29, 30, or 31)
+            const daysInMonth = new Date(analysisSelectedYear, analysisSelectedMonth + 1, 0).getDate();
+            const monthPrefix = `${analysisSelectedYear}-${String(analysisSelectedMonth + 1).padStart(2, '0')}`;
+
+            // Independent persistent data per month
+            const monthSessions = archivedSessionsArray.filter(s => s.date && s.date.startsWith(monthPrefix));
+            let totalMonthMinutes = 0;
+            const dayMinutesMap = {};
+            for (let d = 1; d <= daysInMonth; d++) dayMinutesMap[d] = 0;
+
+            monthSessions.forEach(s => {
+                const minVal = parseInt(s.duration) || 0;
+                totalMonthMinutes += minVal;
+                const parts = s.date.split('-');
+                if (parts.length >= 3) {
+                    const dayPart = parseInt(parts[2], 10);
+                    if (dayMinutesMap[dayPart] !== undefined) {
+                        dayMinutesMap[dayPart] += minVal;
+                    }
+                }
+            });
+
+            // Accurate Daily Average: total study minutes / actual days in month (0 min days included in denominator)
+            const dailyAvgMinutes = Math.round(totalMonthMinutes / daysInMonth);
+            const activeDaysCount = Object.values(dayMinutesMap).filter(m => m > 0).length;
+
+            const totalTimeEl = document.getElementById('selected-month-total-time');
+            if (totalTimeEl) totalTimeEl.innerText = formatMinutesToHM(totalMonthMinutes);
+            const avgEl = document.getElementById('selected-month-daily-avg');
+            if (avgEl) avgEl.innerText = formatMinutesToHM(dailyAvgMinutes) + (isAr ? ' / يوم' : ' / day');
+            const activeEl = document.getElementById('selected-month-active-days');
+            if (activeEl) activeEl.innerText = `${activeDaysCount} / ${daysInMonth}` + (isAr ? ' يوم' : ' days');
+
+            // Render Heatmap Grid: strictly Day 1 to daysInMonth
+            const hmContainer = document.getElementById('monthly-activity-heatmap-container');
+            if (hmContainer) {
+                hmContainer.innerHTML = '';
+                const grid = document.createElement('div');
+                grid.className = 'monthly-heatmap-grid';
+                
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const mins = dayMinutesMap[d] || 0;
+                    let lvl = 'lvl-0';
+                    if (mins > 300) lvl = 'lvl-4';
+                    else if (mins > 150) lvl = 'lvl-3';
+                    else if (mins > 60) lvl = 'lvl-2';
+                    else if (mins > 0) lvl = 'lvl-1';
+
+                    const cellDate = new Date(analysisSelectedYear, analysisSelectedMonth, d);
+                    const weekday = cellDate.toLocaleDateString(isAr ? 'ar-EG' : 'en-US', { weekday: 'short' });
+                    
+                    const cell = document.createElement('div');
+                    cell.className = `monthly-day-cell ${lvl}`;
+                    cell.setAttribute('data-day', d);
+                    cell.setAttribute('title', `${weekday}, ${d} ${monthName}: ${formatMinutesToHM(mins)}`);
+                    cell.innerHTML = `
+                        <div class="day-num">${d}</div>
+                        <div class="day-time">${mins > 0 ? formatMinutesToHM(mins) : '0m'}</div>
+                    `;
+                    grid.appendChild(cell);
+                }
+                hmContainer.appendChild(grid);
+            }
+        }
+
         function recalculateAndRenderDashboard() {
             const todayISO = getLocalISODate(new Date());
             const yesterdayDate = new Date(); yesterdayDate.setDate(yesterdayDate.getDate() - 1);
             const yesterdayISO = getLocalISODate(yesterdayDate);
-            const weekStart = new Date();
-            weekStart.setHours(0, 0, 0, 0);
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-            const monthPrefix = getLocalISODate(new Date()).slice(0, 7);
-            let todayMinutes = 0, yesterdayMinutes = 0, weekMinutes = 0, monthMinutes = 0;
-            let totalAccumulatedStudyMinutes = 0;
+            const weekStart = getWeekStartSaturday();
+            const monthPrefix = todayISO.slice(0, 7);
+            const yearPrefix = todayISO.slice(0, 4);
+
+            let todayMinutes = 0, yesterdayMinutes = 0, weekMinutes = 0, monthMinutes = 0, yearMinutes = 0;
             let tagMinutesSumMap = {};
             currentTagsList.forEach(t => tagMinutesSumMap[t] = 0);
+
             archivedSessionsArray.forEach(session => {
                 let minutesVal = parseInt(session.duration) || 0;
                 if (tagMinutesSumMap[session.tag] !== undefined) tagMinutesSumMap[session.tag] += minutesVal;
                 else tagMinutesSumMap[session.tag] = minutesVal;
-                totalAccumulatedStudyMinutes += minutesVal;
+                
                 if (session.date === todayISO) todayMinutes += minutesVal;
                 if (session.date === yesterdayISO) yesterdayMinutes += minutesVal;
-                if (new Date(session.date) >= weekStart) weekMinutes += minutesVal;
+                if (new Date(session.date + 'T00:00:00') >= weekStart) weekMinutes += minutesVal;
                 if (session.date.startsWith(monthPrefix)) monthMinutes += minutesVal;
+                if (session.date.startsWith(yearPrefix)) yearMinutes += minutesVal;
             });
+
+            // 4-Tier Time Totals Breakdown
+            const tierTodayEl = document.getElementById('tier-today-val');
+            if (tierTodayEl) tierTodayEl.innerText = formatMinutesToHM(todayMinutes);
+            const tierWeekEl = document.getElementById('tier-week-val');
+            if (tierWeekEl) tierWeekEl.innerText = formatMinutesToHM(weekMinutes);
+            const tierMonthEl = document.getElementById('tier-month-val');
+            if (tierMonthEl) tierMonthEl.innerText = formatMinutesToHM(monthMinutes);
+            const tierYearEl = document.getElementById('tier-year-val');
+            if (tierYearEl) tierYearEl.innerText = formatMinutesToHM(yearMinutes);
+
+            const nowD = new Date();
+            const curMonthDays = new Date(nowD.getFullYear(), nowD.getMonth() + 1, 0).getDate();
+            const tierDaysSub = document.getElementById('tier-month-days-sub');
+            if (tierDaysSub) tierDaysSub.innerText = currentSystemLanguage === 'ar' ? `من 1 إلى ${curMonthDays}` : `Day 1 to ${curMonthDays}`;
+
             let dailyHours = (todayMinutes / 60).toFixed(1);
             let yesterdayHours = (yesterdayMinutes / 60).toFixed(1);
             let weeklyHours = (weekMinutes / 60).toFixed(1);
@@ -4567,18 +5730,37 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                     monthParent.className = 'subtext gray';
                 }
             }
+
+            // Subject / Tag Distribution: Exclude hidden tags from calculation so visible tags sum strictly to 100%
             const barsContainer = document.getElementById('bars-dynamic-wrapper');
             if (barsContainer) {
                 barsContainer.innerHTML = '';
-                currentTagsList.forEach(tag => {
+                const visibleTags = currentTagsList.filter(t => !hiddenTags.includes(t));
+                const visibleAccumulatedStudyMinutes = visibleTags.reduce((acc, t) => acc + (tagMinutesSumMap[t] || 0), 0);
+                
+                visibleTags.forEach(tag => {
                     let tagMinutes = tagMinutesSumMap[tag] || 0;
-                    let tagPercentage = totalAccumulatedStudyMinutes > 0 ? Math.round((tagMinutes / totalAccumulatedStudyMinutes) * 100) : 0;
+                    let tagPercentage = visibleAccumulatedStudyMinutes > 0 ? Math.round((tagMinutes / visibleAccumulatedStudyMinutes) * 100) : 0;
                     const item = document.createElement('div');
                     item.className = 'chart-progress-item';
-                    item.innerHTML = '<div class="chart-progress-labels"><span>' + tag + '</span><span style="color: var(--accent-orange); font-weight:700;">' + tagPercentage + '% (' + tagMinutes + ' Min)</span></div><div class="chart-progress-rail"><div class="chart-progress-fill" style="width: ' + tagPercentage + '%"></div></div>';
+                    item.innerHTML = `
+                        <div class="chart-progress-labels">
+                            <span style="display:flex; align-items:center; gap:6px;">
+                                <span style="width:8px; height:8px; border-radius:50%; background:${getTagColor(tag)}; display:inline-block;"></span>
+                                <strong>${escapeGoalHtml(tag)}</strong>
+                            </span>
+                            <span style="color: var(--accent-orange); font-weight:700;">${tagPercentage}% (${formatMinutesToHM(tagMinutes)})</span>
+                        </div>
+                        <div class="chart-progress-rail">
+                            <div class="chart-progress-fill" style="width: ${tagPercentage}%; background: ${getTagColor(tag)};"></div>
+                        </div>`;
                     barsContainer.appendChild(item);
                 });
             }
+
+            // Render monthly activity heatmap with independent persistent data
+            renderMonthlyAnalysisAndHeatmap();
+
             if (typeof renderWeeklySegmentedChart === "function") renderWeeklySegmentedChart();
         }
 
@@ -4907,7 +6089,7 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                 let matchTag = !tagFilter || s.tag === tagFilter;
                 let matchDate = true;
                 if (dateFilter === 'today') matchDate = s.date === getLocalISODate(new Date());
-                else if (dateFilter === 'week') { let ws = new Date(); ws.setHours(0,0,0,0); ws.setDate(ws.getDate() - ws.getDay()); matchDate = new Date(s.date + 'T00:00:00') >= ws; }
+                else if (dateFilter === 'week') { let ws = getWeekStartSaturday(); matchDate = new Date(s.date + 'T00:00:00') >= ws; }
                 else if (dateFilter === 'month') { matchDate = s.date.startsWith(getLocalISODate(new Date()).slice(0, 7)); }
                 return matchSearch && matchTag && matchDate;
             });
@@ -5130,22 +6312,29 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
 
                     const card = document.createElement('div');
                     card.className = 'goal-card subject-group-card';
+                    card.dataset.tagKey = tagKey;
                     card.style.cursor = 'pointer';
                     card.innerHTML = `
                         <div class="goal-card-top">
-                            <div>
-                                <div class="goal-card-title" style="display:flex;align-items:center;gap:8px;">
-                                    <span style="width:10px;height:10px;border-radius:50%;background:${dotColor};display:inline-block;flex-shrink:0;"></span>
-                                    ${escapeGoalHtml(displayName)}
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                ${!isUnassigned ? `<span class="subject-drag-handle" title="${currentSystemLanguage === 'ar' ? 'اسحب لإعادة الترتيب' : 'Drag to reorder'}" style="cursor:grab; font-size:16px; opacity:0.6; padding:0 4px;">⠿</span>` : ''}
+                                <div>
+                                    <div class="goal-card-title" style="display:flex;align-items:center;gap:8px;">
+                                        <span style="width:10px;height:10px;border-radius:50%;background:${dotColor};display:inline-block;flex-shrink:0;"></span>
+                                        ${escapeGoalHtml(displayName)}
+                                    </div>
+                                    <span class="goal-linked-tag-pill">📂 ${branchesForTag.length} ${branchWord}</span>
                                 </div>
-                                <span class="goal-linked-tag-pill">📂 ${branchesForTag.length} ${branchWord}</span>
                             </div>
                             ${!isUnassigned ? `<button class="item-delete-btn" data-role="delete-subject-tag">✕</button>` : ''}
                         </div>
                         <div class="goal-tasks-toggle is-open">
                             <span>📚 ${d.goalTasksHeader || 'Lectures'} ${totalLectures ? `(<span class="gt-count">${doneLectures}/${totalLectures}</span>)` : ''}</span>
                         </div>`;
-                    card.addEventListener('click', () => openSubjectGroup(tagKey));
+                    card.addEventListener('click', (e) => {
+                        if (e.target.closest('.subject-drag-handle') || e.target.closest('[data-role="delete-subject-tag"]')) return;
+                        openSubjectGroup(tagKey);
+                    });
                     const delBtn = card.querySelector('[data-role="delete-subject-tag"]');
                     if (delBtn) {
                         delBtn.addEventListener('click', (e) => {
@@ -5155,6 +6344,7 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                     }
                     grid.appendChild(card);
                 });
+                enableSubjectDragAndDrop(grid);
                 refreshTimerSidebar();
                 return;
             }
@@ -5239,13 +6429,16 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                     : `<div class="goal-tasks-empty-hint">${d.goalTasksEmptyHint || 'No lectures yet — add one below.'}</div>`;
 
                 const card = document.createElement('div');
-                card.className = `goal-card`;
+                card.className = `goal-card branch-draggable-card`;
                 card.dataset.goalCardId = goal.id;
                 card.innerHTML = `
                     <div class="goal-card-top">
-                        <div>
-                            <div class="goal-card-title">${escapeGoalHtml(goal.title)}</div>
-                            ${goal.linkedTag ? `<span class="goal-linked-tag-pill">🔗 ${escapeGoalHtml(goal.linkedTag)}</span>` : ''}
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="branch-drag-handle" title="${currentSystemLanguage === 'ar' ? 'اسحب لإعادة الترتيب' : 'Drag to reorder'}" style="cursor:grab; font-size:16px; opacity:0.6; padding:0 4px;">⠿</span>
+                            <div>
+                                <div class="goal-card-title">${escapeGoalHtml(goal.title)}</div>
+                                ${goal.linkedTag ? `<span class="goal-linked-tag-pill">🔗 ${escapeGoalHtml(goal.linkedTag)}</span>` : ''}
+                            </div>
                         </div>
                         <button class="item-delete-btn" onclick="deleteGoal('${goal.id}')">✕</button>
                     </div>
@@ -5264,6 +6457,7 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                 const tasksListContainer = card.querySelector('.goal-tasks-list');
                 if (tasksListContainer) enableTaskDragAndDrop(tasksListContainer, goal.id);
             });
+            enableBranchDragAndDrop(grid, currentOpenSubjectGroupTag);
             refreshTimerSidebar();
         }
         function commitTaskOrder(container, goalId) {
@@ -5311,6 +6505,128 @@ body.gcal-immersive-mode .gcal-nav-handle.hidden {
                     document.addEventListener('pointercancel', onUp, { once: true });
                 });
             });
+        }
+
+        function enableSubjectDragAndDrop(container) {
+            container.querySelectorAll('.subject-drag-handle').forEach(handle => {
+                handle.addEventListener('pointerdown', (e) => {
+                    if (e.button !== undefined && e.button !== 0) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const card = handle.closest('.subject-group-card');
+                    if (!card) return;
+                    card.classList.add('is-dragging');
+
+                    function onMove(ev) {
+                        const y = ev.clientY;
+                        const siblings = Array.from(container.querySelectorAll('.subject-group-card:not(.is-dragging)'));
+                        let target = null;
+                        for (const sib of siblings) {
+                            const rect = sib.getBoundingClientRect();
+                            if (y < rect.top + rect.height / 2) { target = sib; break; }
+                        }
+                        if (target) container.insertBefore(card, target);
+                        else container.appendChild(card);
+                    }
+
+                    function onUp() {
+                        document.removeEventListener('pointermove', onMove);
+                        document.removeEventListener('pointerup', onUp);
+                        document.removeEventListener('pointercancel', onUp);
+                        if (card) {
+                            card.classList.remove('is-dragging');
+                            commitSubjectOrder(container);
+                        }
+                    }
+
+                    document.addEventListener('pointermove', onMove);
+                    document.addEventListener('pointerup', onUp, { once: true });
+                    document.addEventListener('pointercancel', onUp, { once: true });
+                });
+            });
+        }
+
+        function commitSubjectOrder(container) {
+            const orderedTags = Array.from(container.querySelectorAll('.subject-group-card'))
+                .map(c => c.dataset.tagKey)
+                .filter(t => t && t !== UNASSIGNED_SUBJECT_KEY);
+            if (orderedTags.length) {
+                currentTagsList = orderedTags;
+                dbSet('tags', currentTagsList);
+                renderTagsChips();
+                recalculateAndRenderDashboard();
+            }
+        }
+
+        function enableBranchDragAndDrop(container, currentTag) {
+            container.querySelectorAll('.branch-drag-handle').forEach(handle => {
+                handle.addEventListener('pointerdown', (e) => {
+                    if (e.button !== undefined && e.button !== 0) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const card = handle.closest('.branch-draggable-card');
+                    if (!card) return;
+                    card.classList.add('is-dragging');
+
+                    function onMove(ev) {
+                        const y = ev.clientY;
+                        const siblings = Array.from(container.querySelectorAll('.branch-draggable-card:not(.is-dragging)'));
+                        let target = null;
+                        for (const sib of siblings) {
+                            const rect = sib.getBoundingClientRect();
+                            if (y < rect.top + rect.height / 2) { target = sib; break; }
+                        }
+                        if (target) container.insertBefore(card, target);
+                        else container.appendChild(card);
+                    }
+
+                    function onUp() {
+                        document.removeEventListener('pointermove', onMove);
+                        document.removeEventListener('pointerup', onUp);
+                        document.removeEventListener('pointercancel', onUp);
+                        if (card) {
+                            card.classList.remove('is-dragging');
+                            commitBranchOrder(container, currentTag);
+                        }
+                    }
+
+                    document.addEventListener('pointermove', onMove);
+                    document.addEventListener('pointerup', onUp, { once: true });
+                    document.addEventListener('pointercancel', onUp, { once: true });
+                });
+            });
+        }
+
+        function commitBranchOrder(container, currentTag) {
+            const orderedIds = Array.from(container.querySelectorAll('.branch-draggable-card')).map(c => c.dataset.goalCardId);
+            if (!orderedIds.length) return;
+
+            const tagGoals = goalsArray.filter(g => {
+                const key = (g.linkedTag && currentTagsList.includes(g.linkedTag)) ? g.linkedTag : UNASSIGNED_SUBJECT_KEY;
+                return key === currentTag;
+            });
+            tagGoals.sort((a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id));
+
+            let tIdx = 0;
+            goalsArray = goalsArray.map(g => {
+                const key = (g.linkedTag && currentTagsList.includes(g.linkedTag)) ? g.linkedTag : UNASSIGNED_SUBJECT_KEY;
+                if (key === currentTag) return tagGoals[tIdx++];
+                return g;
+            });
+
+            dbSet('goals', goalsArray);
+            if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
+        }
+
+        function toggleIndexHeaderCollapse() {
+            const isCollapsed = document.body.classList.toggle('index-header-collapsed');
+            const btn = document.getElementById('gcal-header-toggle-btn');
+            if (btn) {
+                btn.innerHTML = isCollapsed ? '⤡ Show Header' : '⤢ Full Canvas';
+            }
+            if (typeof gcalRenderCurrentView === 'function') {
+                setTimeout(gcalRenderCurrentView, 100);
+            }
         }
         function toggleGoalTasksPanel(goalId) {
             if (expandedGoalTasksSet.has(goalId)) expandedGoalTasksSet.delete(goalId);
