@@ -2189,45 +2189,35 @@ body.gcal-immersive-mode {
 }
 
 body.gcal-immersive-mode .header-navigation {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    z-index: 99999 !important;
-    transform: translateY(-100%);
-    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45) !important;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-}
-
-html[data-theme="light"] body.gcal-immersive-mode .header-navigation {
-    box-shadow: 0 12px 36px rgba(60, 50, 40, 0.14) !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-}
-
-body.gcal-immersive-mode .header-navigation.revealed,
-body.gcal-immersive-mode .header-navigation:hover {
-    transform: translateY(0) !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, margin-top 0.28s ease !important;
 }
 
 body.gcal-immersive-mode .screens-container {
     max-width: 100vw !important;
     width: 100vw !important;
     margin: 0 !important;
-    padding: 0 !important;
-    height: 100vh !important;
+    padding: 0 16px !important;
+    height: calc(100vh - 74px) !important;
     overflow: hidden !important;
+    transition: height 0.28s ease, padding 0.28s ease, margin 0.28s ease !important;
 }
 
 body.gcal-immersive-mode #screen-calendar {
+    height: 100% !important;
+    min-height: 0 !important;
+    border-radius: 16px !important;
+    margin: 0 !important;
+}
+
+body.index-header-collapsed.gcal-immersive-mode .screens-container {
     height: 100vh !important;
-    min-height: 100vh !important;
+    padding: 0 8px !important;
+}
+
+body.index-header-collapsed.gcal-immersive-mode #screen-calendar {
+    height: 100vh !important;
     border-radius: 0 !important;
     border: none !important;
-    box-shadow: none !important;
-    margin: 0 !important;
 }
 
 body.gcal-immersive-mode .toast-container {
@@ -2430,6 +2420,146 @@ html[data-theme="light"] .auth-real-footer {
 }
 [data-theme="light"] .gcal-agenda-item-row {
     border-color: #e8eaed !important;
+}
+
+/* --- Study Trend Month Selector & Badges --- */
+.trend-nav-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-soft);
+    color: var(--text-light);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+}
+.trend-nav-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
+    transform: translateY(-1px);
+}
+.trend-month-picker-btn {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-soft);
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+}
+.trend-month-picker-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
+}
+.trend-month-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    z-index: 1000;
+    background: #181920;
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 6px;
+    max-height: 220px;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+html[dir="rtl"] .trend-month-dropdown {
+    right: auto;
+    left: 0;
+}
+.trend-month-dropdown-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+.trend-month-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--accent-orange);
+}
+.trend-month-dropdown-item.active {
+    background: rgba(217, 165, 74, 0.16);
+    color: var(--accent-orange);
+    font-weight: 700;
+}
+.study-trend-avg-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(217, 165, 74, 0.12);
+    border: 1px solid rgba(217, 165, 74, 0.3);
+    color: var(--accent-orange);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+/* Light Mode Overrides for Study Trend */
+html[data-theme="light"] .trend-nav-btn {
+    background: #ffffff !important;
+    border-color: #d6c6b2 !important;
+    color: #3d3127 !important;
+    box-shadow: 0 1px 3px rgba(61,49,39,0.08);
+}
+html[data-theme="light"] .trend-nav-btn:hover {
+    background: #f7f1e8 !important;
+    border-color: var(--accent-orange) !important;
+    color: var(--accent-orange) !important;
+}
+html[data-theme="light"] .trend-month-picker-btn {
+    background: #ffffff !important;
+    border-color: #d6c6b2 !important;
+    color: #3d3127 !important;
+    box-shadow: 0 1px 3px rgba(61,49,39,0.08);
+}
+html[data-theme="light"] .trend-month-picker-btn:hover {
+    background: #f7f1e8 !important;
+    border-color: var(--accent-orange) !important;
+    color: #8c5b0d !important;
+}
+html[data-theme="light"] .trend-month-dropdown {
+    background: #ffffff !important;
+    border-color: #d6c6b2 !important;
+    box-shadow: 0 10px 30px rgba(61,49,39,0.18) !important;
+}
+html[data-theme="light"] .trend-month-dropdown-item {
+    color: #3d3127 !important;
+}
+html[data-theme="light"] .trend-month-dropdown-item:hover {
+    background: #f5ede2 !important;
+    color: #8c5b0d !important;
+}
+html[data-theme="light"] .trend-month-dropdown-item.active {
+    background: rgba(217, 165, 74, 0.2) !important;
+    color: #8c5b0d !important;
+}
+html[data-theme="light"] .study-trend-avg-badge {
+    background: rgba(217, 165, 74, 0.16) !important;
+    border-color: rgba(217, 165, 74, 0.45) !important;
+    color: #8c5b0d !important;
 }
 
 /* --- 3. Calendar Top Bar Header Toggle & Canvas Expansion --- */
@@ -2979,18 +3109,26 @@ html[data-theme="light"] .month-selector-dropdown {
                 <div class="charts-container-box" style="margin-top:10px;">
                     <div class="charts-box-title" id="chart-trend-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                         <div style="display:flex; align-items:center; gap:12px;">
-                            <span>ðŸ“ˆ <span id="trend-title-txt">Study Trend</span></span>
-                            <span id="study-trend-avg-display" class="study-trend-avg-badge" style="font-size:12px; font-weight:700; color:var(--accent-orange); background:rgba(217, 165, 74, 0.12); padding:3px 10px; border-radius:12px; border:1px solid rgba(217, 165, 74, 0.25);">Daily Avg: 0h 0m</span>
+                            <span style="display:inline-flex; align-items:center; gap:6px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                                <span id="trend-title-txt">Study Trend</span>
+                            </span>
+                            <span id="study-trend-avg-display" class="study-trend-avg-badge">Daily Avg: 0h 0m</span>
                         </div>
-                        <div class="trend-month-selector" style="display:flex; align-items:center; gap:4px;">
-                            <button type="button" class="trend-nav-btn" onclick="navStudyTrendMonth(-1)" title="Previous Month" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); width:28px; height:28px; border-radius:6px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; justify-content:center; transition:all 0.2s;">â€¹</button>
+                        <div class="trend-month-selector" style="display:flex; align-items:center; gap:6px;">
+                            <button type="button" class="trend-nav-btn" onclick="navStudyTrendMonth(-1)" title="Previous Month" aria-label="Previous Month">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                            </button>
                             <div class="trend-month-dropdown-wrapper" style="position:relative; display:inline-block;">
-                                <button type="button" class="trend-month-picker-btn" id="study-trend-month-picker-btn" onclick="toggleStudyTrendMonthDropdown(event)" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); padding:4px 10px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
-                                    <span id="study-trend-month-display">September 2026</span> â–¾
+                                <button type="button" class="trend-month-picker-btn" id="study-trend-month-picker-btn" onclick="toggleStudyTrendMonthDropdown(event)">
+                                    <span id="study-trend-month-display">September 2026</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-inline-start:4px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                 </button>
-                                <div class="trend-month-dropdown" id="study-trend-month-dropdown" style="display:none; position:absolute; right:0; top:100%; margin-top:4px; background:#141721; border:1px solid var(--border-soft); border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:1000; min-width:140px; max-height:220px; overflow-y:auto; padding:4px;"></div>
+                                <div class="trend-month-dropdown" id="study-trend-month-dropdown" style="display:none;"></div>
                             </div>
-                            <button type="button" class="trend-nav-btn" onclick="navStudyTrendMonth(1)" title="Next Month" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); width:28px; height:28px; border-radius:6px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; justify-content:center; transition:all 0.2s;">â€º</button>
+                            <button type="button" class="trend-nav-btn" onclick="navStudyTrendMonth(1)" title="Next Month" aria-label="Next Month">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
                         </div>
                     </div>
                     <div style="position: relative; height: 320px;">
@@ -3074,7 +3212,10 @@ html[data-theme="light"] .month-selector-dropdown {
                         <button class="gcal-arrow-btn" onclick="gcalShift(1)" title="Next">›</button>
                     </div>
                     <div class="gcal-date-label" id="gcal-date-label">September 2026</div>
-                    <button class="gcal-header-toggle-btn" id="gcal-header-toggle-btn" onclick="toggleIndexHeaderCollapse()" title="Toggle full canvas">⤢ Full Canvas</button>
+                    <button class="gcal-header-toggle-btn" id="gcal-header-toggle-btn" onclick="toggleIndexHeaderCollapse()" title="Toggle full canvas">
+                        <svg id="gcal-toggle-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                        <span id="gcal-toggle-text">Full Canvas</span>
+                    </button>
                 </div>
 
                 <div class="gcal-topbar-center">
@@ -3996,37 +4137,50 @@ html[data-theme="light"] .month-selector-dropdown {
             // Setup Firebase RTDB presence for active status directly under user access record
             try {
                 const myPresenceRef = myAccessRef.child('presence');
+                const globalPresenceRef = rtdb.ref('indexStudyAssistant/presence/' + user.uid);
                 const connectedRef = rtdb.ref('.info/connected');
+
                 connectedRef.on('value', (snap) => {
                     if (snap.val() === true) {
-                        myPresenceRef.onDisconnect().set({
+                        const offlineData = {
                             state: 'offline',
-                            lastActive: firebase.database.ServerValue.TIMESTAMP
-                        }).then(() => {
-                            myPresenceRef.set({
-                                state: 'online',
-                                lastActive: firebase.database.ServerValue.TIMESTAMP
-                            });
-                        }).catch(err => console.warn('presence onDisconnect err:', err));
+                            lastActive: firebase.database.ServerValue.TIMESTAMP,
+                            clientLastActive: Date.now()
+                        };
+                        const onlineData = {
+                            state: 'online',
+                            lastActive: firebase.database.ServerValue.TIMESTAMP,
+                            clientLastActive: Date.now()
+                        };
+
+                        myPresenceRef.onDisconnect().set(offlineData);
+                        globalPresenceRef.onDisconnect().set(offlineData);
+
+                        myPresenceRef.set(onlineData);
+                        globalPresenceRef.set(onlineData);
                     }
                 });
 
-                // Heartbeat every 20 seconds
+                // Heartbeat every 15 seconds while app is active
                 const sendPresenceHeartbeat = () => {
                     if (auth.currentUser) {
-                        myPresenceRef.update({
+                        const now = Date.now();
+                        const updateData = {
                             state: 'online',
-                            lastActive: firebase.database.ServerValue.TIMESTAMP
-                        }).catch(() => {});
+                            lastActive: firebase.database.ServerValue.TIMESTAMP,
+                            clientLastActive: now
+                        };
+                        myPresenceRef.update(updateData).catch(() => {});
+                        globalPresenceRef.update(updateData).catch(() => {});
                     }
                 };
-                setInterval(sendPresenceHeartbeat, 20000);
+                setInterval(sendPresenceHeartbeat, 15000);
 
-                // Throttled user activity tracking (max once per 20s)
+                // Throttled user activity tracking (max once per 15s)
                 let lastActivityRecorded = 0;
                 const recordUserActivity = () => {
                     const now = Date.now();
-                    if (now - lastActivityRecorded > 20000) {
+                    if (now - lastActivityRecorded > 15000) {
                         lastActivityRecorded = now;
                         sendPresenceHeartbeat();
                     }
@@ -4038,16 +4192,19 @@ html[data-theme="light"] .month-selector-dropdown {
                 // Disconnect on beforeunload
                 window.addEventListener('beforeunload', () => {
                     try {
-                        myPresenceRef.update({
+                        const offlineData = {
                             state: 'offline',
-                            lastActive: firebase.database.ServerValue.TIMESTAMP
-                        });
+                            lastActive: firebase.database.ServerValue.TIMESTAMP,
+                            clientLastActive: Date.now()
+                        };
+                        myPresenceRef.set(offlineData);
+                        globalPresenceRef.set(offlineData);
                     } catch(e) {}
                 });
             } catch (e) { console.warn('Presence init error:', e); }
 
             if (isAdmin) {
-                await myAccessRef.set({
+                await myAccessRef.update({
                     email: user.email || '', displayName: user.displayName || '', photoURL: user.photoURL || '',
                     status: 'approved', isAdmin: true, requestedAt: Date.now(), respondedAt: Date.now()
                 });
@@ -4069,13 +4226,18 @@ html[data-theme="light"] .month-selector-dropdown {
             myAccessListenerRef = myAccessRef;
             myAccessRef.on('value', async (snap) => {
                 const record = snap.val();
-                if (!record) {
-                    await myAccessRef.set({
+                if (!record || !record.status) {
+                    await myAccessRef.update({
                         email: user.email || '', displayName: user.displayName || '', photoURL: user.photoURL || '',
                         status: 'pending', isAdmin: false, requestedAt: Date.now()
                     });
                     return;
                 }
+                // Keep profile updated without wiping presence
+                myAccessRef.update({
+                    email: user.email || '', displayName: user.displayName || '', photoURL: user.photoURL || ''
+                }).catch(() => {});
+
                 if (record.status === 'approved') {
                     try { await bootApp(); }
                     catch (err) { console.error('bootApp failed:', err); }
@@ -4096,48 +4258,87 @@ html[data-theme="light"] .month-selector-dropdown {
             if (isClockRunning) pauseClock();
         }
 
+        function formatRelativeLastActive(timestamp, isAr) {
+            if (!timestamp) return isAr ? '\u063A\u064A\u0631 \u0645\u0639\u0631\u0648\u0641' : 'Unknown';
+            const diffMs = Date.now() - timestamp;
+            if (diffMs < 0) return isAr ? '\u0627\u0644\u0622\u0646' : 'Just now';
+            const diffSec = Math.floor(diffMs / 1000);
+            if (diffSec < 60) return isAr ? '\u0645\u0646\u0630 \u0644\u062D\u0638\u0627\u062A' : 'Just moments ago';
+            const diffMin = Math.floor(diffSec / 60);
+            if (diffMin < 60) return isAr ? `\u0645\u0646\u0630 ${diffMin} \u062F\u0642\u064A\u0642\u0629` : `${diffMin} min ago`;
+            const diffHours = Math.floor(diffMin / 60);
+            if (diffHours < 24) return isAr ? `\u0645\u0646\u0630 ${diffHours} \u0633\u0627\u0639\u0629` : `${diffHours} hr ago`;
+            const d = new Date(timestamp);
+            return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatRelativeLastActive(timestamp, isAr) {
+            if (!timestamp) return isAr ? '\u063A\u064A\u0631 \u0645\u0639\u0631\u0648\u0641' : 'Unknown';
+            const diffMs = Date.now() - timestamp;
+            if (diffMs < 0) return isAr ? '\u0627\u0644\u0622\u0646' : 'Just now';
+            const diffSec = Math.floor(diffMs / 1000);
+            if (diffSec < 60) return isAr ? '\u0645\u0646\u0630 \u0644\u062D\u0638\u0627\u062A' : 'Just moments ago';
+            const diffMin = Math.floor(diffSec / 60);
+            if (diffMin < 60) return isAr ? `\u0645\u0646\u0630 ${diffMin} \u062F\u0642\u064A\u0642\u0629` : `${diffMin} min ago`;
+            const diffHours = Math.floor(diffMin / 60);
+            if (diffHours < 24) return isAr ? `\u0645\u0646\u0630 ${diffHours} \u0633\u0627\u0639\u0629` : `${diffHours} hr ago`;
+            const d = new Date(timestamp);
+            return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
         function renderAdminAccessList(snap) {
             lastAdminAccessSnap = snap;
             const data = snap.val() || {};
             const listEl = document.getElementById('admin-access-list');
             const emptyEl = document.getElementById('admin-empty-state');
             const countEl = document.getElementById('admin-pending-count');
+            if (!listEl) return;
             const entries = Object.entries(data).filter(([uid, rec]) => !rec.isAdmin);
             entries.sort((a, b) => (b[1].requestedAt || 0) - (a[1].requestedAt || 0));
             const pendingCount = entries.filter(([, rec]) => rec.status === 'pending').length;
-            countEl.innerText = pendingCount > 0 ? pendingCount + ' pending' : '';
-            if (entries.length === 0) { listEl.innerHTML = ''; emptyEl.style.display = 'block'; return; }
-            emptyEl.style.display = 'none';
+            if (countEl) countEl.innerText = pendingCount > 0 ? pendingCount + ' pending' : '';
+            if (entries.length === 0) { listEl.innerHTML = ''; if (emptyEl) emptyEl.style.display = 'block'; return; }
+            if (emptyEl) emptyEl.style.display = 'none';
+
+            const isAr = currentSystemLanguage === 'ar';
+
             listEl.innerHTML = entries.map(([uid, rec]) => {
                 const statusColor = rec.status === 'approved' ? 'var(--success)' : rec.status === 'banned' ? 'var(--danger)' : 'var(--warning)';
-                const requestedDate = rec.requestedAt ? new Date(rec.requestedAt).toLocaleString() : '';
-                
-                // Real-time Presence info
-                const pres = rec.presence || (userStatusCache && userStatusCache[uid]) || {};
-                const isOnline = pres.state === "online" && (Date.now() - (pres.lastActive || 0) < 60000);
-                const lastActiveTime = pres.lastActive ? new Date(pres.lastActive).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " (" + new Date(pres.lastActive).toLocaleDateString() + ")" : (rec.requestedAt ? new Date(rec.requestedAt).toLocaleDateString() : "Never");
+
+                // Merge presence from global RTDB cache or child record
+                const pres = (userStatusCache && userStatusCache[uid]) || rec.presence || {};
+                const lastActiveTimestamp = pres.lastActive || pres.clientLastActive || rec.requestedAt || 0;
+                const elapsedMs = Date.now() - (pres.clientLastActive || pres.lastActive || 0);
+
+                // Online if state is online AND active within last 90 seconds
+                const isOnline = pres.state === 'online' && elapsedMs < 90000;
+
+                const fullDateTooltip = lastActiveTimestamp ? new Date(lastActiveTimestamp).toLocaleString() : '';
+                const relativeText = isOnline ? (isAr ? '\u0627\u0644\u0622\u0646' : 'Active Now') : formatRelativeLastActive(lastActiveTimestamp, isAr);
+
                 const presencePill = isOnline
-                    ? `<span class="admin-status-pill online" style="display:inline-flex; align-items:center; gap:5px; background:rgba(0, 210, 106, 0.15); color:#00d26a; border:1px solid rgba(0, 210, 106, 0.3); padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px;"><span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#00d26a; box-shadow:0 0 8px #00d26a;"></span> Active Now</span>`
-                    : `<span class="admin-status-pill offline" style="display:inline-flex; align-items:center; gap:5px; background:rgba(255, 255, 255, 0.05); color:var(--text-gray); border:1px solid rgba(255, 255, 255, 0.1); padding:3px 10px; border-radius:12px; font-weight:600; font-size:11px;">â—‹ Offline</span>`;
+                    ? `<span class="admin-status-pill online" style="display:inline-flex; align-items:center; gap:6px; background:rgba(0, 210, 106, 0.15); color:#00d26a; border:1px solid rgba(0, 210, 106, 0.35); padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px;"><span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#00d26a; box-shadow:0 0 8px #00d26a;"></span> ${isAr ? '\u0645\u062A\u0635\u0644 \u0627\u0644\u0622\u0646' : 'Active Now'}</span>`
+                    : `<span class="admin-status-pill offline" style="display:inline-flex; align-items:center; gap:6px; background:rgba(255, 255, 255, 0.05); color:var(--text-gray); border:1px solid rgba(255, 255, 255, 0.1); padding:3px 10px; border-radius:12px; font-weight:600; font-size:11px;">&#9675; ${isAr ? '\u063A\u064A\u0631 \u0645\u062A\u0635\u0644' : 'Offline'}</span>`;
 
                 let actions = '';
                 if (rec.status === 'pending') {
-                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">Approve</button>
-                               <button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">Reject</button>`;
+                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">${isAr ? '\u0642\u0628\u0648\u0644' : 'Approve'}</button>
+                               <button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">${isAr ? '\u0631\u0641\u0636' : 'Reject'}</button>`;
                 } else if (rec.status === 'approved') {
-                    actions = `<button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">Kick / Ban</button>`;
+                    actions = `<button class="modal-btn cancel" onclick="setAccessStatus('${uid}','banned')">${isAr ? '\u062D\u0638\u0631' : 'Kick / Ban'}</button>`;
                 } else if (rec.status === 'banned') {
-                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">Restore access</button>`;
+                    actions = `<button class="modal-btn confirm" onclick="setAccessStatus('${uid}','approved')">${isAr ? '\u0627\u0633\u062A\u0639\u0627\u062F\u0629' : 'Restore access'}</button>`;
                 }
+
                 return `<div class="glass-card" style="padding:14px 18px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${rec.photoURL || ''}" style="width:36px;height:36px;border-radius:50%;background:#222;">
+                        <img src="${rec.photoURL || ''}" style="width:36px;height:36px;border-radius:50%;background:#222;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(rec.displayName || 'User')}&background=random'">
                         <div>
-                            <div style="font-size:13px; color:var(--text-light); font-weight:600;">${rec.displayName || '(no name)'}</div>
-                            <div style="font-size:11px; color:var(--text-gray);">${rec.email || ''}</div>
+                            <div style="font-size:13px; color:var(--text-light); font-weight:600;">${escapeGoalHtml(rec.displayName || '(no name)')}</div>
+                            <div style="font-size:11px; color:var(--text-gray);">${escapeGoalHtml(rec.email || '')}</div>
                             <div style="display:flex; align-items:center; gap:8px; margin-top:4px; flex-wrap:wrap;">
                                 ${presencePill}
-                                <span style="font-size:11px; color:var(--text-gray);">Last Active: ${lastActiveTime}</span>
+                                <span style="font-size:11px; color:var(--text-gray);" title="${fullDateTooltip}">${isAr ? '\u0622\u062E\u0631 \u0646\u0634\u0627\u0637:' : 'Last Active:'} ${relativeText}</span>
                             </div>
                         </div>
                     </div>
@@ -4153,7 +4354,7 @@ html[data-theme="light"] .month-selector-dropdown {
             if (lastAdminAccessSnap && document.getElementById('screen-admin')?.classList.contains('active-view')) {
                 renderAdminAccessList(lastAdminAccessSnap);
             }
-        }, 10000);
+        }, 5000);
 
         function setAccessStatus(uid, status) {
             ACCESS_REF.child(uid).update({ status, respondedAt: Date.now() });
@@ -4359,13 +4560,13 @@ html[data-theme="light"] .month-selector-dropdown {
             if (screenId === 'screen-calendar') {
                 document.body.classList.add('gcal-immersive-mode');
                 document.getElementById('nav-btn-calendar')?.classList.add('active');
+                if (typeof updateGcalHeaderToggleBtn === 'function') updateGcalHeaderToggleBtn();
                 if (typeof gcalRender === 'function') gcalRender();
             } else {
                 document.body.classList.remove('gcal-immersive-mode');
+                document.body.classList.remove('index-header-collapsed');
                 const gNav = document.querySelector('.header-navigation');
                 if (gNav) gNav.classList.remove('revealed');
-                const gHandle = document.getElementById('gcal-nav-handle');
-                if (gHandle) gHandle.classList.remove('hidden');
             }
             if (screenId === 'screen-goals') { document.getElementById('nav-btn-goals').classList.add('active'); renderGoalsScreen(); }
             if (screenId === 'screen-habits') { document.getElementById('nav-btn-habits').classList.add('active'); renderHabitsScreen(); }
@@ -4504,6 +4705,8 @@ html[data-theme="light"] .month-selector-dropdown {
             renderGoalsScreen();
             renderHabitsScreen();
             updateEditAddModalLabels();
+            if (typeof updateGcalHeaderToggleBtn === 'function') updateGcalHeaderToggleBtn();
+            if (typeof renderStudyTrendChart === 'function') renderStudyTrendChart();
         }
 
         function switchMode(mode) {
@@ -5207,7 +5410,7 @@ html[data-theme="light"] .month-selector-dropdown {
             if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
 
             const isAr = currentSystemLanguage === 'ar';
-            showToast(isAr ? '\u062A\u0645 \u0625\u062E\u0641\u0627\u0621 \u0627\u0644\u0645\u0627\u062F\u0629' : 'Subject hidden', trimmed, 'info');
+            showToast(isAr ? '\u062A\u0645 \u0625\u062E\u0641\u0627\u0621 \u0627\u0644\u0645\u0627\u062F\u0629 \u2014 \u064A\u0645\u0643\u0646\u0643 \u0627\u0633\u062A\u0639\u0627\u062F\u062A\u0647\u0627 \u0645\u0646 \u0635\u0641\u062D\u0629 \u0627\u0644\u0645\u0648\u0627\u062F' : 'Subject hidden. Restore it from the Subjects tab anytime.', trimmed, 'info');
         }
 
         function unhideTag(tag) {
@@ -5395,7 +5598,7 @@ html[data-theme="light"] .month-selector-dropdown {
         setInterval(updateDailyCountdownWidget, 1000);
 
         const MONTH_NAMES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const MONTH_NAMES_AR = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+        const MONTH_NAMES_AR = ["\u064A\u0646\u0627\u064A\u0631", "\u0641\u0628\u0631\u0627\u064A\u0631", "\u0645\u0627\u0631\u0633", "\u0623\u0628\u0631\u064A\u0644", "\u0645\u0627\u064A\u0648", "\u064A\u0648\u0646\u064A\u0648", "\u064A\u0648\u0644\u064A\u0648", "\u0623\u063A\u0633\u0637\u0633", "\u0633\u0628\u062A\u0645\u0628\u0631", "\u0623\u0643\u062A\u0648\u0628\u0631", "\u0646\u0648\u0641\u0645\u0628\u0631", "\u062F\u064A\u0633\u0645\u0628\u0631"];
 
                 let trendSelectedYear = new Date().getFullYear();
         let trendSelectedMonth = new Date().getMonth();
@@ -5433,10 +5636,8 @@ html[data-theme="light"] .month-selector-dropdown {
             const monthNames = isAr ? MONTH_NAMES_AR : MONTH_NAMES_EN;
             monthNames.forEach((name, idx) => {
                 const item = document.createElement('div');
-                item.style.cssText = `padding:6px 10px; border-radius:5px; font-size:12px; cursor:pointer; color:${idx === trendSelectedMonth ? 'var(--accent-orange)' : 'var(--text-light)'}; background:${idx === trendSelectedMonth ? 'rgba(217,165,74,0.12)' : 'transparent'};`;
-                item.innerText = `${name} ${trendSelectedYear}`;
-                item.onmouseover = () => item.style.background = 'rgba(255,255,255,0.08)';
-                item.onmouseout = () => item.style.background = idx === trendSelectedMonth ? 'rgba(217,165,74,0.12)' : 'transparent';
+                item.className = 'trend-month-dropdown-item' + (idx === trendSelectedMonth ? ' active' : '');
+                item.innerText = name + ' ' + trendSelectedYear;
                 item.onclick = () => selectStudyTrendMonth(idx, trendSelectedYear);
                 drop.appendChild(item);
             });
@@ -6105,11 +6306,20 @@ html[data-theme="light"] .month-selector-dropdown {
             if (goalsHiddenBtn && goalsHiddenCount) {
                 const isAr = currentSystemLanguage === 'ar';
                 if (goalsHiddenTxt) goalsHiddenTxt.innerText = isAr ? '\u0627\u0644\u0645\u0648\u0627\u062F \u0627\u0644\u0645\u062E\u0641\u064A\u0629' : 'Hidden';
-                if (!currentOpenSubjectGroupTag && hiddenTags.length > 0) {
-                    goalsHiddenBtn.style.display = 'inline-flex';
-                    goalsHiddenCount.innerText = hiddenTags.length;
-                } else {
+                goalsHiddenCount.innerText = hiddenTags.length;
+                if (currentOpenSubjectGroupTag) {
                     goalsHiddenBtn.style.display = 'none';
+                } else {
+                    goalsHiddenBtn.style.display = 'inline-flex';
+                    if (hiddenTags.length > 0) {
+                        goalsHiddenBtn.style.borderColor = 'var(--accent-orange)';
+                        goalsHiddenBtn.style.color = 'var(--accent-orange)';
+                        goalsHiddenBtn.style.background = 'rgba(217, 165, 74, 0.14)';
+                    } else {
+                        goalsHiddenBtn.style.borderColor = 'var(--border-soft)';
+                        goalsHiddenBtn.style.color = 'var(--text-gray)';
+                        goalsHiddenBtn.style.background = 'rgba(255, 255, 255, 0.04)';
+                    }
                 }
             }
 
@@ -6132,7 +6342,11 @@ html[data-theme="light"] .month-selector-dropdown {
                 const tagKeysToRender = [...visibleTags];
                 if (groups[UNASSIGNED_SUBJECT_KEY] && groups[UNASSIGNED_SUBJECT_KEY].length) tagKeysToRender.push(UNASSIGNED_SUBJECT_KEY);
 
-                if (tagKeysToRender.length === 0) { emptyState.innerText = d.goalsEmptyState; emptyState.style.display = 'block'; return; }
+                if (tagKeysToRender.length === 0 && hiddenTags.length === 0) {
+                    emptyState.innerText = d.goalsEmptyState;
+                    emptyState.style.display = 'block';
+                    return;
+                }
                 emptyState.style.display = 'none';
 
                 tagKeysToRender.forEach(tagKey => {
@@ -6151,19 +6365,19 @@ html[data-theme="light"] .month-selector-dropdown {
                     card.innerHTML = `
                         <div class="goal-card-top">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                ${!isUnassigned ? `<span class="subject-drag-handle" title="${currentSystemLanguage === 'ar' ? 'اسحب لإعادة الترتيب' : 'Drag to reorder'}" style="cursor:grab; font-size:16px; opacity:0.6; padding:0 4px;">⠿</span>` : ''}
+                                ${!isUnassigned ? `<span class="subject-drag-handle" title="${currentSystemLanguage === 'ar' ? '\u0627\u0633\u062D\u0628 \u0644\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u062A\u0631\u062A\u064A\u0628' : 'Drag to reorder'}" style="cursor:grab; font-size:16px; opacity:0.6; padding:0 4px;">&#10033;</span>` : ''}
                                 <div>
                                     <div class="goal-card-title" style="display:flex;align-items:center;gap:8px;">
                                         <span style="width:10px;height:10px;border-radius:50%;background:${dotColor};display:inline-block;flex-shrink:0;"></span>
                                         ${escapeGoalHtml(displayName)}
                                     </div>
-                                    <span class="goal-linked-tag-pill">📂 ${branchesForTag.length} ${branchWord}</span>
+                                    <span class="goal-linked-tag-pill">&#128194; ${branchesForTag.length} ${branchWord}</span>
                                 </div>
                             </div>
-                            ${!isUnassigned ? `<button class="item-delete-btn" data-role="delete-subject-tag">✕</button>` : ''}
+                            ${!isUnassigned ? `<button class="item-delete-btn" data-role="delete-subject-tag">&#10005;</button>` : ''}
                         </div>
                         <div class="goal-tasks-toggle is-open">
-                            <span>📚 ${d.goalTasksHeader || 'Lectures'} ${totalLectures ? `(<span class="gt-count">${doneLectures}/${totalLectures}</span>)` : ''}</span>
+                            <span>&#128218; ${d.goalTasksHeader || 'Lectures'} ${totalLectures ? `(<span class="gt-count">${doneLectures}/${totalLectures}</span>)` : ''}</span>
                         </div>`;
                     card.addEventListener('click', (e) => {
                         if (e.target.closest('.subject-drag-handle') || e.target.closest('[data-role="delete-subject-tag"]')) return;
@@ -6185,6 +6399,44 @@ html[data-theme="light"] .month-selector-dropdown {
                     }
                     grid.appendChild(card);
                 });
+
+                // Dedicated Visible Section for Hidden Subjects
+                if (hiddenTags.length > 0) {
+                    const hiddenSection = document.createElement('div');
+                    hiddenSection.className = 'goals-hidden-section-container';
+                    hiddenSection.style.cssText = 'grid-column: 1 / -1; margin-top:24px; padding-top:16px; border-top:1px dashed var(--border-soft);';
+                    const isAr = currentSystemLanguage === 'ar';
+                    hiddenSection.innerHTML = `
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                            <div style="display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px; color:var(--text-gray);">
+                                <span>&#128065;&#65039;</span>
+                                <span>${isAr ? '\u0627\u0644\u0645\u0648\u0627\u062F \u0627\u0644\u0645\u062E\u0641\u064A\u0629 \u062D\u0627\u0644\u064A\u0627\u064B' : 'Currently Hidden Subjects'} (${hiddenTags.length})</span>
+                            </div>
+                            <button class="add-item-pill-btn" onclick="openManageHiddenTagsModal()" style="font-size:12px; padding:4px 12px;">
+                                ${isAr ? '\u0625\u062F\u0627\u0631\u0629 \u0627\u0644\u0643\u0644' : 'Manage All'}
+                            </button>
+                        </div>
+                        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:12px;">
+                            ${hiddenTags.map(tag => {
+                                const color = getTagColor(tag);
+                                const safe = (tag || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                                return `
+                                    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border-soft);">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <span style="width:10px; height:10px; border-radius:50%; background:${color}; display:inline-block; flex-shrink:0;"></span>
+                                            <span style="font-size:13px; font-weight:600; color:var(--text-light);">${escapeGoalHtml(tag)}</span>
+                                        </div>
+                                        <button type="button" class="modal-btn confirm" style="padding:4px 12px; font-size:12px; border-radius:6px; font-weight:700;" onclick="unhideTag('${safe}')">
+                                            &#128065;&#65039; ${isAr ? '\u0627\u0633\u062A\u0639\u0627\u062F\u0629' : 'Unhide'}
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                    grid.appendChild(hiddenSection);
+                }
+
                 enableSubjectDragAndDrop(grid);
                 refreshTimerSidebar();
                 return;
@@ -6459,12 +6711,29 @@ html[data-theme="light"] .month-selector-dropdown {
             if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
         }
 
+        function updateGcalHeaderToggleBtn(isCollapsed) {
+            if (isCollapsed === undefined) {
+                isCollapsed = document.body.classList.contains('index-header-collapsed');
+            }
+            const btn = document.getElementById('gcal-header-toggle-btn');
+            if (!btn) return;
+            const isAr = currentSystemLanguage === 'ar';
+            const textEl = document.getElementById('gcal-toggle-text');
+            const iconEl = document.getElementById('gcal-toggle-icon');
+            if (isCollapsed) {
+                if (textEl) textEl.innerText = isAr ? '\u0625\u0638\u0647\u0627\u0631 \u0627\u0644\u0634\u0631\u064A\u0637 \u0627\u0644\u0639\u0644\u0648\u064A' : 'Show Header';
+                if (iconEl) iconEl.innerHTML = '<path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7"/>';
+                btn.title = isAr ? '\u0625\u0638\u0647\u0627\u0631 \u0627\u0644\u0634\u0631\u064A\u0637 \u0627\u0644\u0639\u0644\u0648\u064A' : 'Show Header';
+            } else {
+                if (textEl) textEl.innerText = isAr ? '\u0645\u0644\u0621 \u0627\u0644\u0634\u0627\u0634\u0629' : 'Full Canvas';
+                if (iconEl) iconEl.innerHTML = '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>';
+                btn.title = isAr ? '\u0645\u0644\u0621 \u0627\u0644\u0634\u0627\u0634\u0629' : 'Full Canvas';
+            }
+        }
+
         function toggleIndexHeaderCollapse() {
             const isCollapsed = document.body.classList.toggle('index-header-collapsed');
-            const btn = document.getElementById('gcal-header-toggle-btn');
-            if (btn) {
-                btn.innerHTML = isCollapsed ? '⤡ Show Header' : '⤢ Full Canvas';
-            }
+            updateGcalHeaderToggleBtn(isCollapsed);
             if (typeof gcalRenderCurrentView === 'function') {
                 setTimeout(gcalRenderCurrentView, 100);
             }
@@ -7072,12 +7341,16 @@ html[data-theme="light"] .month-selector-dropdown {
             document.getElementById('add-manual-btn-txt').innerText = d.addManualBtn;
 
             // New analytics labels
-            const trendTitle = document.getElementById('chart-trend-title');
-            if (trendTitle) trendTitle.innerText = d.trendTitle || '📈 Study Trend';
+            const isAr = currentSystemLanguage === 'ar';
+            const trendTitle = document.getElementById('trend-title-txt') || document.getElementById('chart-trend-title');
+            if (trendTitle) {
+                const titleText = d.trendTitle ? d.trendTitle.replace(/^[^\w\u0600-\u06FF]+/g, '').trim() : (isAr ? '\u0627\u062A\u062C\u0627\u0647 \u0627\u0644\u062F\u0631\u0627\u0633\u0629' : 'Study Trend');
+                trendTitle.innerText = titleText;
+            }
             const trendLegendDaily = document.getElementById('trend-legend-daily');
-            if (trendLegendDaily) trendLegendDaily.innerText = d.trendDaily || 'Daily';
+            if (trendLegendDaily) trendLegendDaily.innerText = d.trendDaily || (isAr ? '\u0627\u0644\u062F\u0631\u0627\u0633\u0629 \u0627\u0644\u064A\u0648\u0645\u064A\u0629' : 'Daily');
             const trendLegendAvg = document.getElementById('trend-legend-avg');
-            if (trendLegendAvg) trendLegendAvg.innerText = d.trendAvg || '7-Day Avg';
+            if (trendLegendAvg) trendLegendAvg.innerText = d.trendAvg || (isAr ? '\u0627\u0644\u0645\u062A\u0648\u0633\u0637 7 \u0623\u064A\u0627\u0645' : '7-Day Avg');
             const prodTitle = document.getElementById('chart-productivity-title');
             if (prodTitle) prodTitle.innerText = d.productivityTitle || '🕒 Productivity Hours';
             const prodSubtitle = document.getElementById('productivity-subtitle');
