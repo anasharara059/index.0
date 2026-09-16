@@ -2643,242 +2643,6 @@ html[data-theme="light"] .month-selector-dropdown {
     color: #000;
 }
 
-/* 4-Tier Totals Row */
-.analysis-4tier-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 22px;
-}
-@media (max-width: 860px) {
-    .analysis-4tier-stats { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 500px) {
-    .analysis-4tier-stats { grid-template-columns: 1fr; }
-}
-.tier-stat-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border-soft);
-    border-radius: 16px;
-    padding: 16px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.tier-stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-html[data-theme="light"] .tier-stat-card {
-    background: #ffffff;
-    border-color: rgba(73, 62, 50, 0.12);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-}
-.tier-stat-label {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color: var(--text-gray);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.tier-stat-value {
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--text-light);
-    letter-spacing: -0.5px;
-}
-html[data-theme="light"] .tier-stat-value {
-    color: #202124;
-}
-.tier-stat-sub {
-    font-size: 11px;
-    color: var(--text-gray);
-    font-weight: 500;
-}
-
-/* --- 6. Monthly Heat Map Grid (Strictly Day 1 to End of Month) --- */
-.monthly-heatmap-section {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border-soft);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 22px;
-}
-html[data-theme="light"] .monthly-heatmap-section {
-    background: #ffffff;
-    border-color: rgba(73, 62, 50, 0.12);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
-}
-.monthly-heatmap-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-.monthly-heatmap-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-light);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-html[data-theme="light"] .monthly-heatmap-title {
-    color: #202124;
-}
-.monthly-heatmap-legend {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--text-gray);
-}
-.legend-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-}
-.monthly-heatmap-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
-    gap: 8px;
-}
-.monthly-day-cell {
-    border-radius: 10px;
-    padding: 10px 6px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    border: 1px solid var(--border-soft);
-    background: rgba(255, 255, 255, 0.02);
-    cursor: pointer;
-    transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
-    position: relative;
-    user-select: none;
-}
-.monthly-day-cell:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent-orange);
-    z-index: 5;
-}
-.monthly-day-cell.is-today {
-    border: 2px solid var(--accent-orange) !important;
-}
-.monthly-day-num {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-light);
-}
-html[data-theme="light"] .monthly-day-num {
-    color: #202124;
-}
-.monthly-day-name {
-    font-size: 9.5px;
-    font-weight: 600;
-    color: var(--text-gray);
-    text-transform: uppercase;
-}
-.monthly-day-time {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--accent-orange);
-    margin-top: 2px;
-}
-
-/* Heatmap Intensity Colors */
-.heatmap-lvl-0 {
-    background: rgba(255, 255, 255, 0.02);
-}
-html[data-theme="light"] .heatmap-lvl-0 {
-    background: #f8f9fa;
-}
-.heatmap-lvl-1 {
-    background: rgba(217, 165, 74, 0.18);
-    border-color: rgba(217, 165, 74, 0.3);
-}
-html[data-theme="light"] .heatmap-lvl-1 {
-    background: rgba(38, 115, 74, 0.15);
-    border-color: rgba(38, 115, 74, 0.3);
-}
-.heatmap-lvl-2 {
-    background: rgba(217, 165, 74, 0.38);
-    border-color: rgba(217, 165, 74, 0.5);
-}
-html[data-theme="light"] .heatmap-lvl-2 {
-    background: rgba(38, 115, 74, 0.32);
-    border-color: rgba(38, 115, 74, 0.5);
-}
-.heatmap-lvl-3 {
-    background: rgba(217, 165, 74, 0.62);
-    border-color: rgba(217, 165, 74, 0.75);
-}
-html[data-theme="light"] .heatmap-lvl-3 {
-    background: rgba(38, 115, 74, 0.55);
-    border-color: rgba(38, 115, 74, 0.7);
-}
-.heatmap-lvl-4 {
-    background: rgba(217, 165, 74, 0.92);
-    border-color: var(--accent-orange);
-    box-shadow: 0 0 10px rgba(217, 165, 74, 0.35);
-}
-html[data-theme="light"] .heatmap-lvl-4 {
-    background: rgba(38, 115, 74, 0.85);
-    border-color: var(--day-green-deep, #1d5b3a);
-    box-shadow: 0 0 10px rgba(38, 115, 74, 0.25);
-}
-.heatmap-lvl-4 .monthly-day-num,
-.heatmap-lvl-4 .monthly-day-name,
-.heatmap-lvl-4 .monthly-day-time {
-    color: #000 !important;
-}
-html[data-theme="light"] .heatmap-lvl-4 .monthly-day-num,
-html[data-theme="light"] .heatmap-lvl-4 .monthly-day-name,
-html[data-theme="light"] .heatmap-lvl-4 .monthly-day-time {
-    color: #fff !important;
-}
-
-/* Monthly Average Card Highlight */
-.monthly-average-highlight {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, rgba(62, 92, 138, 0.12), rgba(217, 165, 74, 0.08));
-    border: 1px solid rgba(62, 92, 138, 0.25);
-    border-radius: 14px;
-    padding: 12px 18px;
-    margin-top: 14px;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-html[data-theme="light"] .monthly-average-highlight {
-    background: #f8fafd;
-    border-color: #dadce0;
-}
-.monthly-avg-title {
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--text-light);
-}
-html[data-theme="light"] .monthly-avg-title {
-    color: #202124;
-}
-.monthly-avg-value {
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--accent-orange);
-}
-html[data-theme="light"] .monthly-avg-value {
-    color: var(--day-green-deep, #1d5b3a);
-}
-
 /* --- 7. Subject & Branch Drag & Drop Handles --- */
 .subject-drag-handle,
 .branch-drag-handle {
@@ -3168,91 +2932,6 @@ html[data-theme="light"] .monthly-avg-value {
         <div class="screen-view glass-card analysis-screen-layout" id="screen-analysis">
             <div class="dashboard-scaled-panel">
                 <div class="dash-section-header" id="dash-header-title">Analytics & Progress Rates</div>
-
-                <!-- 📅 Top Month Selector Bar -->
-                <div class="analysis-month-selector-bar">
-                    <div class="month-nav-controls">
-                        <button class="month-nav-btn" onclick="navAnalysisMonth(-1)" title="Previous Month">❮</button>
-                        <div class="month-picker-dropdown-wrapper">
-                            <button class="month-picker-btn" id="analysis-month-picker-btn" onclick="toggleAnalysisMonthDropdown(event)">
-                                <span id="analysis-month-display">September 2026</span> ▾
-                            </button>
-                            <div class="month-picker-dropdown" id="analysis-month-dropdown" style="display:none;">
-                                <!-- Months Jan-Dec rendered here -->
-                            </div>
-                        </div>
-                        <button class="month-nav-btn" onclick="navAnalysisMonth(1)" title="Next Month">❯</button>
-                    </div>
-                    <div class="month-metrics-summary">
-                        <div class="month-metric-chip">
-                            <span class="chip-label">Month Total:</span>
-                            <span class="chip-val" id="selected-month-total-time">0h 0m</span>
-                        </div>
-                        <div class="month-metric-chip highlight">
-                            <span class="chip-label">Daily Avg:</span>
-                            <span class="chip-val" id="selected-month-daily-avg">0h 0m / day</span>
-                        </div>
-                        <div class="month-metric-chip">
-                            <span class="chip-label">Active Days:</span>
-                            <span class="chip-val" id="selected-month-active-days">0 / 30</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ⏱️ 4-Tier Time Totals Breakdown -->
-                <div class="analysis-4tier-stats">
-                    <div class="tier-stat-card">
-                        <div class="tier-icon">📅</div>
-                        <div class="tier-info">
-                            <div class="tier-label">Today</div>
-                            <div class="tier-value" id="tier-today-val">0h 0m</div>
-                            <div class="tier-sub" id="tier-today-sub">Active sessions</div>
-                        </div>
-                    </div>
-                    <div class="tier-stat-card">
-                        <div class="tier-icon">🗓️</div>
-                        <div class="tier-info">
-                            <div class="tier-label">This Week</div>
-                            <div class="tier-value" id="tier-week-val">0h 0m</div>
-                            <div class="tier-sub">Sat → Fri</div>
-                        </div>
-                    </div>
-                    <div class="tier-stat-card">
-                        <div class="tier-icon">📊</div>
-                        <div class="tier-info">
-                            <div class="tier-label">This Month</div>
-                            <div class="tier-value" id="tier-month-val">0h 0m</div>
-                            <div class="tier-sub" id="tier-month-days-sub">Day 1 to Last Day</div>
-                        </div>
-                    </div>
-                    <div class="tier-stat-card">
-                        <div class="tier-icon">🏆</div>
-                        <div class="tier-info">
-                            <div class="tier-label">This Year</div>
-                            <div class="tier-value" id="tier-year-val">0h 0m</div>
-                            <div class="tier-sub" id="tier-year-sub">All Year Total</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 🗓️ Monthly Activity Heatmap (Strictly Day 1 to Last Day of Month) -->
-                <div class="charts-container-box" style="margin-top:12px; margin-bottom:14px;">
-                    <div class="charts-box-title" style="display:flex; justify-content:space-between; align-items:center;">
-                        <span id="monthly-heatmap-title">🗓️ Monthly Activity Heatmap (<span id="heatmap-month-title">September 2026</span>)</span>
-                        <div class="heatmap-legend" style="display:flex; gap:6px; align-items:center; font-size:11px; color:var(--text-gray);">
-                            <span>Less</span>
-                            <div class="monthly-day-cell lvl-0" style="width:14px; height:14px; border:none; display:inline-block;"></div>
-                            <div class="monthly-day-cell lvl-1" style="width:14px; height:14px; border:none; display:inline-block;"></div>
-                            <div class="monthly-day-cell lvl-2" style="width:14px; height:14px; border:none; display:inline-block;"></div>
-                            <div class="monthly-day-cell lvl-3" style="width:14px; height:14px; border:none; display:inline-block;"></div>
-                            <div class="monthly-day-cell lvl-4" style="width:14px; height:14px; border:none; display:inline-block;"></div>
-                            <span>More</span>
-                        </div>
-                    </div>
-                    <div id="monthly-activity-heatmap-container" style="padding:10px 0;">
-                        <!-- Days 1 to 28/29/30/31 rendered here -->
-                    </div>
-                </div>
                 <div class="metrics-cards-grid">
                     <div class="metric-card-box">
                         <div class="metric-text-group">
@@ -3301,7 +2980,22 @@ html[data-theme="light"] .monthly-avg-value {
 
                 <!-- 📈 Study Trend Line Chart -->
                 <div class="charts-container-box" style="margin-top:10px;">
-                    <div class="charts-box-title" id="chart-trend-title">📈 Study Trend</div>
+                    <div class="charts-box-title" id="chart-trend-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span>ðŸ“ˆ <span id="trend-title-txt">Study Trend</span></span>
+                            <span id="study-trend-avg-display" class="study-trend-avg-badge" style="font-size:12px; font-weight:700; color:var(--accent-orange); background:rgba(217, 165, 74, 0.12); padding:3px 10px; border-radius:12px; border:1px solid rgba(217, 165, 74, 0.25);">Daily Avg: 0h 0m</span>
+                        </div>
+                        <div class="trend-month-selector" style="display:flex; align-items:center; gap:4px;">
+                            <button type="button" class="trend-nav-btn" onclick="navStudyTrendMonth(-1)" title="Previous Month" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); width:28px; height:28px; border-radius:6px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; justify-content:center; transition:all 0.2s;">â€¹</button>
+                            <div class="trend-month-dropdown-wrapper" style="position:relative; display:inline-block;">
+                                <button type="button" class="trend-month-picker-btn" id="study-trend-month-picker-btn" onclick="toggleStudyTrendMonthDropdown(event)" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); padding:4px 10px; border-radius:6px; cursor:pointer; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+                                    <span id="study-trend-month-display">September 2026</span> â–¾
+                                </button>
+                                <div class="trend-month-dropdown" id="study-trend-month-dropdown" style="display:none; position:absolute; right:0; top:100%; margin-top:4px; background:#141721; border:1px solid var(--border-soft); border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,0.5); z-index:1000; min-width:140px; max-height:220px; overflow-y:auto; padding:4px;"></div>
+                            </div>
+                            <button type="button" class="trend-nav-btn" onclick="navStudyTrendMonth(1)" title="Next Month" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); width:28px; height:28px; border-radius:6px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; justify-content:center; transition:all 0.2s;">â€º</button>
+                        </div>
+                    </div>
                     <div style="position: relative; height: 320px;">
                         <canvas id="study-trend-chart"></canvas>
                     </div>
@@ -3413,9 +3107,6 @@ html[data-theme="light"] .monthly-avg-value {
                         <button class="gcal-view-tab" data-view="year" onclick="gcalSetView('year')">Year</button>
                         <button class="gcal-view-tab" data-view="agenda" onclick="gcalSetView('agenda')">Schedule</button>
                     </div>
-                    <button class="gcal-today-btn" onclick="gcalRevealHeader()" title="Show INDEX Navigation Menu" style="display:inline-flex; align-items:center; gap:5px; font-size:12px; padding:0 12px; margin-left:6px;">
-                        <span>🌐 Menu</span>
-                    </button>
                 </div>
             </header>
 
@@ -3754,32 +3445,6 @@ html[data-theme="light"] .monthly-avg-value {
     </div>
 
     <!-- Tag Context Menu (Right Click) -->
-    <div id="tag-context-menu" class="tag-context-menu" style="display:none;">
-        <div class="tag-context-menu-item" onclick="onTagContextMenuColor()">
-            <span>🎨</span>
-            <span id="ctx-menu-color-txt">Change Color</span>
-        </div>
-        <div class="tag-context-menu-item" onclick="onTagContextMenuRename()">
-            <span>✏️</span>
-            <span id="ctx-menu-rename-txt">Rename Subject</span>
-        </div>
-        <div class="tag-context-menu-item" onclick="onTagContextMenuHide()">
-            <span>👁️</span>
-            <span id="ctx-menu-hide-txt">Hide Subject</span>
-        </div>
-    </div>
-
-    <!-- Rename Tag Modal -->
-    <div class="modal-overlay" id="tag-rename-modal">
-        <div class="modal-box">
-            <h3 id="tag-rename-heading">Rename Subject</h3>
-            <input type="text" id="tag-rename-input" placeholder="New subject name...">
-            <div class="modal-buttons">
-                <button class="modal-btn cancel" onclick="closeTagRenameModal()" id="tag-rename-cancel">Cancel</button>
-                <button class="modal-btn confirm" onclick="saveTagRenameFromModal()" id="tag-rename-save">Rename</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Manage Hidden Tags Modal -->
     <div class="modal-overlay" id="manage-hidden-tags-modal">
@@ -4328,34 +3993,60 @@ html[data-theme="light"] .monthly-avg-value {
             document.getElementById('user-badge-photo').src = user.photoURL || '';
             document.getElementById('nav-btn-admin').style.display = isAdmin ? 'inline-block' : 'none';
 
-            // Setup Firebase RTDB presence for active status
+                        const myAccessRef = ACCESS_REF.child(user.uid);
+
+            // Setup Firebase RTDB presence for active status directly under user access record
             try {
-                const userStatusRef = rtdb.ref('indexStudyAssistant/presence/' + user.uid);
+                const myPresenceRef = myAccessRef.child('presence');
                 const connectedRef = rtdb.ref('.info/connected');
                 connectedRef.on('value', (snap) => {
                     if (snap.val() === true) {
-                        userStatusRef.onDisconnect().set({
+                        myPresenceRef.onDisconnect().set({
                             state: 'offline',
                             lastActive: firebase.database.ServerValue.TIMESTAMP
                         }).then(() => {
-                            userStatusRef.set({
+                            myPresenceRef.set({
                                 state: 'online',
                                 lastActive: firebase.database.ServerValue.TIMESTAMP
                             });
-                        });
+                        }).catch(err => console.warn('presence onDisconnect err:', err));
                     }
                 });
-                setInterval(() => {
+
+                // Heartbeat every 20 seconds
+                const sendPresenceHeartbeat = () => {
                     if (auth.currentUser) {
-                        userStatusRef.update({
+                        myPresenceRef.update({
                             state: 'online',
                             lastActive: firebase.database.ServerValue.TIMESTAMP
-                        });
+                        }).catch(() => {});
                     }
-                }, 45000);
-            } catch (e) { console.warn('Presence init error:', e); }
+                };
+                setInterval(sendPresenceHeartbeat, 20000);
 
-            const myAccessRef = ACCESS_REF.child(user.uid);
+                // Throttled user activity tracking (max once per 20s)
+                let lastActivityRecorded = 0;
+                const recordUserActivity = () => {
+                    const now = Date.now();
+                    if (now - lastActivityRecorded > 20000) {
+                        lastActivityRecorded = now;
+                        sendPresenceHeartbeat();
+                    }
+                };
+                ['mousemove', 'keydown', 'click', 'touchstart'].forEach(ev => {
+                    window.addEventListener(ev, recordUserActivity, { passive: true });
+                });
+
+                // Disconnect on beforeunload
+                window.addEventListener('beforeunload', () => {
+                    try {
+                        myPresenceRef.update({
+                            state: 'offline',
+                            lastActive: firebase.database.ServerValue.TIMESTAMP
+                        });
+                    } catch(e) {}
+                });
+            } catch (e) { console.warn('Presence init error:', e); }
 
             if (isAdmin) {
                 await myAccessRef.set({
@@ -4424,12 +4115,12 @@ html[data-theme="light"] .monthly-avg-value {
                 const requestedDate = rec.requestedAt ? new Date(rec.requestedAt).toLocaleString() : '';
                 
                 // Real-time Presence info
-                const pres = (userStatusCache && userStatusCache[uid]) || {};
-                const isOnline = pres.state === 'online' && (Date.now() - (pres.lastActive || 0) < 120000);
-                const lastActiveTime = pres.lastActive ? new Date(pres.lastActive).toLocaleString() : (rec.requestedAt ? new Date(rec.requestedAt).toLocaleString() : 'Never');
+                const pres = rec.presence || (userStatusCache && userStatusCache[uid]) || {};
+                const isOnline = pres.state === "online" && (Date.now() - (pres.lastActive || 0) < 60000);
+                const lastActiveTime = pres.lastActive ? new Date(pres.lastActive).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " (" + new Date(pres.lastActive).toLocaleDateString() + ")" : (rec.requestedAt ? new Date(rec.requestedAt).toLocaleDateString() : "Never");
                 const presencePill = isOnline
-                    ? `<span class="admin-status-pill online">● Active Now</span>`
-                    : `<span class="admin-status-pill offline">○ Offline</span>`;
+                    ? `<span class="admin-status-pill online" style="display:inline-flex; align-items:center; gap:5px; background:rgba(0, 210, 106, 0.15); color:#00d26a; border:1px solid rgba(0, 210, 106, 0.3); padding:3px 10px; border-radius:12px; font-weight:700; font-size:11px;"><span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#00d26a; box-shadow:0 0 8px #00d26a;"></span> Active Now</span>`
+                    : `<span class="admin-status-pill offline" style="display:inline-flex; align-items:center; gap:5px; background:rgba(255, 255, 255, 0.05); color:var(--text-gray); border:1px solid rgba(255, 255, 255, 0.1); padding:3px 10px; border-radius:12px; font-weight:600; font-size:11px;">â—‹ Offline</span>`;
 
                 let actions = '';
                 if (rec.status === 'pending') {
@@ -4459,6 +4150,12 @@ html[data-theme="light"] .monthly-avg-value {
                 </div>`;
             }).join('');
         }
+
+        setInterval(() => {
+            if (lastAdminAccessSnap && document.getElementById('screen-admin')?.classList.contains('active-view')) {
+                renderAdminAccessList(lastAdminAccessSnap);
+            }
+        }, 10000);
 
         function setAccessStatus(uid, status) {
             ACCESS_REF.child(uid).update({ status, respondedAt: Date.now() });
@@ -5211,19 +4908,19 @@ html[data-theme="light"] .monthly-avg-value {
                 }
             }
 
-            visibleTags.forEach(tag => {
+                        visibleTags.forEach(tag => {
                 const chip = document.createElement('div');
                 chip.className = `mini-tag-chip ${tag === currentlySelectedTag ? 'selected' : ''}`;
-                chip.title = currentSystemLanguage === 'ar' ? 'انقر لتختار · انقر بزر الماوس الأيمن للخيارات' : 'Click to select · Right-click for options';
+                chip.title = currentSystemLanguage === 'ar' ? 'Ø§Ù†Ù‚Ø± Ù„Ù„Ø§Ø®ØªÙŠØ§Ø± Â· ÙƒÙ„ÙŠÙƒ ÙŠÙ…ÙŠÙ† Ù„Ù„ØªØ¹Ø¯ÙŠÙ„' : 'Click to select Â· Right-click to edit';
                 chip.onclick = () => selectActiveTag(tag);
                 chip.oncontextmenu = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    openTagContextMenu(e, tag);
+                    openTagSubjectModal(tag, e);
                 };
                 let pressTimer;
                 chip.addEventListener('touchstart', (e) => {
-                    pressTimer = setTimeout(() => { e.preventDefault(); openTagContextMenu(e, tag); }, 600);
+                    pressTimer = setTimeout(() => { e.preventDefault(); openTagSubjectModal(tag, e); }, 600);
                 });
                 chip.addEventListener('touchend', () => clearTimeout(pressTimer));
                 chip.addEventListener('touchmove', () => clearTimeout(pressTimer));
@@ -5233,14 +4930,9 @@ html[data-theme="light"] .monthly-avg-value {
                 colorDot.style.backgroundColor = getTagColor(tag);
                 const spanName = document.createElement('span');
                 spanName.innerText = tag;
-                const removeBtn = document.createElement('span');
-                removeBtn.className = 'remove-icon';
-                removeBtn.innerText = '✕';
-                removeBtn.title = currentSystemLanguage === 'ar' ? 'حذف' : 'Delete';
-                removeBtn.onclick = (e) => { e.stopPropagation(); deleteTagFromSystem(tag); };
+
                 chip.appendChild(colorDot);
                 chip.appendChild(spanName);
-                chip.appendChild(removeBtn);
                 wrapper.appendChild(chip);
             });
             const addBtnCircle = document.createElement('div');
@@ -5251,171 +4943,173 @@ html[data-theme="light"] .monthly-avg-value {
             wrapper.appendChild(addBtnCircle);
         }
 
-        function openTagContextMenu(e, tag) {
-            tagContextMenuTarget = tag;
-            const menu = document.getElementById('tag-context-menu');
-            if (!menu) return;
-            menu.style.display = 'block';
-            
-            let x = e.clientX || 100;
-            let y = e.clientY || 100;
-            if (x + 190 > window.innerWidth) x = window.innerWidth - 200;
-            if (y + 150 > window.innerHeight) y = window.innerHeight - 160;
-            
-            menu.style.left = x + 'px';
-            menu.style.top = y + 'px';
-        }
+                function openTagSubjectModal(tagName, event) {
+            const prev = document.getElementById('tag-subject-modal');
+            if (prev) prev.remove();
 
-        function closeTagContextMenu() {
-            const menu = document.getElementById('tag-context-menu');
-            if (menu) menu.style.display = 'none';
-        }
+            const isAr = currentSystemLanguage === 'ar';
+            const currentColor = getTagColor(tagName);
 
-        window.addEventListener('click', (e) => {
-            if (!e.target.closest('#tag-context-menu')) closeTagContextMenu();
-            if (!e.target.closest('.month-picker-dropdown-wrapper')) {
-                const drop = document.getElementById('analysis-month-dropdown');
-                if (drop) drop.style.display = 'none';
-            }
-        });
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay modal-open';
+            modal.id = 'tag-subject-modal';
+            modal.style.zIndex = '100010';
 
-        function onTagContextMenuColor() {
-            const tag = tagContextMenuTarget;
-            closeTagContextMenu();
-            if (tag) openTagColorModal(tag);
-        }
+            const paletteColors = [
+                '#3498db','#e67e22','#1abc9c','#e84393','#2ecc71','#9b59b6',
+                '#e74c3c','#f1c40f','#16a085','#d35400','#8e44ad','#2c3e50',
+                '#d9a54a','#3e5c8a','#00d26a','#3498db','#e74c3c','#f39c12'
+            ];
 
-        function onTagContextMenuRename() {
-            const tag = tagContextMenuTarget;
-            closeTagContextMenu();
-            if (tag) openTagRenameModal(tag);
-        }
+            modal.innerHTML = `
+                <div class="modal-box" style="max-width:380px; width:90%; padding:20px; border-radius:14px; background:rgba(20,23,33,0.96); backdrop-filter:blur(20px); border:1px solid var(--border-soft); box-shadow:0 20px 50px rgba(0,0,0,0.6);">
+                    <!-- Top: Subject Name & Hide Button -->
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+                        <input type="text" id="tag-edit-name-input" value="${escapeGoalHtml(tagName)}" 
+                               placeholder="${isAr ? '\u0627\u0633\u0645 \u0627\u0644\u0645\u0627\u062F\u0629' : 'Subject Name'}"
+                               style="flex:1; height:40px; padding:0 12px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); font-size:14px; font-weight:700; outline:none; transition:border-color 0.2s;"
+                               onfocus="this.style.borderColor='var(--accent-orange)';" 
+                               onblur="this.style.borderColor='var(--border-soft)';" />
+                        <button type="button" id="tag-hide-btn" title="${isAr ? '\u0625\u062E\u0641\u0627\u0621 \u0627\u0644\u0645\u0627\u062F\u0629' : 'Hide Subject'}"
+                                style="height:40px; padding:0 12px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); color:var(--text-light); font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;"
+                                onmouseover="this.style.background='rgba(255,255,255,0.12)';"
+                                onmouseout="this.style.background='rgba(255,255,255,0.06)';">
+                            <span style="font-size:15px;">👁️</span>
+                            <span>${isAr ? '\u0625\u062E\u0641\u0627\u0621' : 'Hide'}</span>
+                        </button>
+                    </div>
 
-        function onTagContextMenuHide() {
-            const tag = tagContextMenuTarget;
-            closeTagContextMenu();
-            if (tag) hideTagFromSystem(tag);
-        }
-
-        function hideTagFromSystem(tag) {
-            if (!hiddenTags.includes(tag)) {
-                hiddenTags.push(tag);
-                dbSet('hiddenTags', hiddenTags);
-            }
-            const visibleTags = currentTagsList.filter(t => !hiddenTags.includes(t));
-            if (currentlySelectedTag === tag && visibleTags.length > 0) {
-                currentlySelectedTag = visibleTags[0];
-                dbSet('selectedTag', currentlySelectedTag);
-            }
-            renderTagsChips();
-            recalculateAndRenderDashboard();
-            renderGoalsScreen();
-            showToast('Subject hidden from view', tag, 'info');
-        }
-
-        function openManageHiddenTagsModal() {
-            const modal = document.getElementById('manage-hidden-tags-modal');
-            const list = document.getElementById('manage-hidden-tags-list');
-            if (!modal || !list) return;
-            list.innerHTML = '';
-            if (hiddenTags.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-gray); padding:16px;">${currentSystemLanguage === 'ar' ? 'لا توجد مواد مخفية' : 'No hidden subjects'}</div>`;
-            } else {
-                hiddenTags.forEach(tag => {
-                    const item = document.createElement('div');
-                    item.style.cssText = 'display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:rgba(255,255,255,0.04); border-radius:8px; border:1px solid var(--border-soft);';
-                    item.innerHTML = `
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="width:10px; height:10px; border-radius:50%; background:${getTagColor(tag)}; display:inline-block;"></span>
-                            <span style="font-size:13px; font-weight:600; color:var(--text-light);">${tag}</span>
+                    <!-- Middle: Compact Color Picker -->
+                    <div style="margin-bottom:16px;">
+                        <div style="font-size:11px; color:var(--text-gray); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">
+                            ${isAr ? '\u0644\u0648\u0646 \u0627\u0644\u0645\u0627\u062F\u0629' : 'Subject Color'}
                         </div>
-                        <button class="modal-btn confirm" style="padding:4px 12px; font-size:12px;" onclick="unhideTag('${tag}')">${currentSystemLanguage === 'ar' ? 'إظهار' : 'Unhide'}</button>
-                    `;
-                    list.appendChild(item);
+                        <div style="display:grid; grid-template-columns:repeat(6, 1fr); gap:6px; margin-bottom:10px;">
+                            ${paletteColors.map(c => `
+                                <div class="tag-color-swatch" data-color="${c}"
+                                     style="height:32px; border-radius:6px; background:${c}; cursor:pointer; border:2px solid ${c.toLowerCase() === currentColor.toLowerCase() ? '#fff' : 'transparent'}; transition:all 0.15s; display:flex; align-items:center; justify-content:center;"
+                                     onclick="selectTagColorSwatch('${c}')">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label style="font-size:12px; color:var(--text-gray);">${isAr ? '\u0644\u0648\u0646 \u0645\u062E\u0635\u0635:' : 'Custom:'}</label>
+                            <input type="color" id="tag-custom-color-input" value="${currentColor}" 
+                                   style="width:36px; height:32px; border-radius:6px; border:none; cursor:pointer; background:transparent; padding:0;"
+                                   onchange="onTagCustomColorChange(this.value)" />
+                            <span id="tag-chosen-color-preview" style="display:inline-block; width:16px; height:16px; border-radius:50%; background:${currentColor};"></span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom: Action Buttons -->
+                    <div class="modal-buttons" style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+                        <button type="button" class="modal-btn cancel" onclick="document.getElementById('tag-subject-modal').remove();" style="padding:8px 16px; border-radius:8px; font-size:13px;">
+                            ${isAr ? '\u0625\u0644\u063A\u0627\u0621' : 'Cancel'}
+                        </button>
+                        <button type="button" class="modal-btn confirm" id="tag-subject-save-btn" style="padding:8px 18px; border-radius:8px; font-size:13px; font-weight:700;">
+                            ${isAr ? '\u062D\u0641\u0638' : 'Save'}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            let selectedColor = currentColor;
+
+            window.selectTagColorSwatch = function(color) {
+                selectedColor = color;
+                document.querySelectorAll('.tag-color-swatch').forEach(el => {
+                    el.style.borderColor = el.getAttribute('data-color') === color ? '#fff' : 'transparent';
                 });
-            }
-            modal.classList.add('is-active');
+                const customInp = document.getElementById('tag-custom-color-input');
+                if (customInp) customInp.value = color;
+                const prevEl = document.getElementById('tag-chosen-color-preview');
+                if (prevEl) prevEl.style.backgroundColor = color;
+            };
+
+            window.onTagCustomColorChange = function(color) {
+                selectedColor = color;
+                document.querySelectorAll('.tag-color-swatch').forEach(el => {
+                    el.style.borderColor = el.getAttribute('data-color') === color ? '#fff' : 'transparent';
+                });
+                const prevEl = document.getElementById('tag-chosen-color-preview');
+                if (prevEl) prevEl.style.backgroundColor = color;
+            };
+
+            document.getElementById('tag-hide-btn').onclick = () => {
+                hideTagFromSystem(tagName);
+                modal.remove();
+            };
+
+            document.getElementById('tag-subject-save-btn').onclick = () => {
+                const newName = (document.getElementById('tag-edit-name-input').value || '').trim();
+                if (!newName) {
+                    modal.remove();
+                    return;
+                }
+
+                // 1. Color update
+                customTagColors[newName] = selectedColor;
+                tagPaletteColors[newName] = selectedColor;
+                if (newName !== tagName) {
+                    delete customTagColors[tagName];
+                    delete tagPaletteColors[tagName];
+                }
+                dbSet('customTagColors', customTagColors);
+
+                // 2. Rename across system if name changed
+                if (newName !== tagName) {
+                    const idx = currentTagsList.indexOf(tagName);
+                    if (idx !== -1) currentTagsList[idx] = newName;
+                    else currentTagsList.push(newName);
+
+                    const hIdx = hiddenTags.indexOf(tagName);
+                    if (hIdx !== -1) hiddenTags[hIdx] = newName;
+
+                    if (tagColors[tagName]) {
+                        tagColors[newName] = selectedColor || tagColors[tagName];
+                        delete tagColors[tagName];
+                        dbSet('tagColors', tagColors);
+                    }
+
+                    if (currentlySelectedTag === tagName) {
+                        currentlySelectedTag = newName;
+                        dbSet('selectedTag', currentlySelectedTag);
+                    }
+
+                    let sessionsChanged = false;
+                    archivedSessionsArray.forEach(s => {
+                        if (s.tag === tagName) { s.tag = newName; sessionsChanged = true; }
+                    });
+                    if (sessionsChanged) dbSet('sessions', archivedSessionsArray);
+
+                    let goalsChanged = false;
+                    goalsArray.forEach(g => {
+                        if (g.linkedTag === tagName) { g.linkedTag = newName; goalsChanged = true; }
+                    });
+                    if (goalsChanged) dbSet('goals', goalsArray);
+
+                    dbSet('tags', currentTagsList);
+                    dbSet('hiddenTags', hiddenTags);
+                }
+
+                modal.remove();
+                renderTagsChips();
+                recalculateAndRenderDashboard();
+                renderGoalsScreen();
+                if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
+                showToast(isAr ? '\u062A\u0645 \u062D\u0641\u0638 \u0627\u0644\u062A\u0639\u062F\u064A\u0644\u0627\u062A' : 'Subject updated successfully', newName, 'success');
+            };
         }
 
-        function closeManageHiddenTagsModal() {
-            const modal = document.getElementById('manage-hidden-tags-modal');
-            if (modal) modal.classList.remove('is-active');
-        }
-
-        function unhideTag(tag) {
-            hiddenTags = hiddenTags.filter(t => t !== tag);
-            dbSet('hiddenTags', hiddenTags);
-            openManageHiddenTagsModal();
-            renderTagsChips();
-            recalculateAndRenderDashboard();
-            renderGoalsScreen();
-            showToast('Subject restored to view', tag, 'success');
-        }
-
-        function openTagRenameModal(tag) {
-            tagContextMenuTarget = tag;
-            const modal = document.getElementById('tag-rename-modal');
-            const input = document.getElementById('tag-rename-input');
-            if (!modal || !input) return;
-            input.value = tag;
-            modal.classList.add('is-active');
-            setTimeout(() => input.focus(), 100);
-        }
-
-        function closeTagRenameModal() {
-            const modal = document.getElementById('tag-rename-modal');
-            if (modal) modal.classList.remove('is-active');
-        }
-
-        function saveTagRenameFromModal() {
-            const oldName = tagContextMenuTarget;
-            const input = document.getElementById('tag-rename-input');
-            if (!oldName || !input) return;
-            const newName = input.value.trim();
-            if (!newName || newName === oldName) {
-                closeTagRenameModal();
-                return;
-            }
-            const idx = currentTagsList.indexOf(oldName);
-            if (idx !== -1) currentTagsList[idx] = newName;
-            else currentTagsList.push(newName);
-
-            const hIdx = hiddenTags.indexOf(oldName);
-            if (hIdx !== -1) hiddenTags[hIdx] = newName;
-
-            if (tagColors[oldName]) {
-                tagColors[newName] = tagColors[oldName];
-                delete tagColors[oldName];
-                dbSet('tagColors', tagColors);
-            }
-            
-            if (currentlySelectedTag === oldName) {
-                currentlySelectedTag = newName;
-                dbSet('selectedTag', currentlySelectedTag);
-            }
-
-            let sessionsChanged = false;
-            archivedSessionsArray.forEach(s => {
-                if (s.tag === oldName) { s.tag = newName; sessionsChanged = true; }
-            });
-            if (sessionsChanged) dbSet('sessions', archivedSessionsArray);
-
-            let goalsChanged = false;
-            goalsArray.forEach(g => {
-                if (g.linkedTag === oldName) { g.linkedTag = newName; goalsChanged = true; }
-            });
-            if (goalsChanged) dbSet('goals', goalsArray);
-
-            dbSet('tags', currentTagsList);
-            dbSet('hiddenTags', hiddenTags);
-
-            closeTagRenameModal();
-            renderTagsChips();
-            recalculateAndRenderDashboard();
-            renderGoalsScreen();
-            if (typeof refreshTimerSidebar === 'function') refreshTimerSidebar();
-            showToast('Subject renamed successfully', newName, 'success');
-        }
+        function openTagContextMenu(e, tag) { openTagSubjectModal(tag, e); }
+        function closeTagContextMenu() {}
+        function openTagRenameModal(tag) { openTagSubjectModal(tag); }
+        function closeTagRenameModal() {}
+        function onTagContextMenuColor() {}
+        function onTagContextMenuRename() {}
+        function onTagContextMenuHide() {}
 
         function selectActiveTag(tag) { currentlySelectedTag = tag; dbSet('selectedTag', currentlySelectedTag); renderTagsChips(); refreshTimerSidebar(); loadTimerNotesForCurrentTag(); applySubjectTint(); }
         function deleteTagFromSystem(tag) {
@@ -5504,29 +5198,32 @@ html[data-theme="light"] .monthly-avg-value {
         const MONTH_NAMES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const MONTH_NAMES_AR = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
 
-        function navAnalysisMonth(direction) {
-            analysisSelectedMonth += direction;
-            if (analysisSelectedMonth < 0) {
-                analysisSelectedMonth = 11;
-                analysisSelectedYear -= 1;
-            } else if (analysisSelectedMonth > 11) {
-                analysisSelectedMonth = 0;
-                analysisSelectedYear += 1;
+                let trendSelectedYear = new Date().getFullYear();
+        let trendSelectedMonth = new Date().getMonth();
+
+        function navStudyTrendMonth(direction) {
+            trendSelectedMonth += direction;
+            if (trendSelectedMonth < 0) {
+                trendSelectedMonth = 11;
+                trendSelectedYear -= 1;
+            } else if (trendSelectedMonth > 11) {
+                trendSelectedMonth = 0;
+                trendSelectedYear += 1;
             }
-            renderMonthlyAnalysisAndHeatmap();
+            renderStudyTrendChart();
         }
 
-        function selectAnalysisMonth(monthIdx, yearVal) {
-            analysisSelectedMonth = monthIdx;
-            if (yearVal !== undefined) analysisSelectedYear = yearVal;
-            const drop = document.getElementById('analysis-month-dropdown');
+        function selectStudyTrendMonth(monthIdx, yearVal) {
+            trendSelectedMonth = monthIdx;
+            if (yearVal !== undefined) trendSelectedYear = yearVal;
+            const drop = document.getElementById('study-trend-month-dropdown');
             if (drop) drop.style.display = 'none';
-            renderMonthlyAnalysisAndHeatmap();
+            renderStudyTrendChart();
         }
 
-        function toggleAnalysisMonthDropdown(e) {
+        function toggleStudyTrendMonthDropdown(e) {
             if (e) e.stopPropagation();
-            const drop = document.getElementById('analysis-month-dropdown');
+            const drop = document.getElementById('study-trend-month-dropdown');
             if (!drop) return;
             if (drop.style.display === 'block') {
                 drop.style.display = 'none';
@@ -5537,90 +5234,22 @@ html[data-theme="light"] .monthly-avg-value {
             const monthNames = isAr ? MONTH_NAMES_AR : MONTH_NAMES_EN;
             monthNames.forEach((name, idx) => {
                 const item = document.createElement('div');
-                item.className = `month-picker-item ${idx === analysisSelectedMonth ? 'selected' : ''}`;
-                item.innerText = `${name} ${analysisSelectedYear}`;
-                item.onclick = () => selectAnalysisMonth(idx, analysisSelectedYear);
+                item.style.cssText = `padding:6px 10px; border-radius:5px; font-size:12px; cursor:pointer; color:${idx === trendSelectedMonth ? 'var(--accent-orange)' : 'var(--text-light)'}; background:${idx === trendSelectedMonth ? 'rgba(217,165,74,0.12)' : 'transparent'};`;
+                item.innerText = `${name} ${trendSelectedYear}`;
+                item.onmouseover = () => item.style.background = 'rgba(255,255,255,0.08)';
+                item.onmouseout = () => item.style.background = idx === trendSelectedMonth ? 'rgba(217,165,74,0.12)' : 'transparent';
+                item.onclick = () => selectStudyTrendMonth(idx, trendSelectedYear);
                 drop.appendChild(item);
             });
             drop.style.display = 'block';
         }
 
-        function renderMonthlyAnalysisAndHeatmap() {
-            const isAr = currentSystemLanguage === 'ar';
-            const monthNames = isAr ? MONTH_NAMES_AR : MONTH_NAMES_EN;
-            const monthName = monthNames[analysisSelectedMonth];
-            const monthTitleStr = `${monthName} ${analysisSelectedYear}`;
-            
-            // Update display labels
-            const displayEl = document.getElementById('analysis-month-display');
-            if (displayEl) displayEl.innerText = monthTitleStr;
-            const hmTitle = document.getElementById('heatmap-month-title');
-            if (hmTitle) hmTitle.innerText = monthTitleStr;
-
-            // Strictly Day 1 to the actual last day of the selected month (28/29, 30, or 31)
-            const daysInMonth = new Date(analysisSelectedYear, analysisSelectedMonth + 1, 0).getDate();
-            const monthPrefix = `${analysisSelectedYear}-${String(analysisSelectedMonth + 1).padStart(2, '0')}`;
-
-            // Independent persistent data per month
-            const monthSessions = archivedSessionsArray.filter(s => s.date && s.date.startsWith(monthPrefix));
-            let totalMonthMinutes = 0;
-            const dayMinutesMap = {};
-            for (let d = 1; d <= daysInMonth; d++) dayMinutesMap[d] = 0;
-
-            monthSessions.forEach(s => {
-                const minVal = parseInt(s.duration) || 0;
-                totalMonthMinutes += minVal;
-                const parts = s.date.split('-');
-                if (parts.length >= 3) {
-                    const dayPart = parseInt(parts[2], 10);
-                    if (dayMinutesMap[dayPart] !== undefined) {
-                        dayMinutesMap[dayPart] += minVal;
-                    }
-                }
-            });
-
-            // Accurate Daily Average: total study minutes / actual days in month (0 min days included in denominator)
-            const dailyAvgMinutes = Math.round(totalMonthMinutes / daysInMonth);
-            const activeDaysCount = Object.values(dayMinutesMap).filter(m => m > 0).length;
-
-            const totalTimeEl = document.getElementById('selected-month-total-time');
-            if (totalTimeEl) totalTimeEl.innerText = formatMinutesToHM(totalMonthMinutes);
-            const avgEl = document.getElementById('selected-month-daily-avg');
-            if (avgEl) avgEl.innerText = formatMinutesToHM(dailyAvgMinutes) + (isAr ? ' / يوم' : ' / day');
-            const activeEl = document.getElementById('selected-month-active-days');
-            if (activeEl) activeEl.innerText = `${activeDaysCount} / ${daysInMonth}` + (isAr ? ' يوم' : ' days');
-
-            // Render Heatmap Grid: strictly Day 1 to daysInMonth
-            const hmContainer = document.getElementById('monthly-activity-heatmap-container');
-            if (hmContainer) {
-                hmContainer.innerHTML = '';
-                const grid = document.createElement('div');
-                grid.className = 'monthly-heatmap-grid';
-                
-                for (let d = 1; d <= daysInMonth; d++) {
-                    const mins = dayMinutesMap[d] || 0;
-                    let lvl = 'lvl-0';
-                    if (mins > 300) lvl = 'lvl-4';
-                    else if (mins > 150) lvl = 'lvl-3';
-                    else if (mins > 60) lvl = 'lvl-2';
-                    else if (mins > 0) lvl = 'lvl-1';
-
-                    const cellDate = new Date(analysisSelectedYear, analysisSelectedMonth, d);
-                    const weekday = cellDate.toLocaleDateString(isAr ? 'ar-EG' : 'en-US', { weekday: 'short' });
-                    
-                    const cell = document.createElement('div');
-                    cell.className = `monthly-day-cell ${lvl}`;
-                    cell.setAttribute('data-day', d);
-                    cell.setAttribute('title', `${weekday}, ${d} ${monthName}: ${formatMinutesToHM(mins)}`);
-                    cell.innerHTML = `
-                        <div class="day-num">${d}</div>
-                        <div class="day-time">${mins > 0 ? formatMinutesToHM(mins) : '0m'}</div>
-                    `;
-                    grid.appendChild(cell);
-                }
-                hmContainer.appendChild(grid);
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.trend-month-dropdown-wrapper')) {
+                const drop = document.getElementById('study-trend-month-dropdown');
+                if (drop) drop.style.display = 'none';
             }
-        }
+        });
 
         function recalculateAndRenderDashboard() {
             const todayISO = getLocalISODate(new Date());
@@ -5646,20 +5275,7 @@ html[data-theme="light"] .monthly-avg-value {
                 if (session.date.startsWith(yearPrefix)) yearMinutes += minutesVal;
             });
 
-            // 4-Tier Time Totals Breakdown
-            const tierTodayEl = document.getElementById('tier-today-val');
-            if (tierTodayEl) tierTodayEl.innerText = formatMinutesToHM(todayMinutes);
-            const tierWeekEl = document.getElementById('tier-week-val');
-            if (tierWeekEl) tierWeekEl.innerText = formatMinutesToHM(weekMinutes);
-            const tierMonthEl = document.getElementById('tier-month-val');
-            if (tierMonthEl) tierMonthEl.innerText = formatMinutesToHM(monthMinutes);
-            const tierYearEl = document.getElementById('tier-year-val');
-            if (tierYearEl) tierYearEl.innerText = formatMinutesToHM(yearMinutes);
 
-            const nowD = new Date();
-            const curMonthDays = new Date(nowD.getFullYear(), nowD.getMonth() + 1, 0).getDate();
-            const tierDaysSub = document.getElementById('tier-month-days-sub');
-            if (tierDaysSub) tierDaysSub.innerText = currentSystemLanguage === 'ar' ? `من 1 إلى ${curMonthDays}` : `Day 1 to ${curMonthDays}`;
 
             let dailyHours = (todayMinutes / 60).toFixed(1);
             let yesterdayHours = (yesterdayMinutes / 60).toFixed(1);
@@ -5738,28 +5354,32 @@ html[data-theme="light"] .monthly-avg-value {
                 const visibleTags = currentTagsList.filter(t => !hiddenTags.includes(t));
                 const visibleAccumulatedStudyMinutes = visibleTags.reduce((acc, t) => acc + (tagMinutesSumMap[t] || 0), 0);
                 
-                visibleTags.forEach(tag => {
-                    let tagMinutes = tagMinutesSumMap[tag] || 0;
-                    let tagPercentage = visibleAccumulatedStudyMinutes > 0 ? Math.round((tagMinutes / visibleAccumulatedStudyMinutes) * 100) : 0;
-                    const item = document.createElement('div');
-                    item.className = 'chart-progress-item';
-                    item.innerHTML = `
-                        <div class="chart-progress-labels">
-                            <span style="display:flex; align-items:center; gap:6px;">
-                                <span style="width:8px; height:8px; border-radius:50%; background:${getTagColor(tag)}; display:inline-block;"></span>
-                                <strong>${escapeGoalHtml(tag)}</strong>
-                            </span>
-                            <span style="color: var(--accent-orange); font-weight:700;">${tagPercentage}% (${formatMinutesToHM(tagMinutes)})</span>
-                        </div>
-                        <div class="chart-progress-rail">
-                            <div class="chart-progress-fill" style="width: ${tagPercentage}%; background: ${getTagColor(tag)};"></div>
-                        </div>`;
-                    barsContainer.appendChild(item);
-                });
+                if (visibleTags.length === 0) {
+                    barsContainer.innerHTML = `<div style="text-align:center; padding:24px; color:var(--text-gray); font-size:12px;">${currentSystemLanguage === 'ar' ? '\u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u0648\u0627\u062F \u062F\u0631\u0627\u0633\u064A\u0629' : 'No subjects available'}</div>`;
+                } else {
+                    visibleTags.forEach(tag => {
+                        let tagMinutes = tagMinutesSumMap[tag] || 0;
+                        let tagPercentage = visibleAccumulatedStudyMinutes > 0 ? Math.round((tagMinutes / visibleAccumulatedStudyMinutes) * 100) : 0;
+                        const item = document.createElement('div');
+                        item.className = 'chart-progress-item';
+                        item.innerHTML = `
+                            <div class="chart-progress-labels" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:12px;">
+                                <span style="display:flex; align-items:center; gap:8px;">
+                                    <span style="width:10px; height:10px; border-radius:3px; background:${getTagColor(tag)}; display:inline-block; box-shadow:0 0 6px ${getTagColor(tag)}40;"></span>
+                                    <strong style="color:var(--text-light); font-weight:600;">${escapeGoalHtml(tag)}</strong>
+                                </span>
+                                <span style="color:var(--accent-orange); font-weight:700; font-size:11px;">${tagPercentage}% <span style="color:var(--text-gray); font-weight:500;">(${formatMinutesToHM(tagMinutes)})</span></span>
+                            </div>
+                            <div class="chart-progress-rail" style="height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+                                <div class="chart-progress-fill" style="height:100%; width:${tagPercentage}%; background:${getTagColor(tag)}; border-radius:3px; transition:width 0.4s cubic-bezier(0.4,0,0.2,1);"></div>
+                            </div>`;
+                        barsContainer.appendChild(item);
+                    });
+                }
             }
 
             // Render monthly activity heatmap with independent persistent data
-            renderMonthlyAnalysisAndHeatmap();
+            renderStudyTrendChart();
 
             if (typeof renderWeeklySegmentedChart === "function") renderWeeklySegmentedChart();
         }
@@ -7244,34 +6864,7 @@ html[data-theme="light"] .monthly-avg-value {
         }
 
 
-        function openTagColorModal(tagName) {
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay modal-open';
-            modal.id = 'tag-color-modal-dynamic';
-            modal.innerHTML = `
-                <div class="modal-box">
-                    <h3>${currentSystemLanguage === 'ar' ? 'لون التاج' : 'Tag Color'}: ${tagName}</h3>
-                    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:16px 0;">
-                        ${['#3498db','#e67e22','#1abc9c','#e84393','#2ecc71','#9b59b6','#e74c3c','#f1c40f','#16a085','#d35400','#8e44ad','#2c3e50','#d9a54a','#3e5c8a','#00d26a','#3498db','#e74c3c','#f39c12'].map(c => `
-                            <div onclick="setTagColor('${tagName}', '${c}'); document.getElementById('tag-color-modal-dynamic').remove();" 
-                                 style="width:40px;height:40px;border-radius:10px;background:${c};cursor:pointer;border:2px solid transparent;transition:all 0.2s;"
-                                 onmouseover="this.style.borderColor='#fff';this.style.transform='scale(1.15)';"
-                                 onmouseout="this.style.borderColor='transparent';this.style.transform='scale(1)';"
-                            ></div>
-                        `).join('')}
-                    </div>
-                    <div style="margin-bottom:16px;">
-                        <label style="font-size:11px;color:var(--text-gray);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">${currentSystemLanguage === 'ar' ? 'لون مخصص' : 'Custom Color'}</label>
-                        <input type="color" id="custom-tag-color-picker" value="${getTagColor(tagName)}" style="width:100%;height:40px;border-radius:10px;border:none;cursor:pointer;background:transparent;">
-                    </div>
-                    <div class="modal-buttons">
-                        <button class="modal-btn cancel" onclick="document.getElementById('tag-color-modal-dynamic').remove();">${currentSystemLanguage === 'ar' ? 'إلغاء' : 'Cancel'}</button>
-                        <button class="modal-btn confirm" onclick="setTagColor('${tagName}', document.getElementById('custom-tag-color-picker').value); document.getElementById('tag-color-modal-dynamic').remove();">${currentSystemLanguage === 'ar' ? 'حفظ' : 'Save'}</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
+        function openTagColorModal(tagName) { openTagSubjectModal(tagName); }
 
         let customTagColors = {};
 
@@ -7358,26 +6951,38 @@ document.addEventListener('keydown', function(e) {
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
-            // Get last 30 days of data
-            const days = 30;
+            const isAr = currentSystemLanguage === 'ar';
+            const monthNames = isAr ? MONTH_NAMES_AR : MONTH_NAMES_EN;
+            const monthName = monthNames[trendSelectedMonth];
+            const monthDisplayEl = document.getElementById('study-trend-month-display');
+            if (monthDisplayEl) monthDisplayEl.innerText = `${monthName} ${trendSelectedYear}`;
+
+            // Number of days in selected month (1 to 28/29/30/31)
+            const daysInMonth = new Date(trendSelectedYear, trendSelectedMonth + 1, 0).getDate();
+            const monthPrefix = `${trendSelectedYear}-${String(trendSelectedMonth + 1).padStart(2, '0')}`;
+
             const labels = [];
             const dailyData = [];
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+            let totalMonthMinutes = 0;
 
-            for (let i = days - 1; i >= 0; i--) {
-                const d = new Date(today);
-                d.setDate(d.getDate() - i);
-                const iso = getLocalISODate(d);
-                labels.push(d.toLocaleDateString(currentSystemLanguage === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric' }));
-
+            for (let d = 1; d <= daysInMonth; d++) {
+                labels.push(String(d));
+                const dayISO = `${monthPrefix}-${String(d).padStart(2, '0')}`;
                 const dayMinutes = archivedSessionsArray
-                    .filter(s => s.date === iso)
+                    .filter(s => s.date === dayISO)
                     .reduce((sum, s) => sum + (parseInt(s.duration) || 0), 0);
+                totalMonthMinutes += dayMinutes;
                 dailyData.push(dayMinutes / 60); // convert to hours
             }
 
-            // Calculate 7-day moving average
+            // Explicit Daily Average
+            const dailyAvgMinutes = Math.round(totalMonthMinutes / daysInMonth);
+            const avgBadgeEl = document.getElementById('study-trend-avg-display');
+            if (avgBadgeEl) {
+                avgBadgeEl.innerText = (isAr ? '\u0627\u0644\u0645\u0639\u062F\u0644 \u0627\u0644\u064A\u0648\u0645\u064A: ' : 'Daily Avg: ') + formatMinutesToHM(dailyAvgMinutes);
+            }
+
+            // 7-Day moving average
             const avgData = [];
             for (let i = 0; i < dailyData.length; i++) {
                 let sum = 0;
@@ -7399,12 +7004,12 @@ document.addEventListener('keydown', function(e) {
                     labels: labels,
                     datasets: [
                         {
-                            label: currentSystemLanguage === 'ar' ? 'الدراسة اليومية' : 'Daily Study',
+                            label: isAr ? '\u0627\u0644\u062F\u0631\u0627\u0633\u0629 \u0627\u0644\u064A\u0648\u0645\u064A\u0629' : 'Daily Study',
                             data: dailyData,
                             borderColor: 'rgba(217, 165, 74, 0.9)',
                             backgroundColor: 'rgba(217, 165, 74, 0.08)',
                             borderWidth: 2,
-                            tension: 0.4,
+                            tension: 0.35,
                             fill: true,
                             pointRadius: 3,
                             pointBackgroundColor: 'rgba(217, 165, 74, 1)',
@@ -7416,13 +7021,13 @@ document.addEventListener('keydown', function(e) {
                             pointHoverBorderWidth: 3
                         },
                         {
-                            label: currentSystemLanguage === 'ar' ? 'المتوسط 7 أيام' : '7-Day Average',
+                            label: isAr ? '\u0627\u0644\u0645\u062A\u0648\u0633\u0637 7 \u0623\u064A\u0627\u0645' : '7-Day Average',
                             data: avgData,
                             borderColor: 'rgba(62, 92, 138, 0.9)',
                             backgroundColor: 'transparent',
                             borderWidth: 2,
                             borderDash: [6, 4],
-                            tension: 0.4,
+                            tension: 0.35,
                             fill: false,
                             pointRadius: 0,
                             pointHoverRadius: 4,
@@ -7450,8 +7055,13 @@ document.addEventListener('keydown', function(e) {
                             padding: 12,
                             displayColors: true,
                             callbacks: {
+                                title: function(items) {
+                                    if (!items || !items.length) return '';
+                                    const day = items[0].label;
+                                    return `${day} ${monthName} ${trendSelectedYear}`;
+                                },
                                 label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + ' ' + (currentSystemLanguage === 'ar' ? 'ساعة' : 'hrs');
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + ' ' + (isAr ? '\u0633\u0627\u0639\u0629' : 'hrs');
                                 }
                             }
                         }
@@ -7465,7 +7075,7 @@ document.addEventListener('keydown', function(e) {
                             ticks: {
                                 color: 'rgba(122, 127, 145, 0.7)',
                                 font: { size: 10, weight: '600' },
-                                maxTicksLimit: 10
+                                maxTicksLimit: 16
                             }
                         },
                         y: {
