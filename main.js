@@ -1,0 +1,246 @@
+const { app, BrowserWindow, ipcMain, screen } = require('electron');
+const path = require('path');
+const http = require('http');
+const fs = require('fs');
+
+let localServer;
+
+function startLocalServer() {
+  return new Promise((resolve, reject) => {
+    localServer = http.createServer((req, res) => {
+      try {
+        const requestedPath = decodeURIComponent((req.url || '/').split('?')[0]);
+        const relativePath = requestedPath === '/' ? '/index.html' : requestedPath;
+        const filePath = path.resolve(__dirname, `.${relativePath}`);
+        const root = path.resolve(__dirname);
+
+        if (!filePath.startsWith(root + path.sep) && filePath !== root) {
+          res.writeHead(403);
+          res.end('Forbidden');
+          return;
+        }
+
+        const stat = fs.statSync(filePath);
+        if (!stat.isFile()) throw new Error('Not a file');
+
+        const ext = path.extname(filePath).toLowerCase();
+        const contentTypes = {
+          '.html': 'text/html; charset=utf-8',
+          '.js': 'text/javascript; charset=utf-8',
+          '.css': 'text/css; charset=utf-8',
+          '.json': 'application/json; charset=utf-8',
+          '.png': 'image/png',
+          '.jpg': 'image/jpeg',
+          '.jpeg': 'image/jpeg',
+          '.svg': 'image/svg+xml',
+          '.ico': 'image/x-icon'
+        };
+
+        res.writeHead(200, { 'Content-Type': contentTypes[ext] || 'application/octet-stream' });
+        fs.createReadStream(filePath).pipe(res);
+      } catch (_err) {
+        res.writeHead(404);
+        res.end('Not found');
+      }
+    });
+
+    localServer.once('error', reject);
+    localServer.listen(0, 'localhost', () => {
+      const { port } = localServer.address();
+      resolve(`http://localhost:${port}`);
+    });
+  });
+}
+
+let mainWindow;
+let overlayWindow;
+let lastOverlayState = {
+  time: '00:00:00',
+  running: false,
+  paused: false,
+  visible: false,
+  progress: 0,
+  theme: 'dark',
+  mode: 'pomodoro',
+  tag: 'Study'
+};
+
+// Keeps the overlay window floating over ANY fullscreen app, game, or video player
+function ensureOverlayOnTop() {
+  if (!overlayWindow || overlayWindow.isDestroyed()) return;
+  try {
+    // 'screen-saver' is the highest z-band level in Windows Desktop Window Manager.
+    // It stays strictly ABOVE fullscreen applications (YouTube fullscreen in Chrome/Edge, VLC, PotPlayer, MPV).
+    overlayWindow.setAlwaysOnTop(true, 'screen-saver');
+    overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    overlayWindow.moveTop();
+  } catch (err) {
+    try { overlayWindow.setAlwaysOnTop(true); } catch (_) {}
+  }
+}
+
+function createOverlayWindow() {
+  overlayWindow = new BrowserWindow({
+    width: 270,
+    height: 60,
+    minWidth: 200,
+    minHeight: 48,
+    maxWidth: 360,
+    maxHeight: 100,
+    transparent: true,
+    frame: false,
+    resizable: false,
+    movable: true,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    show: false,
+    focusable: false, // Prevents stealing focus from full-screen media players and games
+    hasShadow: false, // Avoids DWM shadow artifacts when floating over video surfaces
+    type: 'toolbar',  // Utility overlay type keeps Windows from suppressing it on fullscreen
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      sandbox: false
+    }
+  });
+
+  ensureOverlayOnTop();
+  overlayWindow.loadFile(path.join(__dirname, 'overlay.html'));
+
+  overlayWindow.once('ready-to-show', () => {
+    const saved = overlayWindow.getPosition();
+    if (!saved || saved.length !== 2) {
+      const workArea = screen.getPrimaryDisplay().workArea;
+      overlayWindow.setPosition(
+        Math.round(workArea.x + (workArea.width - 270) / 2),
+        Math.round(workArea.y)
+      );
+    }
+    overlayWindow.webContents.send('mini-timer:state', lastOverlayState);
+    ensureOverlayOnTop();
+  });
+
+  // Re-assert topmost on blur in case a fullscreen app steals focus
+  overlayWindow.on('blur', () => {
+    if (lastOverlayState.visible) {
+      ensureOverlayOnTop();
+    }
+  });
+
+  overlayWindow.on('closed', () => {
+    overlayWindow = null;
+  });
+}
+
+async function createMainWindow() {
+  mainWindow = new BrowserWindow({
+    width: 1440,
+    height: 950,
+    minWidth: 1100,
+    minHeight: 720,
+    backgroundColor: '#08090d',
+    icon: path.join(__dirname, 'build', 'icon.ico'),
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      sandbox: false
+    }
+  });
+
+  const appUrl = await startLocalServer();
+  mainWindow.loadURL(appUrl);
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+    if (overlayWindow && !overlayWindow.isDestroyed()) {
+      overlayWindow.close();
+    }
+  });
+}
+
+app.whenReady().then(async () => {
+  await createMainWindow();
+  createOverlayWindow();
+
+  app.on('activate', () => {
+    if (!mainWindow) createMainWindow();
+  });
+});
+
+app.on('before-quit', () => {
+  if (localServer) {
+    localServer.close();
+    localServer = null;
+  }
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+
+ipcMain.on('mini-timer:update', (_event, state) => {
+  lastOverlayState = {
+    time: String(state?.time || '00:00:00'),
+    running: !!state?.running,
+    paused: !!state?.paused,
+    visible: !!state?.visible,
+    progress: Number.isFinite(state?.progress) ? Math.max(0, Math.min(100, state.progress)) : 0,
+    theme: state?.theme === 'light' ? 'light' : 'dark',
+    mode: String(state?.mode || 'pomodoro'),
+    tag: String(state?.tag || 'Study')
+  };
+
+  if (!overlayWindow || overlayWindow.isDestroyed()) return;
+
+  overlayWindow.webContents.send('mini-timer:state', lastOverlayState);
+
+  if (lastOverlayState.visible) {
+    if (!overlayWindow.isVisible()) {
+      overlayWindow.showInactive();
+    }
+    ensureOverlayOnTop();
+  } else if (overlayWindow.isVisible()) {
+    overlayWindow.hide();
+  }
+});
+
+ipcMain.on('mini-timer:pin-top', (_event, pinned) => {
+  if (!overlayWindow || overlayWindow.isDestroyed()) return;
+  if (pinned) {
+    const pos = overlayWindow.getPosition();
+    const display = screen.getDisplayNearestPoint({ x: pos[0], y: pos[1] });
+    const area = display.workArea;
+    const [w] = overlayWindow.getSize();
+    const centerX = Math.round(area.x + (area.width - w) / 2);
+    const topY = area.y;
+    overlayWindow.setPosition(centerX, topY);
+    ensureOverlayOnTop();
+  }
+});
+
+ipcMain.on('mini-timer:toggle-play-pause', () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('mini-timer:command', { action: 'toggle-play-pause' });
+  }
+});
+
+ipcMain.on('mini-timer:hide', () => {
+  if (overlayWindow && !overlayWindow.isDestroyed()) overlayWindow.hide();
+});
+
+ipcMain.on('mini-timer:move', (_event, { x, y }) => {
+  if (!overlayWindow || overlayWindow.isDestroyed()) return;
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+  const display = screen.getDisplayNearestPoint({ x, y });
+  const area = display.workArea;
+  const [w, h] = overlayWindow.getSize();
+  const clampedX = Math.max(area.x, Math.min(Math.round(x), area.x + area.width - w));
+  const clampedY = Math.max(area.y, Math.min(Math.round(y), area.y + area.height - h));
+  overlayWindow.setPosition(clampedX, clampedY);
+  ensureOverlayOnTop();
+});
+
+ipcMain.handle('mini-timer:get-position', () => {
+  if (!overlayWindow || overlayWindow.isDestroyed()) return null;
+  return overlayWindow.getPosition();
+});
